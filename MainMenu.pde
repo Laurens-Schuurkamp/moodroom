@@ -34,7 +34,7 @@ class MainMenu
 
   }
   
-  void drawMenu(){
+  void drawMenu(int x1, int y1, int x2, int y2){
       if(activated==false)return;
     
       int hitId=-1;

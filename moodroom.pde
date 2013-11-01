@@ -197,7 +197,7 @@ void setup()
   
   handSvgR  = loadShape("data/gui/hand_r.svg");
   handSvgL  = loadShape("data/gui/hand_l.svg");
-  handSize=150*s;
+  handSize=95*s;
   adjustOffset=handSize;
   perspective(radians(60), float(width)/float(height), 10.0f, 150000.0f);
 
@@ -269,8 +269,11 @@ void draw() {
 
   }
   
-  mainMenu.drawMenu();
-
+  if(demoModus){
+    mainMenu.drawMenu(mouseX, mouseY, mouseX, mouseY);
+    shape(handSvgR, mouseX-(width/2)-(handSize), mouseY-(height/2)-(handSize/2), handSize,handSize);
+  };
+  
 }
 
 
