@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<appConfig>
+    <mainSettings 
+        debug="true" 
+        demoModus="true" 
+        width="1024"
+        height="768"
+        ip="localhost"
+        port="3000"
+        qrActive="false"
+        
+    />
+    
+    <niteSettings
+        UseSteady="true"
+        MotionSpeedThreshold="0.25"
+        MotionTime="350"
+        SteadyDuration="50"
+        XAngleThreshold="25"
+        YAngleThreshold="20"
+        swipeDelay="500"
+  
+    />
+    
+    <niteDefaults
+        UseSteady="true"
+        MotionSpeedThreshold="0.25"
+        MotionTime="350"
+        SteadyDuration="250"
+        XAngleThreshold="25"
+        YAngleThreshold="20"
+        swipeDelay="500"
+  
+    />        
+                            
+</appConfig>
