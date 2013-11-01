@@ -1,41 +1,43 @@
 class MainMenu
 {
   boolean activated=true;
+  String activeLayer="none";
   
   ArrayList menuList=new ArrayList();
-  //String menuItems []={"bckgr", "raster", "pointcloud", "beateffect", "wave", "skellet"};
-  String menuItems []={"bckgr", "raster", "pointcloud"};
   float w, h, x, y;
-  float offsetX;
-  float padding=24*s;
 
-  
-  
   int activeHitId=-1;
-  int rTimer=66;
+  //int rTimer=66;
+  float sSvg=0.9;
 
   MainMenu(){
     println("mainMenu constructor");
 
-    w = 320*s;
-    h = 240*s;
+    w = 320*s*sSvg;
+    h = 240*s*sSvg;
     
     println("w ="+w);
-    float widthTotal=(w*menuItems.length)+(padding*menuItems.length)+padding;
+    float widthTotal=(w*layers.length)+(padding*layers.length)+padding;
     int i;
-    for(i=0; i<menuItems.length; i++){
+    for(i=0; i<layers.length; i++){
       
       float x= -widthTotal/2 + (i*(w+padding));
       float y= -h/2;
-      MainMenuItem item=new MainMenuItem(menuItems[i], i, x, y);
+      MainMenuItem item=new MainMenuItem(layers[i], i, x, y, sSvg);
       menuList.add(item); 
       
     }
 
   }
   
-  void drawMenu(int x1, int y1, int x2, int y2){
+  void drawMenu(float x1, float y1, float x2, float y2){
       if(activated==false)return;
+      
+      if(activeLayer!="none"){
+        subMenu.drawSubMenu(mouseX, mouseY, mouseX, mouseY, activeLayer);
+        return;
+        
+      };
     
       int hitId=-1;
       
@@ -44,19 +46,21 @@ class MainMenu
         MainMenuItem item=(MainMenuItem) menuList.get(i);
         shape(item.iconSvg, item.x, item.y);
         
-        if (mouseX - (screenWidth/2) > item.x && mouseX - (screenWidth/2) < item.x+w && mouseY-(screenHeight/2) > item.y && mouseY-(screenHeight/2) < item.y+h) {
-            hitId = item.id;
+        if (x1 - (screenWidth/2) > item.x && x1 - (screenWidth/2) < item.x+w && y1-(screenHeight/2) > item.y && y1-(screenHeight/2) < item.y+h &&
+            x2 - (screenWidth/2) > item.x && x2 - (screenWidth/2) < item.x+w && y2-(screenHeight/2) > item.y && y2-(screenHeight/2) < item.y+h) {
+
+          hitId = item.id;
             
             if(activeHitId!=hitId){
               timer.timeActivation=millis();
               activeHitId=item.id;
               
             }else if(activeHitId==hitId){
-              boolean timed= timer.setTimer(item.x, item.y);
+              boolean timed = timer.setTimer(item.x, item.y);
               if(timed){
                 // set menu action
-                hitId=-1;
-               //activated=false; 
+                activeLayer=item.subject;
+                hitId=-1; 
               };
 
             };
@@ -72,9 +76,7 @@ class MainMenu
 
 
   };
-
-  
-  
+    
 }
 
 
@@ -82,20 +84,21 @@ class MainMenu
 class MainMenuItem{
   
   int id;
-  String item;
+  String subject;
   PVector pos;
   PImage icon;
   float x, y;
   PShape iconSvg;
   PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg");  
   
-  MainMenuItem(String _item, int _id, float _x, float _y){
+  MainMenuItem(String _subject, int _id, float _x, float _y, float sSvg){
     id=_id;
-    println("mainMenuItem constructor");
     x=_x;
     y=_y;
-    item = _item;   
-    iconSvg = loadShape("data/gui/menu/icon_"+item+".svg");
+    subject = _subject;   
+    iconSvg = loadShape("data/gui/menu/icon_"+subject+".svg");
+    iconSvg.scale(sSvg);
+    edgeOver.scale(sSvg);
   }
   
   

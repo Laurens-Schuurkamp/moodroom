@@ -9,7 +9,7 @@ public class ControlFrame extends PApplet {
   
   float lat=0.0;
   float lng=0.0;
-  boolean init=false;
+  boolean init=true;
   
   Textlabel framerate;
   
@@ -27,11 +27,7 @@ public class ControlFrame extends PApplet {
                     .setFont(createFont("arial",20))
                     ;
                     
-      framerate = cp5.addTextlabel("framerate")
-                    .setText("framerate =")
-                    .setPosition(10,360)
-                    .setFont(createFont("arial",20))
-                    ;            
+                  
 
          
      cp5.addSlider("SteadyDuration").setRange(0, 500).setPosition(10,60).setSize(200,16).setValue(niteSettings.getInt("SteadyDuration"));
@@ -53,17 +49,31 @@ public class ControlFrame extends PApplet {
                     ;
                     
      cp5.addSlider("mainTweener").setRange(0, 100).setPosition(10,290).setSize(200,16).setValue(30);
-     cp5.addSlider("subTweener").setRange(0, 100).setPosition(10,320).setSize(200,16).setValue(30);     
+     cp5.addSlider("subTweener").setRange(0, 100).setPosition(10,320).setSize(200,16).setValue(30);
+
+     cp5.addToggle("skelletActive")
+     .setPosition(10,360)
+     .setSize(16,16)
+     ;
+
+     
+     
+     framerate = cp5.addTextlabel("framerate")
+                    .setText("framerate =")
+                    .setPosition(10,h-100)
+                    .setFont(createFont("arial",20))
+                    ;
+     
      
      cp5.addButton("reset_defaults")
      .setValue(0)
-     .setPosition(10,400)
+     .setPosition(10,h-60)
      .setSize(140,32)
      ;
      
      cp5.addButton("save_xml_settings")
      .setValue(0)
-     .setPosition(170,400)
+     .setPosition(170,h-60)
      .setSize(140,32)
      ;
      
@@ -78,7 +88,7 @@ public class ControlFrame extends PApplet {
       }
     
       if(value<=0){
-        swipeDetector.SetUseSteady(false);
+        swipeDetector.SetUseSteady(false);//
       }else{
         swipeDetector.SetUseSteady(true);
         
@@ -129,6 +139,14 @@ public class ControlFrame extends PApplet {
 
 
   }
+  
+  void skelletActive(boolean value){
+    if(init==false){
+       return;
+    }
+    println("checkbox :"+value);
+    
+  }
 
   public void reset_defaults() {
         
@@ -145,7 +163,7 @@ public class ControlFrame extends PApplet {
     cp5.get(Slider.class,"YAngleThreshold").setValue(niteDefaults.getFloat("YAngleThreshold"));
     cp5.get(Slider.class,"swipeDelay").setValue(niteDefaults.getInt("swipeDelay"));
     
-    println("xml settings defaults ="+niteDefaults);
+    //println("xml settings defaults ="+niteDefaults);
 
   }
   
@@ -155,18 +173,18 @@ public class ControlFrame extends PApplet {
        return;
     } 
     
-     XML niteSettingsOld= xmlSettings.getChild("niteSettings");
-     xmlSettings.removeChild(niteSettingsOld);
-     niteSettings.setInt("SteadyDuration",  parseInt(cp5.get(Slider.class,"SteadyDuration").getValue()) );
-     niteSettings.setInt("MotionTime",  parseInt(cp5.get(Slider.class,"MotionTime").getValue()) );
-     niteSettings.setFloat("MotionSpeedThreshold",  cp5.get(Slider.class,"MotionSpeedThreshold").getValue() );
-     niteSettings.setFloat("XAngleThreshold",  cp5.get(Slider.class,"XAngleThreshold").getValue() );
-     niteSettings.setFloat("YAngleThreshold",  cp5.get(Slider.class,"YAngleThreshold").getValue() );
-     niteSettings.setFloat("swipeDelay",  cp5.get(Slider.class,"swipeDelay").getValue() );
-     xmlSettings.addChild(niteSettings);
-     saveXML(xmlSettings, "test/appSettings_test.xml");
-     
-     println("save xml settings ="+niteSettings+" && nite defaults ="+niteDefaults);  
+//     XML niteSettingsOld= xmlSettings.getChild("niteSettings");
+//     xmlSettings.removeChild(niteSettingsOld);
+//     niteSettings.setInt("SteadyDuration",  parseInt(cp5.get(Slider.class,"SteadyDuration").getValue()) );
+//     niteSettings.setInt("MotionTime",  parseInt(cp5.get(Slider.class,"MotionTime").getValue()) );
+//     niteSettings.setFloat("MotionSpeedThreshold",  cp5.get(Slider.class,"MotionSpeedThreshold").getValue() );
+//     niteSettings.setFloat("XAngleThreshold",  cp5.get(Slider.class,"XAngleThreshold").getValue() );
+//     niteSettings.setFloat("YAngleThreshold",  cp5.get(Slider.class,"YAngleThreshold").getValue() );
+//     niteSettings.setFloat("swipeDelay",  cp5.get(Slider.class,"swipeDelay").getValue() );
+//     xmlSettings.addChild(niteSettings);
+//     saveXML(xmlSettings, "test/appSettings_test.xml");
+//     
+//     println("save xml settings ="+niteSettings+" && nite defaults ="+niteDefaults);  
      
      
 

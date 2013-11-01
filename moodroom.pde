@@ -30,6 +30,7 @@ Skelleton skelleton;
 PointCloud3D pointCloud3D;
 GestureScaling gestureScaling;
 Timer timer;
+SubMenu subMenu;
 
 
 boolean kinectConnected=true;
@@ -57,6 +58,9 @@ float        rotX = radians(180);  // by default rotate the hole scene 180deg ar
 float        rotY = radians(0);
 
 float s;  //screen scale
+float padding=24*s;
+
+String layers[]={"bckgr", "patern", "pointcloud", "sound"};
 
 RFont rfont64;
 RFont rfont48;
@@ -121,6 +125,7 @@ void setup()
   swipeDetector.SetYAngleThreshold(niteSettings.getFloat("YAngleThreshold"));
   
   mainMenu = new MainMenu();
+  subMenu = new SubMenu();
   skelleton=new Skelleton();
   pointCloud3D = new PointCloud3D();
   gestureScaling = new GestureScaling();
@@ -203,11 +208,13 @@ void setup()
 
   smooth(8);
 
+
 }
 
 
 
 void draw() {
+
 
   background(0);
   if(debug){
@@ -263,6 +270,7 @@ void draw() {
             shape(handSvgR, rx-(width/2), ry-(height/2), handSize,handSize);
             shape(handSvgL, lx-(width/2), ly-(height/2), handSize,handSize);
             
+            mainMenu.drawMenu(rx-(width/2), ry-(width/2), lx-(width/2), ly-(width/2));
           }
         
       }
@@ -272,6 +280,9 @@ void draw() {
   if(demoModus){
     mainMenu.drawMenu(mouseX, mouseY, mouseX, mouseY);
     shape(handSvgR, mouseX-(width/2)-(handSize), mouseY-(height/2)-(handSize/2), handSize,handSize);
+  }else{
+   
+    
   };
   
 }
