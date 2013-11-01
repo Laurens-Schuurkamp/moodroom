@@ -34,17 +34,20 @@ class MainMenu
       if(activated==false)return;
       
       if(activeLayer!="none"){
-        subMenu.drawSubMenu(mouseX, mouseY, mouseX, mouseY, activeLayer);
+        subMenu.drawSubMenu(x1, y1, x2, y2, activeLayer);
         return;
         
       };
     
       int hitId=-1;
       
+      pushMatrix();
+      translate(0,0,1);
+      
       for(int i=0; i<menuList.size(); i++){
         
         MainMenuItem item=(MainMenuItem) menuList.get(i);
-        shape(item.iconSvg, item.x, item.y);
+        
         
         if (x1 - (screenWidth/2) > item.x && x1 - (screenWidth/2) < item.x+w && y1-(screenHeight/2) > item.y && y1-(screenHeight/2) < item.y+h &&
             x2 - (screenWidth/2) > item.x && x2 - (screenWidth/2) < item.x+w && y2-(screenHeight/2) > item.y && y2-(screenHeight/2) < item.y+h) {
@@ -68,7 +71,10 @@ class MainMenu
             shape(item.edgeOver, item.x, item.y);
 
         };
+        shape(item.iconSvg, item.x, item.y);
       };
+      
+      popMatrix();
       
       if(hitId==-1){
         activeHitId=-1;  

@@ -12,7 +12,7 @@ class PointCloud3D
   void drawPointCloud(){
     //pointcloud
         int[]   depthMap = context.depthMap();
-        int     steps   = 3;  // to speed up the drawing, draw every third point
+        int     steps   = 4;  // to speed up the drawing, draw every third point
         int     index;
         PVector realWorldPoint;
       

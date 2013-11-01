@@ -25,12 +25,14 @@ XnVFlowRouter flowRouter;
 SwipeControl swipeControl;
 
 MainMenu mainMenu;
-
+SubMenu subMenu;
 Skelleton skelleton;
 PointCloud3D pointCloud3D;
 GestureScaling gestureScaling;
 Timer timer;
-SubMenu subMenu;
+
+LayerPatern layerPatern;
+
 
 
 boolean kinectConnected=true;
@@ -130,6 +132,8 @@ void setup()
   pointCloud3D = new PointCloud3D();
   gestureScaling = new GestureScaling();
   timer = new Timer();
+  
+  layerPatern = new LayerPatern();
   
   
   if (kinectConnected) {
@@ -243,8 +247,9 @@ void draw() {
         //skelleton  
         for(int i=0;i<userList.length;i++)
         {
-          if(context.isTrackingSkeleton(userList[i]))
-            skelleton.drawSkeleton(userList[i]);
+          if(context.isTrackingSkeleton(userList[i])){
+            //skelleton.drawSkeleton(userList[i]);
+          }
         }
         
       popMatrix();
@@ -264,22 +269,30 @@ void draw() {
             ly = map(skelleton.handleft.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
             rx = map(skelleton.handright.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
             ry = map(skelleton.handright.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
-
+            
+            pushMatrix();
+              translate(0,0,1);  
             handSvgR.setStroke(color(255));
             handSvgL.setStroke(color(255));
             shape(handSvgR, rx-(width/2), ry-(height/2), handSize,handSize);
             shape(handSvgL, lx-(width/2), ly-(height/2), handSize,handSize);
+            popMatrix();
             
-            mainMenu.drawMenu(rx-(width/2), ry-(width/2), lx-(width/2), ly-(width/2));
+            mainMenu.drawMenu(lx, ly, rx, ry);
           }
         
       }
 
   }
   
+  layerPatern.drawLayer();
+  
   if(demoModus){
     mainMenu.drawMenu(mouseX, mouseY, mouseX, mouseY);
-    shape(handSvgR, mouseX-(width/2)-(handSize), mouseY-(height/2)-(handSize/2), handSize,handSize);
+    pushMatrix();
+      translate(0,0,1);
+      shape(handSvgR, mouseX-(width/2)-(handSize), mouseY-(height/2)-(handSize/2), handSize,handSize);
+    popMatrix();
   }else{
    
     
