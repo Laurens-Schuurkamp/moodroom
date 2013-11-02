@@ -1,7 +1,8 @@
 class Timer{
   
  int timer = 2000;
- int timeActivation; 
+ int timeActivation;
+ int activeId=-1;
  
  Timer(){
   println("timer constructor");
@@ -9,16 +10,23 @@ class Timer{
  } 
 
  
- boolean setTimer(float x, float y) {
+ boolean setTimer(float x, float y, int id) {
    
+   
+    if(id!=activeId){
+       timeActivation=millis();
+       activeId=id;  
+    } 
+
     float r=75;
     // Calculate how much time has passed
     float passedTime =  millis() - timeActivation;
     
     // Has five seconds passed?
     if (passedTime > timer) {
+      activeId=-1;
       return true;
-      //activeHitId=-1;
+      
     }else{
       float timerProgress= (passedTime / timer);
       

@@ -8,6 +8,7 @@
         ip="localhost"
         port="3000"
         qrActive="false"
+				actionTimer="1500"
         
     />
     

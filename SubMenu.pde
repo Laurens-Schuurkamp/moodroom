@@ -10,7 +10,6 @@ class SubMenu{
 
  float w, h, x, y;
  boolean activated=true;
- int activeHitId=-1;
  float sSvg=0.65;
  String activeAction="none";
  
@@ -49,7 +48,7 @@ class SubMenu{
           
           float x= -widthTotal/2 + (j*(w+padding));
           float y= -h/2;
-          SubMenuItem item=new SubMenuItem(actions[j], j, x, y, sSvg);
+          MenuItem item=new MenuItem(actions[j], j, x, y, sSvg);
           layerActions.actions.add(item); 
           
         }
@@ -58,19 +57,27 @@ class SubMenu{
  
  
  void drawSubMenu(float x1, float y1, float x2, float y2, String activeLayer){
-      if(activated==false)return;
+      
       
       if(activeAction!="none"){
         setLayerActions(activeAction, activeLayer, x1, y1, x2, y2);
         return;
       };
-    
-      int hitId=-1;
+      
+      activated  =  gestureActions.checkMenuActive(y1, y2, h);
+      if(activated==false)return;
+
       SubMenuActions subList;
       int i,j;
       
       pushMatrix();
       translate(0,0,1);
+      
+      pushStyle();
+        fill(0);
+        rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
+      popStyle();
+      boolean hit=false;
       
       for(i=0; i<subMenuList.size(); i++){
           subList= (SubMenuActions) subMenuList.get(i);
@@ -78,44 +85,26 @@ class SubMenu{
             
             for(j=0; j<subList.actions.size(); j++){
 
-              SubMenuItem item=(SubMenuItem) subList.actions.get(j);
-              
-              
-              if (x1 - (screenWidth/2) > item.x && x1 - (screenWidth/2) < item.x+w && y1-(screenHeight/2) > item.y && y1-(screenHeight/2) < item.y+h &&
-                  x2 - (screenWidth/2) > item.x && x2 - (screenWidth/2) < item.x+w && y2-(screenHeight/2) > item.y && y2-(screenHeight/2) < item.y+h) {
+              MenuItem item=(MenuItem) subList.actions.get(j);
+              hit=gestureActions.checkHitId(item, x1, y1, x2, y2, w, h);
+   
+             if(hit){
+               boolean timed = timer.setTimer(item.x, item.y, item.id);
+               if(timed){
+                    // set menu action
+                    activeAction=item.item;
+
+                };
       
-                hitId = item.id;
-                  
-                  if(activeHitId!=hitId){
-                    timer.timeActivation=millis();
-                    activeHitId=item.id;
-                    
-                  }else if(activeHitId==hitId){
-                    boolean timed= timer.setTimer(item.x, item.y);
-                    if(timed){
-                      hitId=-1;
-                      activeAction=item.action;
-      
-                    };
-      
-                  };
-                  
-                  shape(item.edgeOver, item.x, item.y);
-      
-              };
-              
+             };     
+
               shape(item.iconSvg, item.x, item.y);
-            };
+           };
 
         };
       };
       
       popMatrix();
-      
-      if(hitId==-1){
-        activeHitId=-1;  
-      };
-
 
   };
   
@@ -140,30 +129,6 @@ class SubMenu{
 }
 // end class submenu
 
-class SubMenuItem{
-  
-  int id;
-  String action;
-  PVector pos;
-  PImage icon;
-  float x, y;
-  PShape iconSvg;
-  PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg");  
-  
-  SubMenuItem(String _action, int _id, float _x, float _y, float sSvg){
-    id=_id;
-    x=_x;
-    y=_y;
-    action = _action;   
-    iconSvg = loadShape("data/gui/menu/icon_"+action+".svg");
-    iconSvg.scale(sSvg);
-    edgeOver.scale(sSvg);
-    
-    println("adding action :"+_action);
-  }
-  
-  
-}
 
 class SubMenuActions{
   

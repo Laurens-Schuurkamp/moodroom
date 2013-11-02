@@ -9,7 +9,7 @@ public class ControlFrame extends PApplet {
   
   float lat=0.0;
   float lng=0.0;
-  boolean init=true;
+  
   
   Textlabel framerate;
   
@@ -55,6 +55,8 @@ public class ControlFrame extends PApplet {
      .setPosition(10,360)
      .setSize(16,16)
      ;
+     
+     cp5.addSlider("actionTimer").setRange(0, 3000).setPosition(10,400).setSize(200,16).setValue(mainSettings.getInt("actionTimer"));
 
      
      
@@ -137,6 +139,15 @@ public class ControlFrame extends PApplet {
        return;
     }
 
+
+  }
+  
+  void actionTimer(int value) {
+    if(init==false){
+       return;
+    }
+    
+    timer.timer=value;
 
   }
   

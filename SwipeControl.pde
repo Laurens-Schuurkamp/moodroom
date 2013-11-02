@@ -11,6 +11,11 @@ class SwipeControl extends XnVPointControl
     //swipeDelay=niteSettings.getInt("swipeDelay");
 
   }
+  
+  void setActive(){
+    
+    
+  };
 
   ////////////////////////////////////////////////////////////////////////////////////////////
   // XnV callbacks

@@ -17,6 +17,8 @@ XML niteDefaults;
 
 // NITE & Kinect
 SimpleOpenNI context;
+XnVPushDetector pushDetector;
+PushControl pushControl;
 XnVSessionManager sessionManager;
 XnVWaveDetector waveDetector;
 WaveControl waveControl;
@@ -28,12 +30,10 @@ MainMenu mainMenu;
 SubMenu subMenu;
 Skelleton skelleton;
 PointCloud3D pointCloud3D;
-GestureScaling gestureScaling;
+GestureActions gestureActions;
 Timer timer;
 
 LayerPatern layerPatern;
-
-
 
 boolean kinectConnected=true;
 boolean demoModus=false;
@@ -41,6 +41,8 @@ boolean debug=false;
 String ip;
 String port;
 String serverUrl;
+
+Boolean menuActive=false;
 
 ControlP5 cp5;
 ControlFrame cf;
@@ -86,6 +88,8 @@ float pxHandActive=0;
 float handSize=150;
 float adjustOffset;
 
+boolean init=false;
+
 
 void setup()
 {
@@ -115,7 +119,9 @@ void setup()
   }
   
   context = new SimpleOpenNI(this, SimpleOpenNI.RUN_MODE_MULTI_THREADED);
-
+  
+  pushControl = new PushControl();
+  pushDetector = new XnVPushDetector();
   waveControl= new WaveControl();
   waveDetector = new XnVWaveDetector();
   swipeControl = new SwipeControl();
@@ -126,11 +132,13 @@ void setup()
   swipeDetector.SetXAngleThreshold(niteSettings.getFloat("XAngleThreshold"));
   swipeDetector.SetYAngleThreshold(niteSettings.getFloat("YAngleThreshold"));
   
+  
+  
   mainMenu = new MainMenu();
   subMenu = new SubMenu();
   skelleton=new Skelleton();
   pointCloud3D = new PointCloud3D();
-  gestureScaling = new GestureScaling();
+  gestureActions = new GestureActions();
   timer = new Timer();
   
   layerPatern = new LayerPatern();
@@ -156,7 +164,9 @@ void setup()
     sessionManager = context.createSessionManager("Click,Wave", "RaiseHand");
     
     waveDetector.RegisterPrimaryPointCreate(waveControl);
-
+        
+    pushDetector.RegisterPush(pushControl);
+    
     // swipe 
     swipeDetector.RegisterSwipeLeft(swipeControl); 
     swipeDetector.RegisterSwipeRight(swipeControl);
@@ -169,6 +179,7 @@ void setup()
     flowRouter = new XnVFlowRouter();
     //flowRouter.SetActive(swipeDetector);
     flowRouter.SetActive(waveDetector);
+    //flowRouter.SetActive(pushDetector);
     sessionManager.AddListener(flowRouter);
 
     //sessionManager.AddListener(swipeDetector);
@@ -217,6 +228,8 @@ void setup()
 
 
 
+
+
 void draw() {
 
 
@@ -257,7 +270,7 @@ void draw() {
       //hands
       if (userList.length<=0){
           drawHands=false;
-          flowRouter.SetActive(waveDetector);
+          //flowRouter.SetActive(waveDetector);
           
       }else{
                 
@@ -271,11 +284,14 @@ void draw() {
             ry = map(skelleton.handright.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
             
             pushMatrix();
-              translate(0,0,1);  
-            handSvgR.setStroke(color(255));
-            handSvgL.setStroke(color(255));
-            shape(handSvgR, rx-(width/2), ry-(height/2), handSize,handSize);
-            shape(handSvgL, lx-(width/2), ly-(height/2), handSize,handSize);
+              translate(0,0,2);  
+              handSvgR.setStroke(color(255));
+              handSvgL.setStroke(color(255));
+              shape(handSvgR, rx-(width/2)-(handSize/2), ry-(height/2)-(handSize/2), handSize,handSize);
+              shape(handSvgL, lx-(width/2)-(handSize/2), ly-(height/2)-(handSize/2), handSize,handSize);
+              
+              ellipse(rx-(width/2), ry-(height/2), 10,10);
+              ellipse(lx-(width/2), ly-(height/2), 10,10);
             popMatrix();
             
             mainMenu.drawMenu(lx, ly, rx, ry);
@@ -297,6 +313,13 @@ void draw() {
    
     
   };
+  
+  if(init==false){
+    init=true;
+    //mainmenu.drawMenu();
+    //subMenu.drawMenu();
+    
+  }
   
 }
 
@@ -350,6 +373,17 @@ void keyReleased()
     {
       
       case 'S':
+        println("key S released");
+        return;
+      case 'W':
+        println("key W released");
+        return;
+      case 'P':
+        println("key P released");
+        return;
+      case 'C':
+        println("key C released");
+
      
     }
   

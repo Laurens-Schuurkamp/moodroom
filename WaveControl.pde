@@ -7,19 +7,23 @@ class WaveControl extends XnVPointControl
     println("wave control constructor");
   }
   
+  void setActive(){
+    activated=true;
+    flowRouter.SetActive(waveDetector);
+    
+  }
+  
   ////////////////////////////////////////////////////////////////////////////////////////////
   // XnV callbacks
 
   void onPrimaryPointCreate(XnVHandPointContext pContext, XnPoint3D ptFocus) {
     
     println("onPrimaryPointCreate: wavedetector --> ptFocusWave ="+ptFocus.getX());
-    activated=true;
-    if(kinectConnected){
-      
-      pxHandActive=ptFocus.getX();
-      flowRouter.SetActive(swipeDetector);
-    }
-    
+      flowRouter.SetActive(pushDetector);
+      activated=false;
+      mainMenu.activated=true;
+     // pxHandActive=ptFocus.getX();
+
   }
   
   void onPrimaryPointDestroy(int nID) {
