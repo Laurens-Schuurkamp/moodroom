@@ -159,7 +159,7 @@ class LayerPatern{
  
  void drawPrimitivesPicker(PVector left, PVector right){
    
-      activated  =  gestureActions.checkMenuActive(left.y, right.y, h);  
+      activated  =  gestureActions.checkMenuActive(left, right, h);  
       if(activated==false)return; 
    
       pushMatrix();
@@ -175,15 +175,16 @@ class LayerPatern{
       for(int i=0; i<primitivesList.size(); i++){
         
         MenuItem item=(MenuItem) primitivesList.get(i);
-        hit=gestureActions.checkMenuHitId(item, left.x, left.y, right.x, right.y , w, h);
+        boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
+        boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
    
-       if(hit){
+       if(leftHit && rightHit){
          boolean timed = timer.setTimer(item.x, item.y, item.id);
          if(timed){
                 // set menu action
                 activePrimitive=item.item;
                 timer.activeId=-1;
-                subMenu.activeAction="none"; 
+                 
           };
 
        };     
@@ -282,17 +283,18 @@ class LayerPatern{
      sY=distY/distYorg;
      
      float deltaNew=dist(left.x, left.y, right.x, right.y);
-     println(deltaOrg/deltaNew);
+     //println(deltaOrg/deltaNew);
+     
      if( (deltaOrg/deltaNew)>0.99 && (deltaOrg/deltaNew)<1.01 ){
        
        boolean timed = timer.setTimer(0, 0, 101);
            if(timed){
+             subMenu.activeAction="none";
              isScaling=false;
              timer.activeId=-1;
              deltaOrg=0;
-           }
              
-       
+           }
      }else{
        timer.activeId=-1;
      };

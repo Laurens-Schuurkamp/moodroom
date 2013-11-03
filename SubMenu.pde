@@ -3,15 +3,17 @@ class SubMenu{
 
  ArrayList subMenuList=new ArrayList();
  
- String actionsBckgr []={"color"};
- String actionsPatern []={ "stroke", "size", "color", "primitives", "vibration", "disable"};
- String actionsPointcloud []={};
- String actionsSound []={"primitives", "vibration"};
+ String actionsBckgr []={"color","transparency", "return"};
+ String actionsPatern []={ "stroke", "size", "color", "primitives", "disable", "return"};
+ String actionsPointcloud []={"size", "color", "primitives", "return"};
+ String actionsSound []={"primitives", "vibration", "return"};
 
  float w, h, x, y;
  boolean activated=true;
  float sSvg=0.65;
  String activeAction="none";
+ 
+ MenuItem back;
  
  SubMenu(){
   println("submenu constructor");
@@ -37,6 +39,8 @@ class SubMenu{
       }
 
     }
+    
+    back = new MenuItem("return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
 
   
  };
@@ -64,7 +68,9 @@ class SubMenu{
         return;
       };
       
-      activated  =  gestureActions.checkMenuActive(left.y, right.y, h);
+      
+      
+      activated  =  gestureActions.checkMenuActive(left, right, h);
       if(activated==false)return;
 
       SubMenuActions subList;
@@ -86,9 +92,10 @@ class SubMenu{
             for(j=0; j<subList.actions.size(); j++){
 
               MenuItem item=(MenuItem) subList.actions.get(j);
-              hit=gestureActions.checkMenuHitId(item, left.x, left.y, right.x, right.y, w, h);
+              boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
+              boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
    
-             if(hit){
+             if(leftHit && rightHit){
                boolean timed = timer.setTimer(item.x, item.y, item.id);
                if(timed){
                     // set menu action
@@ -103,6 +110,7 @@ class SubMenu{
 
         };
       };
+
       
       popMatrix();
 
@@ -111,6 +119,25 @@ class SubMenu{
   
   void setLayerActions(String action, String activeLayer, PVector left, PVector right){
 
+    //MenuItem back=new MenuItem("return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
+    shape(back.iconSvg, back.x, back.y);
+    boolean leftHit=gestureActions.checkSingleHitId(back, left, w, h);
+    boolean rightHit=gestureActions.checkSingleHitId(back, right, w, h);
+   
+             if(leftHit && rightHit){
+               boolean timed = timer.setTimer(back.x, back.y, back.id);
+               if(timed){
+                    timer.activeId=-1;
+                    activeAction="none";
+                    return;
+
+                };
+      
+             };  
+    
+    
+    
+    
     if(activeLayer=="patern"){
       
       if(action=="primitives" || action =="size"){
@@ -119,19 +146,20 @@ class SubMenu{
         activeAction="none";
         mainMenu.activeLayer="none";
       }
-    }
+    }else if(activeAction=="color"){
+        
+        color c = gestureActions.setColor(left, right, activeLayer);
+        if(activeLayer=="bckgr"){
+          colorBckgr=c;
+        }
     
-    else{
+    }else if( activeAction=="none" || activeAction=="return"){
       activeAction="none";
       mainMenu.activeLayer="none";
     };
     
   };
 
- 
-  
-  
-  
 }
 // end class submenu
 

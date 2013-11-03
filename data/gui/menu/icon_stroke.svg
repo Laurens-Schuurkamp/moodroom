@@ -3,9 +3,9 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="main" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="320px" height="240px" viewBox="0 0 320 240" enable-background="new 0 0 320 240" xml:space="preserve">
-<rect x="83.4" y="55.138" opacity="0.8" fill="#69BD45" stroke="#FFFFFF" stroke-width="1.2775" width="153.199" height="13.56"/>
-<rect x="83.4" y="85.862" opacity="0.8" fill="#3953A4" stroke="#FFFFFF" stroke-width="1.2775" width="153.199" height="19.541"/>
-<rect x="83.4" y="122.153" opacity="0.8" fill="#ED1F24" stroke="#FFFFFF" stroke-width="1.2775" width="153.199" height="43.914"/>
+<rect x="83.4" y="61.693" opacity="0.8" fill="#69BD45" stroke="#FFFFFF" stroke-width="0.9328" width="153.199" height="7.23"/>
+<rect x="83.4" y="86.778" opacity="0.8" fill="#3953A4" stroke="#FFFFFF" stroke-width="1.0667" width="153.199" height="13.625"/>
+<rect x="83.4" y="116.302" opacity="0.8" fill="#ED1F24" stroke="#FFFFFF" stroke-width="1.1013" width="153.199" height="32.638"/>
 <g>
 	<path fill="#FFFFFF" stroke="#000000" stroke-width="0.1" d="M139.707,217.756c0,0.711-0.373,1.066-1.118,1.066h-5.953
 		c-0.815,0-1.223-0.416-1.223-1.248v-16.38c0-0.814,0.386-1.222,1.157-1.222s1.157,0.407,1.157,1.222v15.47h4.866

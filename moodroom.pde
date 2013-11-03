@@ -52,8 +52,7 @@ Tween subTweener;
 Shaper cosine;
 float duration=100;
 
-int screenWidth;
-int screenHeight;
+
 float zoom;
 
 float        zoomF =1.0f;
@@ -96,6 +95,8 @@ PVector leftPos;
 PVector rightPos;
 color handFeedBack=color(255,0,0);
 
+color colorBckgr=color(0);
+
 
 void setup()
 {
@@ -111,8 +112,9 @@ void setup()
   println("server ="+serverUrl);
   
   s =mainSettings.getFloat("height")/960;
-  screenWidth=parseInt(s*1280);
-  screenHeight=parseInt(s*1024);
+  colorMode(HSB);
+  int screenWidth=parseInt(s*1280);
+  int screenHeight=parseInt(s*1024);
 
   size(screenWidth, screenHeight, OPENGL);
   zoom=screenHeight/640;
@@ -236,14 +238,10 @@ void setup()
 
 }
 
-
-
-
-
 void draw() {
 
-
-  background(0);
+  background(colorBckgr);
+  
   if(debug){
     cf.framerate.setText("framerate ="+round(frameRate)+" fps");
   };

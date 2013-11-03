@@ -37,7 +37,7 @@ class MainMenu
         
       };
       
-      activated  =  gestureActions.checkMenuActive(left.y, right.y, h);  
+      activated  =  gestureActions.checkMenuActive(left, right, h);  
       if(activated==false)return;
     
       int hitId=-1;
@@ -51,10 +51,11 @@ class MainMenu
       boolean hit=false;
       for(int i=0; i<menuList.size(); i++){
         
-        MenuItem item=(MenuItem) menuList.get(i);
-        hit=gestureActions.checkMenuHitId(item, left.x, left.y, right.x, right.y, w, h);
-   
-       if(hit){
+      MenuItem item=(MenuItem) menuList.get(i);
+      boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
+      boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
+       
+       if(leftHit && rightHit){
          boolean timed = timer.setTimer(item.x, item.y, item.id);
          if(timed){
                 // set menu action
