@@ -8,8 +8,9 @@ class LayerPatern{
  
  float sSvg=0.65; 
   
- color cf=color(255,96);
+ color cf=color(255, 96);
  color cs=color(255);
+ 
  float strokeWidth=1;
  String activeAction="none";
  
@@ -159,8 +160,8 @@ class LayerPatern{
  
  void drawPrimitivesPicker(PVector left, PVector right){
    
-      activated  =  gestureActions.checkMenuActive(left, right, h);  
-      if(activated==false)return; 
+      //activated  =  gestureActions.checkMenuActive(left, right, h);  
+      //if(activated==false)return; 
    
       pushMatrix();
       translate(0,0,1);
@@ -178,14 +179,15 @@ class LayerPatern{
         boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
         boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
    
-       if(leftHit && rightHit){
-         boolean timed = timer.setTimer(item.x, item.y, item.id);
-         if(timed){
-                // set menu action
-                activePrimitive=item.item;
-                timer.activeId=-1;
-                 
-          };
+       if(leftHit || rightHit){
+         activePrimitive=item.item;
+//         boolean timed = timer.setTimer(item.x, item.y, item.id);
+//         if(timed){
+//                // set menu action
+//                activePrimitive=item.item;
+//                timer.activeId=-1;
+//                 
+//          };
 
        };     
 
@@ -230,11 +232,9 @@ class LayerPatern{
          
        };
 
-       boolean rightHit=false;
-       boolean leftHit=false;
        
-       leftHit=gestureActions.zoomGestureActivation(left.x, left.y, tl,  bl, hitSize);
-       rightHit=gestureActions.zoomGestureActivation(right.x, right.y, tr,  br, hitSize);
+       boolean leftHit=gestureActions.zoomGestureActivation(left.x, left.y, tl,  bl, hitSize);
+       boolean rightHit=gestureActions.zoomGestureActivation(right.x, right.y, tr,  br, hitSize);
        
 
        if(demoModus){

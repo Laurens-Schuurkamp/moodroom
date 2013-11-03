@@ -70,8 +70,8 @@ class SubMenu{
       
       
       
-      activated  =  gestureActions.checkMenuActive(left, right, h);
-      if(activated==false)return;
+      //activated  =  gestureActions.checkMenuActive(left, right, h);
+      //if(activated==false)return;
 
       SubMenuActions subList;
       int i,j;
@@ -134,22 +134,22 @@ class SubMenu{
                 };
       
              };  
-    
-    
-    
-    
+
     if(activeLayer=="patern"){
       
       if(action=="primitives" || action =="size"){
         layerPatern.setAction(left, right, action);
+      }else if(action=="color"){
+          color c = gestureActions.setColor(left, right, layerPatern.cf);
+          layerPatern.cf=c;
       }else{
         activeAction="none";
         mainMenu.activeLayer="none";
       }
-    }else if(activeAction=="color"){
-        
-        color c = gestureActions.setColor(left, right, activeLayer);
+
+    }else if(action=="color"){
         if(activeLayer=="bckgr"){
+          color c = gestureActions.setColor(left, right, colorBckgr);
           colorBckgr=c;
         }
     

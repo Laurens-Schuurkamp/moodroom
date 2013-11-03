@@ -112,7 +112,7 @@ void setup()
   println("server ="+serverUrl);
   
   s =mainSettings.getFloat("height")/960;
-  colorMode(HSB);
+  //colorMode(HSB);
   int screenWidth=parseInt(s*1280);
   int screenHeight=parseInt(s*1024);
 
