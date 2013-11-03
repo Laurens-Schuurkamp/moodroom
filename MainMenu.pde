@@ -29,15 +29,15 @@ class MainMenu
 
   }
   
-  void drawMenu(float x1, float y1, float x2, float y2){
+  void drawMenu(PVector left, PVector right){
 
       if(activeLayer!="none"){
-        subMenu.drawSubMenu(x1, y1, x2, y2, activeLayer);
+        subMenu.drawSubMenu(left, right, activeLayer);
         return;
         
       };
       
-      activated  =  gestureActions.checkMenuActive(y1, y2, h);  
+      activated  =  gestureActions.checkMenuActive(left.y, right.y, h);  
       if(activated==false)return;
     
       int hitId=-1;
@@ -52,7 +52,7 @@ class MainMenu
       for(int i=0; i<menuList.size(); i++){
         
         MenuItem item=(MenuItem) menuList.get(i);
-        hit=gestureActions.checkHitId(item, x1, y1, x2, y2, w, h);
+        hit=gestureActions.checkMenuHitId(item, left.x, left.y, right.x, right.y, w, h);
    
        if(hit){
          boolean timed = timer.setTimer(item.x, item.y, item.id);

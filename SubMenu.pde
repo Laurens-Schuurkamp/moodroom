@@ -4,8 +4,8 @@ class SubMenu{
  ArrayList subMenuList=new ArrayList();
  
  String actionsBckgr []={"color"};
- String actionsPatern []={"primitives", "size", "color",  "stroke", "vibration", "disable"};
- String actionsPointcloud []={"primitives", "size", "color",  "stroke", "vibration", "disable"};
+ String actionsPatern []={ "stroke", "size", "color", "primitives", "vibration", "disable"};
+ String actionsPointcloud []={};
  String actionsSound []={"primitives", "vibration"};
 
  float w, h, x, y;
@@ -56,15 +56,15 @@ class SubMenu{
  }
  
  
- void drawSubMenu(float x1, float y1, float x2, float y2, String activeLayer){
+ void drawSubMenu(PVector left, PVector right, String activeLayer){
       
       
       if(activeAction!="none"){
-        setLayerActions(activeAction, activeLayer, x1, y1, x2, y2);
+        setLayerActions(activeAction, activeLayer, left, right);
         return;
       };
       
-      activated  =  gestureActions.checkMenuActive(y1, y2, h);
+      activated  =  gestureActions.checkMenuActive(left.y, right.y, h);
       if(activated==false)return;
 
       SubMenuActions subList;
@@ -86,7 +86,7 @@ class SubMenu{
             for(j=0; j<subList.actions.size(); j++){
 
               MenuItem item=(MenuItem) subList.actions.get(j);
-              hit=gestureActions.checkHitId(item, x1, y1, x2, y2, w, h);
+              hit=gestureActions.checkMenuHitId(item, left.x, left.y, right.x, right.y, w, h);
    
              if(hit){
                boolean timed = timer.setTimer(item.x, item.y, item.id);
@@ -109,13 +109,19 @@ class SubMenu{
   };
   
   
-  void setLayerActions(String action, String activeLayer, float x1, float y1, float x2, float y2){
-    //println("setting action :"+action+" --> for layer :"+activeLayer);
+  void setLayerActions(String action, String activeLayer, PVector left, PVector right){
+
+    if(activeLayer=="patern"){
+      
+      if(action=="primitives" || action =="size"){
+        layerPatern.setAction(left, right, action);
+      }else{
+        activeAction="none";
+        mainMenu.activeLayer="none";
+      }
+    }
     
-    
-    if(activeLayer=="patern" && action=="primitives"){
-      layerPatern.drawPrimitivesPicker(x1, y1, x2, y2);
-    }else{
+    else{
       activeAction="none";
       mainMenu.activeLayer="none";
     };

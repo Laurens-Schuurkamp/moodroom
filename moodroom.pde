@@ -84,11 +84,17 @@ float lx,ly,rx,ry, bodyX;
 boolean drawHands=false;
 PShape handSvgR;
 PShape handSvgL;
+PShape handSvgRuser;
+PShape handSvgLuser;
 float pxHandActive=0;
 float handSize=150;
 float adjustOffset;
 
 boolean init=false;
+
+PVector leftPos;
+PVector rightPos;
+color handFeedBack=color(255,0,0);
 
 
 void setup()
@@ -215,8 +221,12 @@ void setup()
   rfont64 = new RFont( "data/fonts/vagrlsb_.ttf", 64, RFont.LEFT);
   rfont48 = new RFont( "data/fonts/vagrlsb_.ttf", 48, RFont.LEFT);
   
+  handSvgRuser  = loadShape("data/gui/hand_r.svg");
+  handSvgLuser  = loadShape("data/gui/hand_l.svg");
+  
   handSvgR  = loadShape("data/gui/hand_r.svg");
   handSvgL  = loadShape("data/gui/hand_l.svg");
+  
   handSize=95*s;
   adjustOffset=handSize;
   perspective(radians(60), float(width)/float(height), 10.0f, 150000.0f);
@@ -283,18 +293,25 @@ void draw() {
             rx = map(skelleton.handright.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
             ry = map(skelleton.handright.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
             
+            PVector left=new PVector(lx, ly);
+            PVector right=new PVector(rx, ry);
+            
             pushMatrix();
               translate(0,0,2);  
-              handSvgR.setStroke(color(255));
-              handSvgL.setStroke(color(255));
-              shape(handSvgR, rx-(width/2)-(handSize/2), ry-(height/2)-(handSize/2), handSize,handSize);
-              shape(handSvgL, lx-(width/2)-(handSize/2), ly-(height/2)-(handSize/2), handSize,handSize);
+              //handSvgR.setStroke(color(255));
+              //handSvgL.setStroke(color(255));
               
-              ellipse(rx-(width/2), ry-(height/2), 10,10);
-              ellipse(lx-(width/2), ly-(height/2), 10,10);
+              HandLeft hl=new HandLeft(lx-(width/2), ly-(height/2), true);
+              HandRight hr=new HandRight(rx-(width/2), ry-(height/2), true);
+              
+//              shape(handSvgR, rx-(width/2)-(handSize/2), ry-(height/2)-(handSize/2), handSize,handSize);
+//              shape(handSvgL, lx-(width/2)-(handSize/2), ly-(height/2)-(handSize/2), handSize,handSize);
+              
+              
             popMatrix();
+
             
-            mainMenu.drawMenu(lx, ly, rx, ry);
+            mainMenu.drawMenu(left, right);
           }
         
       }
@@ -304,15 +321,20 @@ void draw() {
   layerPatern.drawLayer();
   
   if(demoModus){
-    mainMenu.drawMenu(mouseX, mouseY, mouseX, mouseY);
+    PVector left=new PVector(mouseX, mouseY);
+    PVector right=new PVector(mouseX, mouseY);
+    
+    mainMenu.drawMenu(left, right);
     pushMatrix();
       translate(0,0,1);
-      shape(handSvgR, mouseX-(width/2)-(handSize), mouseY-(height/2)-(handSize/2), handSize,handSize);
+      HandRight hr=new HandRight(mouseX-(width/2), mouseY-(height/2), true);
     popMatrix();
   }else{
    
     
   };
+  
+   
   
   if(init==false){
     init=true;
@@ -422,6 +444,35 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   return p;
 }
 
+
+class HandLeft{
+  
+  HandLeft(float x, float y, boolean user){
+    if(user){
+      shape(handSvgLuser, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
+    }else{
+      shape(handSvgL, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
+    }
+    
+    
+    if (debug) ellipse(x,y,10,10);
+  }
+}
+
+class HandRight{
+  
+    HandRight(float x, float y, boolean user){
+      
+      if(user){
+        shape(handSvgRuser, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
+      }else{
+        shape(handSvgR, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
+      }
+      
+      if (debug) ellipse(x,y,10,10);
+  }
+  
+}
 
 
 

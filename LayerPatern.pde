@@ -13,6 +13,12 @@ class LayerPatern{
  float strokeWidth=1;
  String activeAction="none";
  
+ boolean isScaling=false;
+ float deltaOrg=0;
+ 
+ float distXorg=0;
+ float distYorg=0;
+ 
  String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
  
  int densityX=50;
@@ -69,7 +75,7 @@ class LayerPatern{
             if(activePrimitive=="ellipse"){
                pushMatrix();
                 translate(x,y);
-                shape(svgEllipse, 0, 0, widthP, widthP);
+                shape(svgEllipse, 0, 0, widthP, heightP);
                 svgEllipse.setStroke(cs);  
                 svgEllipse.setStrokeWeight(strokeWidth);
                 svgEllipse.setFill(cf);
@@ -79,7 +85,7 @@ class LayerPatern{
                //rect(x-wP/2, y-hP/2, wP, hP);
               pushMatrix();
                 translate(x,y);
-                shape(svgRectangle, 0, 0, widthP, widthP);
+                shape(svgRectangle, 0, 0, widthP, heightP);
                 svgRectangle.setStroke(cs);  
                 svgRectangle.setStrokeWeight(strokeWidth);
                 svgRectangle.setFill(cf);
@@ -88,7 +94,7 @@ class LayerPatern{
                //triangle(x-wP/2, y+hP/2, x+wP/2, y+hP/2, x, y-hP/2);
                pushMatrix();
                 translate(x,y);
-                shape(svgTriangle, 0, 0, widthP, widthP);
+                shape(svgTriangle, 0, 0, widthP, heightP);
                 svgTriangle.setStroke(cs);  
                 svgTriangle.setStrokeWeight(strokeWidth);
                 svgTriangle.setFill(cf);
@@ -97,7 +103,7 @@ class LayerPatern{
               
               pushMatrix();
                 translate(x,y);
-                shape(svgStar, 0, 0, widthP, widthP);
+                shape(svgStar, 0, 0, widthP, heightP);
                 svgStar.setStroke(cs);  
                 svgStar.setStrokeWeight(strokeWidth);
                 svgStar.setFill(cf);
@@ -108,7 +114,7 @@ class LayerPatern{
               
               pushMatrix();
                 translate(x,y);
-                shape(svgHectagon, 0, 0, widthP, widthP);
+                shape(svgHectagon, 0, 0, widthP, heightP);
                 svgHectagon.setStroke(cs);  
                 svgHectagon.setStrokeWeight(strokeWidth);
                 svgHectagon.setFill(cf);
@@ -119,7 +125,7 @@ class LayerPatern{
               pushMatrix();
                 translate(x,y);
                 
-                shape(svgHart, 0, 0, widthP, widthP);
+                shape(svgHart, 0, 0, widthP, heightP);
                 svgHart.setStroke(cs);  
                 svgHart.setStrokeWeight(strokeWidth);
                 svgHart.setFill(cf);
@@ -141,9 +147,19 @@ class LayerPatern{
    
  };
  
- void drawPrimitivesPicker(float x1, float y1, float x2, float y2){
+ void setAction(PVector left, PVector right, String action){
+     if(action=="primitives"){
+         drawPrimitivesPicker(left, right);
+     }else{
+       setScaling(left, right);
+     }
    
-      activated  =  gestureActions.checkMenuActive(y1, y2, h);  
+   
+ }
+ 
+ void drawPrimitivesPicker(PVector left, PVector right){
+   
+      activated  =  gestureActions.checkMenuActive(left.y, right.y, h);  
       if(activated==false)return; 
    
       pushMatrix();
@@ -159,7 +175,7 @@ class LayerPatern{
       for(int i=0; i<primitivesList.size(); i++){
         
         MenuItem item=(MenuItem) primitivesList.get(i);
-        hit=gestureActions.checkHitId(item, x1, y1, x2, y2, w, h);
+        hit=gestureActions.checkMenuHitId(item, left.x, left.y, right.x, right.y , w, h);
    
        if(hit){
          boolean timed = timer.setTimer(item.x, item.y, item.id);
@@ -179,10 +195,111 @@ class LayerPatern{
 
    };
    
-   void setScaling(){
+   void setScaling(PVector left, PVector right){
      
+     float offset=220*s;
      
+     if(isScaling){
+       setScale(left, right, offset);
+       return;
+     }
+     
+     int i;
+     
+      PVector tl=new PVector(-offset, -offset);
+      PVector bl=new PVector(-offset, offset);
+      
+      PVector tr=new PVector(offset, -offset);
+      PVector br=new PVector(offset, offset);
+      
+      float hitSize=handSize/2;
+     
+       for(i=0; i<2; i++){
+         if(i==0){
+           //top
+           
+           HandLeft hl=new HandLeft(tl.x, tl.y, false);
+           HandRight hr=new HandRight(tr.x, tr.y, false);
+           
+         }else if(i==1){
+           //bottem
+           HandLeft hl=new HandLeft(bl.x, bl.y, false);
+           HandRight hr=new HandRight(br.x, br.y, false);           
+         }
+         
+       };
+
+       boolean rightHit=false;
+       boolean leftHit=false;
+       
+       leftHit=gestureActions.zoomGestureActivation(left.x, left.y, tl,  bl, hitSize);
+       rightHit=gestureActions.zoomGestureActivation(right.x, right.y, tr,  br, hitSize);
+       
+
+       if(demoModus){
+        HandLeft demo=new HandLeft(bl.x, bl.y, true); 
+        leftHit=true;
+       } 
+        
+       handSvgRuser.setStroke(color(255));
+       handSvgLuser.setStroke(color(255));
+       
+       if(rightHit)  handSvgRuser.setStroke(handFeedBack);
+       if(leftHit)  handSvgLuser.setStroke(handFeedBack);
+       
+       if(leftHit && rightHit){
+           boolean timed = timer.setTimer(0, 0, 100);
+           if(timed){
+             timer.activeId=-1;
+             if(demoModus){
+                left.x=-offset*s;
+                left.y=offset*s;
+              }; 
+             distXorg=right.x-left.x;
+             distYorg=right.y-left.y;
+             deltaOrg = dist(left.x, left.y, right.x, right.y);
+             isScaling=true;
+           }
+
+         
+       };
+       
+       
+
    };
+   
+   void setScale(PVector left, PVector right, float offset){
+    
+     if(demoModus){
+       left.x=-offset*s;
+       left.y=offset*s;
+    }; 
+
+     float distX=right.x-left.x;
+     float distY=right.y-left.y;
+     
+     sX=distX/distXorg;
+     sY=distY/distYorg;
+     
+     float deltaNew=dist(left.x, left.y, right.x, right.y);
+     println(deltaOrg/deltaNew);
+     if( (deltaOrg/deltaNew)>0.99 && (deltaOrg/deltaNew)<1.01 ){
+       
+       boolean timed = timer.setTimer(0, 0, 101);
+           if(timed){
+             isScaling=false;
+             timer.activeId=-1;
+             deltaOrg=0;
+           }
+             
+       
+     }else{
+       timer.activeId=-1;
+     };
+     
+     deltaOrg=deltaNew;
+
+   }
  
   
 }
