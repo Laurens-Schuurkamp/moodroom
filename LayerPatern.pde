@@ -13,20 +13,15 @@ class LayerPatern{
  
  float strokeWidth=1;
  String activeAction="none";
- 
- boolean isScaling=false;
- float deltaOrg=0;
- float distXorg=0;
- float distYorg=0;
+
+  
+ //float offset=220*s;
  
  String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
  
- int densityX=24;
- int densityY=24;
- float wP=24;
- float hP=24;
- float sX=1.0;
- float sY=1.0;
+ PVector density=new PVector(50,50);
+ PVector dims=new PVector(50,50);
+ PVector scaling=new PVector(1,1);
  
  PShape svgRectangle = loadShape("data/gui/primitives/primitives_rectangle.svg");
  PShape svgEllipse = loadShape("data/gui/primitives/primitives_ellipse.svg");
@@ -64,12 +59,12 @@ class LayerPatern{
        stroke(cs);
        translate(-width/2, -height/2);
        
-       float widthP=wP*sX;
-       float heightP=hP*sY;
+       float widthP=dims.x*scaling.x;
+       float heightP=dims.y*scaling.y;
        
-       for (int y=0;y < height; y+=densityY)
+       for (int y=0;y < height; y+=density.y)
         {
-          for (int x=0;x < width; x+=densityX)
+          for (int x=0;x < width; x+=density.x)
           {
             
             if(activePrimitive=="ellipse"){
@@ -82,7 +77,7 @@ class LayerPatern{
                 
               popMatrix();
             }else if(activePrimitive=="rectangle"){
-               //rect(x-wP/2, y-hP/2, wP, hP);
+               //rect(x-dims.x/2, y-hP/2, dims.x, hP);
               pushMatrix();
                 translate(x,y);
                 shape(svgRectangle, 0, 0, widthP, heightP);
@@ -91,7 +86,7 @@ class LayerPatern{
                 svgRectangle.setFill(cf);
               popMatrix(); 
             }else if(activePrimitive=="triangle"){
-               //triangle(x-wP/2, y+hP/2, x+wP/2, y+hP/2, x, y-hP/2);
+               //triangle(x-dims.x/2, y+hP/2, x+/2, y+hP/2, x, y-hP/2);
                pushMatrix();
                 translate(x,y);
                 shape(svgTriangle, 0, 0, widthP, heightP);
@@ -151,7 +146,12 @@ class LayerPatern{
      if(action=="primitives"){
          drawPrimitivesPicker(left, right);
      }else if (action=="size"){
-       setScaling(left, right);
+       boolean isScaling=gestureActions.scalingActive(left, right);
+       
+       if(isScaling ){
+         scaling=gestureActions.setScale(left, right, scaling);
+       }
+       
      }
    
    
@@ -198,110 +198,9 @@ class LayerPatern{
 
    };
    
-   void setScaling(PVector left, PVector right){
-     
-     float offset=220*s;
-     
-     if(isScaling){
-       setScale(left, right, offset);
-       return;
-     }
-     
-     int i;
-     
-      PVector tl=new PVector(-offset, -offset);
-      PVector bl=new PVector(-offset, offset);
-      
-      PVector tr=new PVector(offset, -offset);
-      PVector br=new PVector(offset, offset);
-      
-      float hitSize=handSize/2;
-     
-       for(i=0; i<2; i++){
-         if(i==0){
-           //top
-           
-           HandLeft hl=new HandLeft(tl.x, tl.y, false);
-           HandRight hr=new HandRight(tr.x, tr.y, false);
-           
-         }else if(i==1){
-           //bottem
-           HandLeft hl=new HandLeft(bl.x, bl.y, false);
-           HandRight hr=new HandRight(br.x, br.y, false);           
-         }
-         
-       };
-
-       
-       boolean leftHit=gestureActions.zoomGestureActivation(left.x, left.y, tl,  bl, hitSize);
-       boolean rightHit=gestureActions.zoomGestureActivation(right.x, right.y, tr,  br, hitSize);
-       
-
-       if(demoModus){
-        HandLeft demo=new HandLeft(bl.x, bl.y, true); 
-        leftHit=true;
-       } 
-        
-       handSvgRuser.setStroke(color(255));
-       handSvgLuser.setStroke(color(255));
-       
-       if(rightHit)  handSvgRuser.setStroke(handFeedBack);
-       if(leftHit)  handSvgLuser.setStroke(handFeedBack);
-       
-       if(leftHit && rightHit){
-           boolean timed = timer.setTimer(0, 0, "scaleActivation");
-           if(timed){
-             timer.activeId="none";
-             if(demoModus){
-                left.x=-offset*s;
-                left.y=offset*s;
-              }; 
-             distXorg=right.x-left.x;
-             distYorg=right.y-left.y;
-             deltaOrg = dist(left.x, left.y, right.x, right.y);
-             isScaling=true;
-           }
-
-         
-       };
-       
-       
-
-   };
    
-   void setScale(PVector left, PVector right, float offset){
-    
-     if(demoModus){
-       left.x=-offset*s;
-       left.y=offset*s;
-    }; 
-
-     float distX=right.x-left.x;
-     float distY=right.y-left.y;
-     
-     sX=distX/distXorg;
-     sY=distY/distYorg;
-     
-     float deltaNew=dist(left.x, left.y, right.x, right.y);
-     //println(deltaOrg/deltaNew);
-     
-     if( (deltaOrg/deltaNew)>(1-sensitivity) && (deltaOrg/deltaNew)<(1+sensitivity) ){
-       
-       boolean timed = timer.setTimer(0, 0, "scale");
-           if(timed){
-             subMenu.activeAction="none";
-             isScaling=false;
-             timer.activeId="none";
-             deltaOrg=0;
-             
-           }
-     }else{
-       timer.activeId="none";
-     };
-     
-     deltaOrg=deltaNew;
-
-   }
+   
+   
  
   
 }

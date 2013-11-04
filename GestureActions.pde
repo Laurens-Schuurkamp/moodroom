@@ -5,6 +5,13 @@ class GestureActions
   PVector lastLeft=new PVector(0,0);
   PVector lastRight=new PVector(0,0);
   
+  float deltaOrg=0;
+  float distXorg=0;
+  float distYorg=0;
+  
+  float offset=220*s;
+  boolean isScaling=false;
+  
   GestureActions(){
     println("gestureScaling constopuctor");
     
@@ -135,6 +142,106 @@ class GestureActions
     int alpha=96;   
     return alpha;
   };
+  
+  
+  boolean scalingActive(PVector left, PVector right){
+     
+     if(isScaling)return true; 
+
+      PVector tl=new PVector(-offset, -offset);
+      PVector bl=new PVector(-offset, offset);
+      
+      PVector tr=new PVector(offset, -offset);
+      PVector br=new PVector(offset, offset);
+      
+      float hitSize=handSize/2;
+     
+       for(int i=0; i<2; i++){
+         if(i==0){
+           //top
+           
+           HandLeft hl=new HandLeft(tl.x, tl.y, false);
+           HandRight hr=new HandRight(tr.x, tr.y, false);
+           
+         }else if(i==1){
+           //bottem
+           HandLeft hl=new HandLeft(bl.x, bl.y, false);
+           HandRight hr=new HandRight(br.x, br.y, false);           
+         }
+         
+       };
+
+       boolean leftHit=gestureActions.zoomGestureActivation(left.x, left.y, tl,  bl, hitSize);
+       boolean rightHit=gestureActions.zoomGestureActivation(right.x, right.y, tr,  br, hitSize);
+       
+
+       if(demoModus){
+        HandLeft demo=new HandLeft(bl.x, bl.y, true); 
+        leftHit=true;
+       } 
+        
+       handSvgRuser.setStroke(color(255));
+       handSvgLuser.setStroke(color(255));
+       
+       if(rightHit)  handSvgRuser.setStroke(handFeedBack);
+       if(leftHit)  handSvgLuser.setStroke(handFeedBack);
+       
+       if(leftHit && rightHit){
+           boolean timed = timer.setTimer(0, 0, "scaleActivation");
+           if(timed){
+             timer.activeId="none";
+             if(demoModus){
+                left.x=-offset*s;
+                left.y=offset*s;
+              }; 
+             distXorg=right.x-left.x;
+             distYorg=right.y-left.y;
+             deltaOrg = dist(left.x, left.y, right.x, right.y);
+             isScaling=true;
+           }
+
+         
+       };
+       
+       return isScaling;
+
+   };
+   
+   PVector setScale(PVector left, PVector right, PVector scaling){
+    
+     
+     if(demoModus){
+       left.x=-offset*s;
+       left.y=offset*s;
+    }; 
+
+     float distX=right.x-left.x;
+     float distY=right.y-left.y;
+     
+     scaling.x=distX/distXorg;
+     scaling.y=distY/distYorg;
+     
+     float deltaNew=dist(left.x, left.y, right.x, right.y);
+     //println(deltaOrg/deltaNew);
+     
+     if( (deltaOrg/deltaNew)>(1-sensitivity) && (deltaOrg/deltaNew)<(1+sensitivity) ){
+       
+       boolean timed = timer.setTimer(0, 0, "scale");
+           if(timed){
+             subMenu.activeAction="none";
+             //isScaling=false;
+             timer.activeId="none";
+             deltaOrg=0;
+             
+           }
+     }else{
+       timer.activeId="none";
+     };
+     
+     deltaOrg=deltaNew;
+     return scaling;
+
+   }
   
   
 }
