@@ -57,9 +57,9 @@ public class ControlFrame extends PApplet {
      ;
      
      cp5.addSlider("actionTimer").setRange(0, 3000).setPosition(10,400).setSize(200,16).setValue(mainSettings.getInt("actionTimer"));
+     cp5.addSlider("timerDelay").setRange(0, 2500).setPosition(10,430).setSize(200,16).setValue(mainSettings.getFloat("timerDelay"));
+     cp5.addSlider("sensitivity").setRange(0, 1).setPosition(10,460).setSize(200,16).setValue(mainSettings.getFloat("sensitivity"));
 
-     
-     
      framerate = cp5.addTextlabel("framerate")
                     .setText("framerate =")
                     .setPosition(10,h-100)
@@ -148,6 +148,24 @@ public class ControlFrame extends PApplet {
     }
     
     timer.timer=value;
+
+  }
+  
+  void timerDelay(int value) {
+    if(init==false){
+       return;
+    }
+    
+    timer.delay=value;
+
+  }
+  
+  void sensitivity(float value) {
+    if(init==false){
+       return;
+    }
+    
+    sensitivity=value;
 
   }
   

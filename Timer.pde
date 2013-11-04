@@ -3,6 +3,7 @@ class Timer{
  int timer = 2000;
  int timeActivation;
  int activeId=-1;
+ int delay = 500;
  
  Timer(){
   println("timer constructor");
@@ -14,7 +15,7 @@ class Timer{
    
    
     if(id!=activeId){
-       timeActivation=millis();
+       timeActivation=millis()+delay;
        activeId=id;  
     } 
 

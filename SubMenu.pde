@@ -3,14 +3,14 @@ class SubMenu{
 
  ArrayList subMenuList=new ArrayList();
  
- String actionsBckgr []={"color","transparency", "return"};
+ String actionsBckgr []={"color", "return"};
  String actionsPatern []={ "stroke", "size", "color", "primitives", "disable", "return"};
  String actionsPointcloud []={"size", "color", "primitives", "return"};
  String actionsSound []={"primitives", "vibration", "return"};
 
  float w, h, x, y;
  boolean activated=true;
- float sSvg=0.65;
+ float sSvg=0.60;
  String activeAction="none";
  
  MenuItem back;
@@ -50,7 +50,7 @@ class SubMenu{
    float widthTotal=(w*actions.length)+(padding*actions.length)+padding;
    for(int j=0; j<actions.length; j++){
           
-          float x= -widthTotal/2 + (j*(w+padding));
+          float x= -widthTotal/2 + (j*(w+padding)) +padding;
           float y= -h/2;
           MenuItem item=new MenuItem(actions[j], j, x, y, sSvg);
           layerActions.actions.add(item); 
@@ -124,7 +124,7 @@ class SubMenu{
     boolean leftHit=gestureActions.checkSingleHitId(back, left, w, h);
     boolean rightHit=gestureActions.checkSingleHitId(back, right, w, h);
    
-             if(leftHit && rightHit){
+             if(leftHit || rightHit){
                boolean timed = timer.setTimer(back.x, back.y, back.id);
                if(timed){
                     timer.activeId=-1;
@@ -135,28 +135,41 @@ class SubMenu{
       
              };  
 
-    if(activeLayer=="patern"){
-      
-      if(action=="primitives" || action =="size"){
-        layerPatern.setAction(left, right, action);
-      }else if(action=="color"){
-          color c = gestureActions.setColor(left, right, layerPatern.cf);
-          layerPatern.cf=c;
-      }else{
-        activeAction="none";
-        mainMenu.activeLayer="none";
-      }
-
-    }else if(action=="color"){
-        if(activeLayer=="bckgr"){
-          color c = gestureActions.setColor(left, right, colorBckgr);
-          colorBckgr=c;
-        }
-    
-    }else if( activeAction=="none" || activeAction=="return"){
+    if( activeAction=="none" || activeAction=="return"){
       activeAction="none";
       mainMenu.activeLayer="none";
+      return;
     };
+
+    if(action=="color"){
+      color c=gestureActions.setColor(left, right);
+      if(activeLayer=="bckgr"){
+          colorBckgr=c;
+      }else if(activeLayer=="patern"){
+          layerPatern.cf=c;
+        
+      }
+      
+    }else if(action=="primitives"){
+      if(activeLayer=="patern"){
+        layerPatern.setAction(left, right, action);
+      }else{
+        return;
+      }
+      
+    }else if(action=="size"){
+      if(activeLayer=="patern"){
+        layerPatern.setAction(left, right, action);
+      }else{
+        return;
+      }
+      
+    }
+
+
+    
+    
+
     
   };
 

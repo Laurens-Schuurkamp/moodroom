@@ -31,6 +31,7 @@ SubMenu subMenu;
 Skelleton skelleton;
 PointCloud3D pointCloud3D;
 GestureActions gestureActions;
+ColorPicker colorPicker;
 Timer timer;
 
 LayerPatern layerPatern;
@@ -61,7 +62,7 @@ float        rotX = radians(180);  // by default rotate the hole scene 180deg ar
 float        rotY = radians(0);
 
 float s;  //screen scale
-float padding=24*s;
+int padding=24;
 
 String layers[]={"bckgr", "patern", "pointcloud", "sound"};
 
@@ -93,6 +94,7 @@ boolean init=false;
 
 PVector leftPos;
 PVector rightPos;
+float sensitivity=0.1;
 color handFeedBack=color(255,0,0);
 
 color colorBckgr=color(0);
@@ -118,6 +120,7 @@ void setup()
 
   size(screenWidth, screenHeight, OPENGL);
   zoom=screenHeight/640;
+  padding=parseInt(24*s);
   
   println("demoModus ="+mainSettings.getString("demoModus"));
   if( mainSettings.getString("demoModus").equals("true")){

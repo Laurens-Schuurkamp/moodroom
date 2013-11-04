@@ -47,7 +47,7 @@ class LayerPatern{
     int i;
     for(i=0; i<primitives.length; i++){
       
-      float x= -widthTotal/2 + (i*(w+padding));
+      float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
       MenuItem item=new MenuItem(primitives[i], i, x, y, sSvg);
       primitivesList.add(item); 
@@ -181,13 +181,14 @@ class LayerPatern{
    
        if(leftHit || rightHit){
          activePrimitive=item.item;
-//         boolean timed = timer.setTimer(item.x, item.y, item.id);
-//         if(timed){
-//                // set menu action
-//                activePrimitive=item.item;
-//                timer.activeId=-1;
-//                 
-//          };
+         boolean timed = timer.setTimer(item.x, item.y, item.id);
+         if(timed){
+                // set menu action
+                activePrimitive=item.item;
+                subMenu.activeAction="none";
+                timer.activeId=-1;
+                 
+          };
 
        };     
 
@@ -285,7 +286,7 @@ class LayerPatern{
      float deltaNew=dist(left.x, left.y, right.x, right.y);
      //println(deltaOrg/deltaNew);
      
-     if( (deltaOrg/deltaNew)>0.99 && (deltaOrg/deltaNew)<1.01 ){
+     if( (deltaOrg/deltaNew)>(1-sensitivity) && (deltaOrg/deltaNew)<(1+sensitivity) ){
        
        boolean timed = timer.setTimer(0, 0, 101);
            if(timed){

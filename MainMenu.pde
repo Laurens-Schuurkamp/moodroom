@@ -7,7 +7,7 @@ class MainMenu
   float w, h, x, y;
 
   //int rTimer=66;
-  float sSvg=0.9;
+  float sSvg=0.8;
 
   MainMenu(){
     println("mainMenu constructor");
@@ -20,7 +20,7 @@ class MainMenu
     int i;
     for(i=0; i<layers.length; i++){
       
-      float x= -widthTotal/2 + (i*(w+padding));
+      float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
       MenuItem item=new MenuItem(layers[i], i, x, y, sSvg);
       menuList.add(item); 
@@ -55,7 +55,7 @@ class MainMenu
       boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
       boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
        
-       if(leftHit && rightHit){
+       if(leftHit || rightHit){
          boolean timed = timer.setTimer(item.x, item.y, item.id);
          if(timed){
                 // set menu action
@@ -63,7 +63,9 @@ class MainMenu
                 timer.activeId=-1; 
           };
 
-       };     
+       };
+  
+       
 
         shape(item.iconSvg, item.x, item.y);
       };

@@ -2,6 +2,8 @@ class PointCloud3D
 {
 
   boolean activated=false;
+  color cf = color(255);
+  color cs = color (255);
 
   PointCloud3D(){
     println("PointCloud3D constructor");

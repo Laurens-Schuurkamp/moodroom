@@ -9,6 +9,8 @@
         port="3000"
         qrActive="false"
 				actionTimer="2000"
+				timerDelay="500"
+				sensitivity="0.01"
         
     />
     
