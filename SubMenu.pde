@@ -4,7 +4,7 @@ class SubMenu{
  ArrayList subMenuList=new ArrayList();
  
  String actionsBckgr []={"color", "return"};
- String actionsPatern []={ "stroke", "size", "color", "primitives", "disable", "return"};
+ String actionsPatern []={ "stroke", "size", "primitives", "color", "disable", "return"};
  String actionsPointcloud []={"size", "color", "primitives", "return"};
  String actionsSound []={"primitives", "vibration", "return"};
 
@@ -67,9 +67,7 @@ class SubMenu{
         setLayerActions(activeAction, activeLayer, left, right);
         return;
       };
-      
-      
-      
+
       //activated  =  gestureActions.checkMenuActive(left, right, h);
       //if(activated==false)return;
 
@@ -103,9 +101,20 @@ class SubMenu{
 
                 };
       
-             };     
+             };
+             
+             shape(item.iconSvg, item.x, item.y);
+             
+             //show inactives 
+//             if( activeLayer=="patern" && layerPatern.activePrimitive=="none"){
+//                if(item.item!="primitives" ){
+//                    item.iconSvg.setFill(color(255, 96));
+//                }
+//             }else{
+//          
+//             }      
 
-              shape(item.iconSvg, item.x, item.y);
+              
            };
 
         };
@@ -142,11 +151,11 @@ class SubMenu{
     };
 
     if(action=="color"){
-      color c=gestureActions.setColor(left, right);
+      
       if(activeLayer=="bckgr"){
-          colorBckgr=c;
+          colorBckgr=gestureActions.setColor(left, right, colorBckgr);
       }else if(activeLayer=="patern"){
-          layerPatern.cf=c;
+          layerPatern.cf=gestureActions.setColor(left, right, layerPatern.cf);
         
       }
       

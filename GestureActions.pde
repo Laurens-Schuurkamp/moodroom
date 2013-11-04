@@ -10,6 +10,11 @@ class GestureActions
   float distYorg=0;
   
   float offset=220*s;
+  PVector tl=new PVector(-offset, -offset);
+  PVector bl=new PVector(-offset, offset);
+  
+  PVector tr=new PVector(offset, -offset);
+  PVector br=new PVector(offset, offset);
   boolean isScaling=false;
   
   GestureActions(){
@@ -59,59 +64,25 @@ class GestureActions
 
   }
   
-  boolean zoomGestureActivation(float x, float y, PVector top,  PVector bottom, float hitSize){
+  boolean zoomGestureActivation(PVector hand, PVector top, PVector bottom, float hitSize){
     
         boolean hit=false;  
-        //right
-       if ( x - (width/2) > top.x-hitSize && x - (width/2) < top.x+hitSize && y-(height/2) > top.y-hitSize && y-(height/2) < top.y+hitSize ) {
+        //top position
+       if ( hand.x - (width/2) > top.x-hitSize && hand.x - (width/2) < top.x+hitSize && hand.y-(height/2) > top.y-hitSize && hand.y-(height/2) < top.y+hitSize ) {
             hit=true;    
-        }else if ( x - (width/2) > bottom.x-hitSize && x - (width/2) < bottom.x+hitSize && y-(height/2) > bottom.y-hitSize && y-(height/2) < bottom.y+hitSize ) {
+        }else if ( hand.x - (width/2) > bottom.x-hitSize && hand.x - (width/2) < bottom.x+hitSize && hand.y-(height/2) > bottom.y-hitSize && hand.y-(height/2) < bottom.y+hitSize ) {
             hit=true;
         };
 
     
     return hit;
   }
-  
-  
-  
-  
-  color setColor(PVector left, PVector right){
-    float sens=sensitivity*handSize;
-    boolean timed=false;
-    boolean timerLeft=false;
-    boolean timerRight=false;
-    if(demoModus){
-      left.x=random(1000);
-      left.y=random(1000);
-    };
-    
-    if( left.x>lastLeft.x-sens && left.x<lastLeft.x+sens && left.y>lastLeft.y-sens && left.y<lastLeft.y+sens){
-       timerLeft=true;     
-     }
-     
-     if( right.x>lastRight.x-sens && right.x<lastRight.x+sens &&  right.y>lastRight.y-sens && right.y<lastRight.y+sens){
-       timerRight=true;           
-     }
-    
-    if(timerLeft){
-       timed = timer.setTimer(left.x-(width/2)-(handSize/2), left.y-(height/2)-(handSize/2), "left");   
-    }else if(timerRight){
-       timed = timer.setTimer(right.x-(width/2)-(handSize/2), right.y-(height/2)-(handSize/2), "right");
-    }else{
-       timer.activeId="none";
-    } 
 
-    
-    if(timed){
-            // set menu action
-            subMenu.activeAction="none";
-            timer.activeId="none"; 
-      };
+  color setColor(PVector left, PVector right, color c){
+      
+    // check steady hand timer
+    if(checkHandsSteady(left, right, true)) return c;
 
-    
-
-    color c=color(0);;
     pushMatrix();
     translate(-width/2, -height/2, 0);
       pushStyle();
@@ -146,20 +117,15 @@ class GestureActions
   
   boolean scalingActive(PVector left, PVector right){
      
-     if(isScaling)return true; 
-
-      PVector tl=new PVector(-offset, -offset);
-      PVector bl=new PVector(-offset, offset);
-      
-      PVector tr=new PVector(offset, -offset);
-      PVector br=new PVector(offset, offset);
+     if(isScaling){
+       return true; 
+     }
       
       float hitSize=handSize/2;
      
        for(int i=0; i<2; i++){
          if(i==0){
            //top
-           
            HandLeft hl=new HandLeft(tl.x, tl.y, false);
            HandRight hr=new HandRight(tr.x, tr.y, false);
            
@@ -170,30 +136,26 @@ class GestureActions
          }
          
        };
-
-       boolean leftHit=gestureActions.zoomGestureActivation(left.x, left.y, tl,  bl, hitSize);
-       boolean rightHit=gestureActions.zoomGestureActivation(right.x, right.y, tr,  br, hitSize);
        
-
        if(demoModus){
-        HandLeft demo=new HandLeft(bl.x, bl.y, true); 
-        leftHit=true;
-       } 
-        
-       handSvgRuser.setStroke(color(255));
-       handSvgLuser.setStroke(color(255));
+         HandLeft demo=new HandLeft(bl.x, bl.y, true); 
+         left.x=bl.x + (width/2);
+         left.y=bl.y + (height/2);
+       }
+
+       boolean leftHit=gestureActions.zoomGestureActivation(left, tl,  bl, hitSize);
+       boolean rightHit=gestureActions.zoomGestureActivation(right, tr,  br, hitSize);
+
+       handSvgRuser.setFill(color(0));
+       handSvgLuser.setFill(color(0));
        
-       if(rightHit)  handSvgRuser.setStroke(handFeedBack);
-       if(leftHit)  handSvgLuser.setStroke(handFeedBack);
+       if(rightHit)  handSvgRuser.setFill(handFeedBack);
+       if(leftHit)  handSvgLuser.setFill(handFeedBack);
        
        if(leftHit && rightHit){
            boolean timed = timer.setTimer(0, 0, "scaleActivation");
            if(timed){
              timer.activeId="none";
-             if(demoModus){
-                left.x=-offset*s;
-                left.y=offset*s;
-              }; 
              distXorg=right.x-left.x;
              distYorg=right.y-left.y;
              deltaOrg = dist(left.x, left.y, right.x, right.y);
@@ -208,43 +170,118 @@ class GestureActions
    };
    
    PVector setScale(PVector left, PVector right, PVector scaling){
-    
+       
+       if(demoModus){
+         HandLeft demo=new HandLeft(bl.x, bl.y, true); 
+         left.x=bl.x + (width/2);
+         left.y=bl.y + (height/2);
+       }  
      
-     if(demoModus){
-       left.x=-offset*s;
-       left.y=offset*s;
-    }; 
+     
+     if(checkHandsSteady(left, right, false)){
+       isScaling=false;
+       return scaling;
+     }; 
+
+     handSvgRuser.setFill(handFeedBack);
+     handSvgLuser.setFill(handFeedBack);   
 
      float distX=right.x-left.x;
      float distY=right.y-left.y;
      
      scaling.x=distX/distXorg;
      scaling.y=distY/distYorg;
-     
-     float deltaNew=dist(left.x, left.y, right.x, right.y);
-     //println(deltaOrg/deltaNew);
-     
-     if( (deltaOrg/deltaNew)>(1-sensitivity) && (deltaOrg/deltaNew)<(1+sensitivity) ){
-       
-       boolean timed = timer.setTimer(0, 0, "scale");
-           if(timed){
-             subMenu.activeAction="none";
-             //isScaling=false;
-             timer.activeId="none";
-             deltaOrg=0;
-             
-           }
-     }else{
-       timer.activeId="none";
-     };
-     
-     deltaOrg=deltaNew;
+    
+
+    lastLeft=left;
+    lastRight=right;
      return scaling;
 
    }
+   
+   boolean checkHandsSteady(PVector left, PVector right, boolean single){
+     
+     
+      float sens=sensitivity*handSize;
+      boolean timed=false;
+      boolean timerLeft=false;
+      boolean timerRight=false;
+   
+    if(demoModus && single){
+      left.x=random(1000);
+      left.y=random(1000);
+    };
+    
+    if( left.x>lastLeft.x-sens && left.x<lastLeft.x+sens && left.y>lastLeft.y-sens && left.y<lastLeft.y+sens){
+       timerLeft=true;     
+     }
+     
+     if( right.x>lastRight.x-sens && right.x<lastRight.x+sens &&  right.y>lastRight.y-sens && right.y<lastRight.y+sens){
+       timerRight=true;           
+     }
+    
+    if(single){
+      if(timerLeft){
+         timed = timer.setTimer(left.x-(width/2)-(handSize/2), left.y-(height/2)-(handSize/2), "left");   
+      }else if(timerRight){
+         timed = timer.setTimer(right.x-(width/2)-(handSize/2), right.y-(height/2)-(handSize/2), "right");
+      }else{
+         timer.activeId="none";
+      }
+    }else{
+
+       if( timerLeft && timerRight){
+         timed = timer.setTimer(0, 0, "double");
+       }else{
+         timer.activeId="none";
+       }
+     
+    } 
+
+    
+    if(timed){
+        // set menu action
+        subMenu.activeAction="none";
+        timer.activeId="none";
+        return timed; 
+      };
+    
+    return timed;
+  };
   
   
 }
+
+//class hnds
+class HandLeft{
+  
+  HandLeft(float x, float y, boolean user){
+    if(user){
+      shape(handSvgLuser, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
+    }else{
+      shape(handSvgL, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
+    }
+    
+    
+    if (debug) ellipse(x,y,10,10);
+  }
+}
+
+class HandRight{
+  
+    HandRight(float x, float y, boolean user){
+      
+      if(user){
+        shape(handSvgRuser, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
+      }else{
+        shape(handSvgR, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
+      }
+      
+      if (debug) ellipse(x,y,10,10);
+  }
+  
+}
+
 
 
 

@@ -95,7 +95,7 @@ boolean init=false;
 PVector leftPos;
 PVector rightPos;
 float sensitivity=0.1;
-color handFeedBack=color(255,0,0);
+color handFeedBack=color(255);
 
 color colorBckgr=color(0);
 
@@ -446,34 +446,6 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
 }
 
 
-class HandLeft{
-  
-  HandLeft(float x, float y, boolean user){
-    if(user){
-      shape(handSvgLuser, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
-    }else{
-      shape(handSvgL, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
-    }
-    
-    
-    if (debug) ellipse(x,y,10,10);
-  }
-}
-
-class HandRight{
-  
-    HandRight(float x, float y, boolean user){
-      
-      if(user){
-        shape(handSvgRuser, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
-      }else{
-        shape(handSvgR, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
-      }
-      
-      if (debug) ellipse(x,y,10,10);
-  }
-  
-}
 
 
 

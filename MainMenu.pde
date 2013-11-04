@@ -86,7 +86,8 @@ class MenuItem{
   PImage icon;
   float x, y;
   PShape iconSvg;
-  PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg");  
+  PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg"); 
+  color c;
   
   MenuItem(String _item, int _id, float _x, float _y, float sSvg){
     id=_id;
@@ -96,6 +97,7 @@ class MenuItem{
     iconSvg = loadShape("data/gui/menu/icon_"+item+".svg");
     iconSvg.scale(sSvg*s);
     edgeOver.scale(sSvg*s);
+    
   }
   
   

@@ -147,7 +147,6 @@ class LayerPatern{
          drawPrimitivesPicker(left, right);
      }else if (action=="size"){
        boolean isScaling=gestureActions.scalingActive(left, right);
-       
        if(isScaling ){
          scaling=gestureActions.setScale(left, right, scaling);
        }
@@ -189,9 +188,12 @@ class LayerPatern{
                  
           };
 
-       };     
-
+       };
+  
         shape(item.iconSvg, item.x, item.y);
+            
+
+        
       };
       popMatrix();
 
