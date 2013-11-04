@@ -2,7 +2,9 @@ class GestureActions
 {
   
   boolean activated=false;
-
+  PVector lastLeft=new PVector(0,0);
+  PVector lastRight=new PVector(0,0);
+  
   GestureActions(){
     println("gestureScaling constopuctor");
     
@@ -15,7 +17,7 @@ class GestureActions
     if ( ( left.y-(height/2) > -h/2 && left.y-(height/2) < h/2 ) || ( right.y-(height/2) > -h/2 && right.y-(height/2) < h/2 )) {
       return true;
     }else{
-      timer.activeId=-1; 
+      timer.activeId="none"; 
       return false;
      
     }
@@ -65,7 +67,42 @@ class GestureActions
   }
   
   
+  
+  
   color setColor(PVector left, PVector right){
+    float sens=sensitivity*handSize;
+    boolean timed=false;
+    boolean timerLeft=false;
+    boolean timerRight=false;
+    if(demoModus){
+      left.x=random(1000);
+      left.y=random(1000);
+    };
+    
+    if( left.x>lastLeft.x-sens && left.x<lastLeft.x+sens && left.y>lastLeft.y-sens && left.y<lastLeft.y+sens){
+       timerLeft=true;     
+     }
+     
+     if( right.x>lastRight.x-sens && right.x<lastRight.x+sens &&  right.y>lastRight.y-sens && right.y<lastRight.y+sens){
+       timerRight=true;           
+     }
+    
+    if(timerLeft){
+       timed = timer.setTimer(left.x-(width/2)-(handSize/2), left.y-(height/2)-(handSize/2), "left");   
+    }else if(timerRight){
+       timed = timer.setTimer(right.x-(width/2)-(handSize/2), right.y-(height/2)-(handSize/2), "right");
+    }else{
+       timer.activeId="none";
+    } 
+
+    
+    if(timed){
+            // set menu action
+            subMenu.activeAction="none";
+            timer.activeId="none"; 
+      };
+
+    
 
     color c=color(0);;
     pushMatrix();
@@ -87,7 +124,8 @@ class GestureActions
     
        popStyle();
      popMatrix();
-
+    lastLeft=left;
+    lastRight=right;
     return c;
   };
   

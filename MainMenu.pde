@@ -56,11 +56,11 @@ class MainMenu
       boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
        
        if(leftHit || rightHit){
-         boolean timed = timer.setTimer(item.x, item.y, item.id);
+         boolean timed = timer.setTimer(item.x, item.y, item.item);
          if(timed){
                 // set menu action
                 activeLayer=item.item;
-                timer.activeId=-1; 
+                timer.activeId="none"; 
           };
 
        };

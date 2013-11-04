@@ -2,7 +2,7 @@ class Timer{
   
  int timer = 2000;
  int timeActivation;
- int activeId=-1;
+ String activeId="none";
  int delay = 500;
  
  Timer(){
@@ -11,7 +11,7 @@ class Timer{
  } 
 
  
- boolean setTimer(float x, float y, int id) {
+ boolean setTimer(float x, float y, String id) {
    
    
     if(id!=activeId){
@@ -25,7 +25,7 @@ class Timer{
     
     // Has five seconds passed?
     if (passedTime > timer) {
-      activeId=-1;
+      activeId="none";
       return true;
       
     }else{

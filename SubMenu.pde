@@ -96,7 +96,7 @@ class SubMenu{
               boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
    
              if(leftHit && rightHit){
-               boolean timed = timer.setTimer(item.x, item.y, item.id);
+               boolean timed = timer.setTimer(item.x, item.y, item.item);
                if(timed){
                     // set menu action
                     activeAction=item.item;
@@ -125,9 +125,9 @@ class SubMenu{
     boolean rightHit=gestureActions.checkSingleHitId(back, right, w, h);
    
              if(leftHit || rightHit){
-               boolean timed = timer.setTimer(back.x, back.y, back.id);
+               boolean timed = timer.setTimer(back.x, back.y, back.item);
                if(timed){
-                    timer.activeId=-1;
+                    timer.activeId="none";
                     activeAction="none";
                     return;
 

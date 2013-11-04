@@ -16,16 +16,15 @@ class LayerPatern{
  
  boolean isScaling=false;
  float deltaOrg=0;
- 
  float distXorg=0;
  float distYorg=0;
  
  String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
  
- int densityX=50;
- int densityY=50;
- float wP=25;
- float hP=25;
+ int densityX=24;
+ int densityY=24;
+ float wP=24;
+ float hP=24;
  float sX=1.0;
  float sY=1.0;
  
@@ -151,7 +150,7 @@ class LayerPatern{
  void setAction(PVector left, PVector right, String action){
      if(action=="primitives"){
          drawPrimitivesPicker(left, right);
-     }else{
+     }else if (action=="size"){
        setScaling(left, right);
      }
    
@@ -181,12 +180,12 @@ class LayerPatern{
    
        if(leftHit || rightHit){
          activePrimitive=item.item;
-         boolean timed = timer.setTimer(item.x, item.y, item.id);
+         boolean timed = timer.setTimer(item.x, item.y, item.item);
          if(timed){
                 // set menu action
                 activePrimitive=item.item;
                 subMenu.activeAction="none";
-                timer.activeId=-1;
+                timer.activeId="none";
                  
           };
 
@@ -250,9 +249,9 @@ class LayerPatern{
        if(leftHit)  handSvgLuser.setStroke(handFeedBack);
        
        if(leftHit && rightHit){
-           boolean timed = timer.setTimer(0, 0, 100);
+           boolean timed = timer.setTimer(0, 0, "scaleActivation");
            if(timed){
-             timer.activeId=-1;
+             timer.activeId="none";
              if(demoModus){
                 left.x=-offset*s;
                 left.y=offset*s;
@@ -288,16 +287,16 @@ class LayerPatern{
      
      if( (deltaOrg/deltaNew)>(1-sensitivity) && (deltaOrg/deltaNew)<(1+sensitivity) ){
        
-       boolean timed = timer.setTimer(0, 0, 101);
+       boolean timed = timer.setTimer(0, 0, "scale");
            if(timed){
              subMenu.activeAction="none";
              isScaling=false;
-             timer.activeId=-1;
+             timer.activeId="none";
              deltaOrg=0;
              
            }
      }else{
-       timer.activeId=-1;
+       timer.activeId="none";
      };
      
      deltaOrg=deltaNew;
