@@ -10,7 +10,7 @@ class ActionsMenu
     "color", "transparency", "return"
   };
   String actionsStroke [] = {
-    "color", "width", "return"
+    "strokecolor", "strokewidth", "return"
   };
   String actionsSize [] = {
     "density", "size", "return"
@@ -125,15 +125,25 @@ class ActionsMenu
   };
 
   void setActions(String action, String activeLayer, PVector left, PVector right) {
-      if(action=="size"){
+      
+    if(action=="size"){
          boolean isActive=gestureActions.scalingActive(left, right);
                
          if(isActive && activeLayer=="patern"){
            layerPatern.scaling=gestureActions.setScale(left, right, layerPatern.scaling);
-         }
+         }else if(isActive && activeLayer=="pointcloud"){
+           PVector w=gestureActions.setScale(left, right, layerPatern.strokeW);
+             w.x=w.x*50;
+             w.y=w.y*50;
+             if(w.x<1) w.x=1;
+             if(w.y<1) w.y=1;
+                      
+           pointCloud3D.strokeW=w;
+             
+       }
         
       }else if(action=="density"){
-       ; 
+        
         boolean isActive=gestureActions.scalingActive(left, right);
                
          if(isActive && activeLayer=="patern"){
@@ -141,14 +151,51 @@ class ActionsMenu
            if(dens.x<0.25) dens.x=0.25;
            if(dens.y<0.25) dens.y=0.25;
            layerPatern.density=dens;
+         }else if(isActive && activeLayer=="pointcloud"){
+           PVector dens=gestureActions.setScale(left, right, pointCloud3D.density);
+           if(dens.x<0.25) dens.x=0.25;
+           if(dens.y<0.25) dens.y=0.25;
+           pointCloud3D.density=dens;
          }
         
       }else if(action=="color"){
         if(activeLayer=="patern"){
            layerPatern.cf=gestureActions.setColor(left, right, layerPatern.cf);  
+        }else if(activeLayer=="pointcloud"){
+           pointCloud3D.cs=gestureActions.setColor(left, right, pointCloud3D.cs);  
         }
         
-      };
+      }else if(action=="strokewidth"){
+          
+          boolean isActive=gestureActions.scalingActive(left, right);
+                 
+           if(isActive && activeLayer=="patern"){
+             PVector w=gestureActions.setScale(left, right, layerPatern.strokeW);
+             w.x=w.x*2;
+             w.y=w.y*2;
+             if(w.x<0.1) w.x=0.1;
+             if(w.y<0.1) w.y=0.1;
+             
+             layerPatern.strokeW=w;
+           }
+
+        
+      }else if(action=="strokecolor"){
+          if(activeLayer=="patern"){
+           layerPatern.cs=gestureActions.setColor(left, right, layerPatern.cf);  
+        }
+
+      }else if(action=="transparency"){
+        if(activeLayer=="patern"){
+           layerPatern.cf=gestureActions.setAlpha(left, right, layerPatern.cf);  
+        }else if(activeLayer=="pointcloud"){
+           pointCloud3D.cs=gestureActions.setAlpha(left, right, pointCloud3D.cs);  
+        }
+
+      }
+
+      
+      
       
   }
   

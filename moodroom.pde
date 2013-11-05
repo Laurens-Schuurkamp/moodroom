@@ -97,7 +97,7 @@ boolean init=false;
 PVector leftPos;
 PVector rightPos;
 float sensitivity=0.1;
-color handFeedBack=color(255);
+color handFeedBack=color(255,0,255);
 
 color colorBckgr=color(0);
 
@@ -267,10 +267,7 @@ void draw() {
         rotateX(rotX);
         rotateY(rotY);
         scale(zoomF);
-        
-        //pointCloud3D.drawPointCloud();
-        
-        
+
         //skelleton  
         for(int i=0;i<userList.length;i++)
         {
@@ -279,6 +276,7 @@ void draw() {
           }
         }
         
+        pointCloud3D.drawPointCloud();
       popMatrix();
 
       //hands

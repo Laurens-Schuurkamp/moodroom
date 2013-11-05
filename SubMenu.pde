@@ -3,8 +3,8 @@ class SubMenu{
  ArrayList subMenuList=new ArrayList();
  
  String actionsBckgr []={ "color","return"};
- String actionsPatern []={ "stroke", "size", "primitives", "color", "disable", "return"};
- String actionsPointcloud []={"size", "color", "primitives", "return"};
+ String actionsPatern []={ "stroke", "size", "primitives", "color", "return"};
+ String actionsPointcloud []={"size", "color", "return"};
  String actionsSound []={"primitives", "vibration", "return"};
 
 
