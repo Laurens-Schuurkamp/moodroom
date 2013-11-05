@@ -42,8 +42,7 @@ class SubMenu{
 
     }
 
-    String subsEmpty [] ={};
-    back = new MenuItem("action", "return", subsEmpty, 1000, width/2-w-padding, height/2-h-padding, sSvg);
+    back = new MenuItem("action", "return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
     float y= -h/2;
 
  };
@@ -55,9 +54,8 @@ class SubMenu{
           
           float x= -widthTotal/2 + (j*(w+padding)) +padding;
           float y= -h/2;
-          String subActions [] = {};
                     
-          MenuItem item=new MenuItem("subMenu", actions[j], subActions, j, x, y, sSvg);
+          MenuItem item=new MenuItem("subMenu", actions[j], j, x, y, sSvg);
           layerActions.actions.add(item); 
           
         }
@@ -71,6 +69,9 @@ class SubMenu{
          if(activeActions=="color" && activeLayer=="bckgr"){
              setBckgrColor(left, right);
              return;
+         }else if(activeActions=="primitives" && activeLayer=="patern"){
+            layerPatern.drawPrimitivesPicker(left, right);
+             return; 
          }else if(activeActions=="return"){
            mainMenu.activeLayer="none";
            activeActions="none";
@@ -107,7 +108,7 @@ class SubMenu{
               boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
               boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
    
-             if(leftHit && rightHit){
+             if(leftHit || rightHit){
                boolean timed = timer.setTimer(item.x, item.y, item.item);
                if(timed){
                     // set menu action

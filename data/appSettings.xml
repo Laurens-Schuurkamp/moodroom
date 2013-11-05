@@ -2,9 +2,9 @@
 <appConfig>
     <mainSettings 
         debug="true" 
-        demoModus="true" 
-        width="1024"
-        height="768"
+        demoModus="false" 
+        width="1280"
+				height="960"
         ip="localhost"
         port="3000"
         qrActive="false"

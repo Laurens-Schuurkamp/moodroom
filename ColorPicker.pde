@@ -4,8 +4,7 @@ public class ColorPicker
   int wrect=30;
   PImage cpImage;
   color colorRemember = color(0);
-  
-  
+    
   public ColorPicker ( int x, int y, int w, int h, int c )
   {
     this.x = x;
@@ -14,7 +13,7 @@ public class ColorPicker
     this.h = h;
     this.c = c;
     
-    cpImage = new PImage( w, h );
+    cpImage = new PImage( w, 150 );
     
     init();
   }
@@ -74,15 +73,21 @@ public class ColorPicker
     }
   }
   
-  color getColor(PVector left, PVector right){
-    //println("x ="+right.x+" --> y ="+right.y); 
-    c = get( parseInt(right.x), parseInt(right.y) );
+  color getColor(PVector hand){
+    
+    
+    int hx = (int) hand.x;
+    int hy = (int) hand.y;
+    
+    // -50 is dark-art
+    c =  cpImage.get( hx, hy-(height/2)+150-50 );
+
      return c;
   } 
   
   public void draw ()
   {
-    image( cpImage, x, height/2-handSize );
+    image( cpImage, x, (height/2)-handSize );
 
   }
 

@@ -19,7 +19,7 @@ class LayerPatern{
  
  String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
  
- PVector density=new PVector(50,50);
+ PVector density=new PVector(1,1);
  PVector dims=new PVector(50,50);
  PVector scaling=new PVector(1,1);
  
@@ -45,7 +45,7 @@ class LayerPatern{
       float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
       
-      MenuItem item=new MenuItem("action", primitives[i], subsPrimitives, i, x, y, sSvg);
+      MenuItem item=new MenuItem("action", primitives[i], i, x, y, sSvg);
       primitivesList.add(item); 
       
     }
@@ -61,13 +61,17 @@ class LayerPatern{
        stroke(cs);
        translate(-width/2, -height/2);
        
+       float stepx=density.x*50;
+       float stepy=density.y*50;
+       
        float widthP=dims.x*scaling.x;
        float heightP=dims.y*scaling.y;
        
-       for (int y=0;y < height; y+=density.y)
+       for (int y=0;y < height; y+=stepy)
         {
-          for (int x=0;x < width; x+=density.x)
+          for (int x=0;x < width; x+=stepx)
           {
+            //float xpos=
             
             if(activePrimitive=="ellipse"){
                pushMatrix();
@@ -141,25 +145,25 @@ class LayerPatern{
  };
 
  
- void setAction(PVector left, PVector right, String action){
-     if(action=="primitives"){
-         drawPrimitivesPicker(left, right);
-     }else if (action=="size"){
-       boolean isActive=gestureActions.scalingActive(left, right);
-       if(isActive ){
-         scaling=gestureActions.setScale(left, right, scaling);
-       }
-       
-     }else if(action=="density"){
-       boolean isActive=gestureActions.scalingActive(left, right);
-       if(isActive ){
-         density=gestureActions.setScale(left, right, density);
-       }
-       
-     }
-   
-   
- }
+// void setAction(PVector left, PVector right, String action){
+//     if(action=="primitives"){
+//         drawPrimitivesPicker(left, right);
+//     }else if (action=="size"){
+//       boolean isActive=gestureActions.scalingActive(left, right);
+//       if(isActive ){
+//         scaling=gestureActions.setScale(left, right, scaling);
+//       }
+//       
+//     }else if(action=="density"){
+//       boolean isActive=gestureActions.scalingActive(left, right);
+//       if(isActive ){
+//         density=gestureActions.setScale(left, right, density);
+//       }
+//       
+//     }
+//   
+//   
+// }
  
  void drawPrimitivesPicker(PVector left, PVector right){
    

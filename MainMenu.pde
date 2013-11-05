@@ -7,8 +7,7 @@ class MainMenu
  String actionsPatern []={ "stroke", "size", "primitives", "color", "disable", "return"};
  String actionsPointcloud []={"size", "color", "primitives", "return"};
  String actionsSound []={"primitives", "vibration", "return"};
- String subMenuItems [][]={actionsBckgr, actionsPatern, actionsPointcloud, actionsSound};
-
+ 
   ArrayList menuList=new ArrayList();
   float w, h, x, y;
 
@@ -28,7 +27,7 @@ class MainMenu
       float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
       
-      MenuItem item=new MenuItem("mainMenu", layers[i], subMenuItems[i], i, x, y, sSvg);
+      MenuItem item=new MenuItem("mainMenu", layers[i], i, x, y, sSvg);
       menuList.add(item);
     }
   }
@@ -90,17 +89,13 @@ class MenuItem {
   PShape iconSvg;
   PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg"); 
   color c;
-  String [] subs;
   String menuLevel;
 
-  MenuItem(String _menuLevel, String _item, String [] _subs,  int _id, float _x, float _y, float sSvg) {
-    println("_item ="+_item);
-    
+  MenuItem(String _menuLevel, String _item, int _id, float _x, float _y, float sSvg) {
     id=_id;
     x=_x;
     y=_y;
     item = _item;
-    subs=_subs;  
     menuLevel=_menuLevel; 
     iconSvg = loadShape("data/gui/menu/icon_"+item+".svg");
     iconSvg.scale(sSvg*s);

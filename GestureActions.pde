@@ -17,6 +17,7 @@ class GestureActions
   PVector br=new PVector(offset, offset);
   boolean isScaling=false;
   
+  
   GestureActions(){
     println("gestureScaling constopuctor");
     
@@ -36,20 +37,7 @@ class GestureActions
   
   }
   
-  
-//  boolean checkDoubleHitId(MenuItem item, PVector left, PVector right, float w, float h){
-//    
-//    boolean hit=false;
-//      if (left - (width/2) > item.x && left - (width/2) < item.x+w && left-(height/2) > item.y && left-(height/2) < item.y+h &&
-//              right - (width/2) > item.x && right - (width/2) < item.x+w && right-(height/2) > item.y && right-(height/2) < item.y+h) {
-//            hit=true;
-//            shape(item.edgeOver, item.x, item.y);
-//  
-//      };
-//      
-//    return hit;  
-//
-//  }
+
   
   boolean checkSingleHitId(MenuItem item, PVector pos, float w, float h){
     
@@ -79,9 +67,28 @@ class GestureActions
   }
 
   color setColor(PVector left, PVector right, color c){
-      
-    // check steady hand timer
-    if(checkHandsSteady(left, right, true)) return c;
+
+    boolean isActive=false;
+    PVector hand = new PVector(0,0);
+    String activeHand="none";
+    //zit ik in de colorpicker met rechts?
+      if( right.y > (height/2)-(175/2) && right.y < (height/2)+(175/2) ){
+        hand=right;
+        activeHand="right";
+        isActive=true;
+
+      }//zit ik in de color picker met links?
+      else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
+        hand=left;
+        activeHand="left";
+        isActive=true;
+        //println("cp links :"+left.y);
+      }
+    
+    if(isActive){
+       boolean timed=checkHandsSteady(left, right, true, activeHand);
+       if(timed) return c;
+    }
 
     pushMatrix();
     translate(-width/2, -height/2, 0);
@@ -89,24 +96,22 @@ class GestureActions
       noStroke();
         
       float rh=handSize;
-//      pushStyle();
-//        fill(activeColor);
-//        rect(0, (height/2)-(200/2), width, 200);
-//      popStyle();      
+      
       colorPicker.draw();
-      if( right.y > (height/2)-(150/2) && right.y < (height/2)+(150/2) ){
-        c = colorPicker.getColor (left, right);
-      }else if( left.y > (height/2)-(150/2) && left.y < (height/2)+(150/2) ){
-        c = colorPicker.getColor (left, right);
-      }
+      if(isActive){
+        c = colorPicker.getColor (hand);
+      };
+      
     
        popStyle();
      popMatrix();
+
     lastLeft=left;
     lastRight=right;
+    
     return c;
   };
-  
+ 
 
   
   int setAlpha(PVector left, PVector right, String activeLayer){
@@ -178,8 +183,10 @@ class GestureActions
        }  
      
      
-     if(checkHandsSteady(left, right, false)){
+     if(checkHandsSteady(left, right, false, "none")){
        isScaling=false;
+       handSvgRuser.setFill(color(0));
+       handSvgLuser.setFill(color(0));
        return scaling;
      }; 
 
@@ -199,7 +206,7 @@ class GestureActions
 
    }
    
-   boolean checkHandsSteady(PVector left, PVector right, boolean single){
+   boolean checkHandsSteady(PVector left, PVector right, boolean single, String activeHand){
      
      
       float sens=sensitivity*handSize;
@@ -221,13 +228,15 @@ class GestureActions
      }
     
     if(single){
-      if(timerLeft){
-         timed = timer.setTimer(left.x-(width/2)-(handSize/2), left.y-(height/2)-(handSize/2), "left");   
-      }else if(timerRight){
-         timed = timer.setTimer(right.x-(width/2)-(handSize/2), right.y-(height/2)-(handSize/2), "right");
+      if(activeHand=="left" && timerLeft){
+        timed = timer.setTimer(left.x-(width/2)-(handSize/2), left.y-(height/2)-(handSize/2), "left");
+      }else if(activeHand=="right" && timerRight){
+        timed = timer.setTimer(right.x-(width/2)-(handSize/2), right.y-(height/2)-(handSize/2), "right"); 
       }else{
-         timer.activeId="none";
+        timer.activeId="none";
       }
+      
+
     }else{
 
        if( timerLeft && timerRight){
@@ -255,6 +264,7 @@ class GestureActions
     
     return timed;
   };
+
   
   
 }
@@ -268,8 +278,7 @@ class HandLeft{
     }else{
       shape(handSvgL, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
     }
-    
-    
+
     if (debug) ellipse(x,y,10,10);
   }
 }

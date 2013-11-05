@@ -330,7 +330,7 @@ void draw() {
     
     mainMenu.drawMenu(left, right);
     pushMatrix();
-      translate(0,0,1);
+      translate(0,0,2);
       HandRight hr=new HandRight(mouseX-(width/2), mouseY-(height/2), true);
     popMatrix();
   }else{
