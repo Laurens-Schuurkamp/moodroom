@@ -240,8 +240,15 @@ class GestureActions
 
     
     if(timed){
-        // set menu action
-        subMenu.activeActions="none";
+
+        if(actionsMenu.activeAction!="none"){
+            actionsMenu.activeAction="none";
+         }else if(subMenu.activeActions!="none"){
+            subMenu.activeActions="none";
+         }else{
+             mainMenu.activeLayer="none";
+         };
+        
         timer.activeId="none";
         return timed; 
       };

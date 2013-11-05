@@ -7,11 +7,6 @@ class SubMenu{
  String actionsPointcloud []={"size", "color", "primitives", "return"};
  String actionsSound []={"primitives", "vibration", "return"};
 
- String actionsColor [] = {"color", "alpha"};
- String actionsStroke [] = {"color", "width"};
- String actionsSize [] = {"density", "size"};
- 
- 
 
  float w, h, x, y;
  boolean activated=true;
@@ -72,9 +67,19 @@ class SubMenu{
  
  void drawSubMenu(PVector left, PVector right, String activeLayer){
 
-      if(activeActions!="none"){   
-          setLayerActions(activeActions, activeLayer, left, right);
-          return;
+      if(activeActions!="none"){
+         if(activeActions=="color" && activeLayer=="bckgr"){
+             setBckgrColor(left, right);
+             return;
+         }else if(activeActions=="return"){
+           mainMenu.activeLayer="none";
+           activeActions="none";
+           return;
+           
+         };
+        
+         actionsMenu.drawActions(activeActions, activeLayer, left, right);
+         return;
       };
 
       activated  =  gestureActions.checkMenuActive(left, right, h);
@@ -133,54 +138,12 @@ class SubMenu{
       popMatrix();
 
   };
+  
+  void setBckgrColor(PVector left, PVector right){
 
-  void setLayerActions(String action, String activeLayer, PVector left, PVector right){
+     colorBckgr=gestureActions.setColor(left, right, colorBckgr);   
+  }
 
-    //MenuItem back=new MenuItem("return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
-    shape(back.iconSvg, back.x, back.y);
-    boolean leftHit=gestureActions.checkSingleHitId(back, left, w, h);
-    boolean rightHit=gestureActions.checkSingleHitId(back, right, w, h);
-   
-             if(leftHit || rightHit){
-               boolean timed = timer.setTimer(back.x, back.y, back.item);
-               if(timed){
-                    timer.activeId="none";
-                    activeActions="none";
-                    return;
-
-                };
-      
-             };  
-
-
-    if(action=="color" ){
-      
-      if(activeLayer=="bckgr"){
-          colorBckgr=gestureActions.setColor(left, right, colorBckgr);
-      }else if(activeLayer=="patern"){
-        
-        
-          layerPatern.cf=gestureActions.setColor(left, right, layerPatern.cf);
-        
-      }
-      
-    }else if(action=="primitives"){
-      if(activeLayer=="patern"){
-        layerPatern.setAction(left, right, action);
-      }else{
-        return;
-      }
-      
-    }else if(action=="size"){
-      if(activeLayer=="patern"){
-        layerPatern.setAction(left, right, action);
-      }else{
-        return;
-      }
-      
-    }
-
-  };
 
 }
 // end class submenu
