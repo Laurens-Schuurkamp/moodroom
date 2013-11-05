@@ -2,84 +2,86 @@ class MainMenu
 {
   boolean activated=true;
   String activeLayer="none";
-  
+   
+ String actionsBckgr []={"color", "return"};
+ String actionsPatern []={ "stroke", "size", "primitives", "color", "disable", "return"};
+ String actionsPointcloud []={"size", "color", "primitives", "return"};
+ String actionsSound []={"primitives", "vibration", "return"};
+ String subMenuItems [][]={actionsBckgr, actionsPatern, actionsPointcloud, actionsSound};
+
   ArrayList menuList=new ArrayList();
   float w, h, x, y;
 
   //int rTimer=66;
   float sSvg=0.8;
 
-  MainMenu(){
+  MainMenu() {
     println("mainMenu constructor");
 
     w = 320*s*sSvg;
     h = 240*s*sSvg;
-    
+
     println("w ="+w);
     float widthTotal=(w*layers.length)+(padding*layers.length)+padding;
     int i;
-    for(i=0; i<layers.length; i++){
-      
+    for (i=0; i<layers.length; i++) {
       float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
-      MenuItem item=new MenuItem(layers[i], i, x, y, sSvg);
-      menuList.add(item); 
       
+      MenuItem item=new MenuItem("mainMenu", layers[i], subMenuItems[i], i, x, y, sSvg);
+      menuList.add(item);
     }
-
   }
-  
-  void drawMenu(PVector left, PVector right){
 
-      if(activeLayer!="none"){
-        subMenu.drawSubMenu(left, right, activeLayer);
-        return;
-        
-      };
-      
-      activated  =  gestureActions.checkMenuActive(left, right, h);  
-      if(activated==false)return;
-    
-      int hitId=-1;
+  void drawMenu(PVector left, PVector right) {
 
-      pushMatrix();
-      translate(0,0,1);
-      pushStyle();
-        fill(0);
-        rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
-      popStyle();
-      boolean hit=false;
-      for(int i=0; i<menuList.size(); i++){
-        
+    if (activeLayer!="none") {
+      //println("active layer ="+activeLayer);
+      subMenu.drawSubMenu(left, right, activeLayer);
+      return;
+    };
+
+    activated  =  gestureActions.checkMenuActive(left, right, h);  
+    if (activated==false)return;
+
+    int hitId=-1;
+
+    pushMatrix();
+    translate(0, 0, 1);
+    pushStyle();
+    fill(0);
+    rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
+    popStyle();
+    boolean hit=false;
+    for (int i=0; i<menuList.size(); i++) {
+
       MenuItem item=(MenuItem) menuList.get(i);
       boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
       boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
-       
-       if(leftHit || rightHit){
-         boolean timed = timer.setTimer(item.x, item.y, item.item);
-         if(timed){
-                // set menu action
-                activeLayer=item.item;
-                timer.activeId="none"; 
-          };
 
-       };
-  
-       
-
-        shape(item.iconSvg, item.x, item.y);
+      if (leftHit || rightHit) {
+        boolean timed = timer.setTimer(item.x, item.y, item.item);
+        if (timed) {
+          // set menu action
+          activeLayer=item.item;
+          println("active layer ="+item.item);
+          timer.activeId="none";
+        };
       };
-      
-      popMatrix();
 
+
+
+      shape(item.iconSvg, item.x, item.y);
+    };
+
+    popMatrix();
   };
-    
 }
 
 
 
-class MenuItem{
-  
+class MenuItem {
+
   int id;
   String item;
   PVector pos;
@@ -88,17 +90,22 @@ class MenuItem{
   PShape iconSvg;
   PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg"); 
   color c;
-  
-  MenuItem(String _item, int _id, float _x, float _y, float sSvg){
+  String [] subs;
+  String menuLevel;
+
+  MenuItem(String _menuLevel, String _item, String [] _subs,  int _id, float _x, float _y, float sSvg) {
+    println("_item ="+_item);
+    
     id=_id;
     x=_x;
     y=_y;
-    item = _item;   
+    item = _item;
+    subs=_subs;  
+    menuLevel=_menuLevel; 
     iconSvg = loadShape("data/gui/menu/icon_"+item+".svg");
     iconSvg.scale(sSvg*s);
     edgeOver.scale(sSvg*s);
     
   }
-  
-  
 }
+

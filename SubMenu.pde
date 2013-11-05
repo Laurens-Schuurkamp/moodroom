@@ -1,17 +1,23 @@
 class SubMenu{
- 
 
  ArrayList subMenuList=new ArrayList();
  
- String actionsBckgr []={"color", "return"};
+ String actionsBckgr []={ "color","return"};
  String actionsPatern []={ "stroke", "size", "primitives", "color", "disable", "return"};
  String actionsPointcloud []={"size", "color", "primitives", "return"};
  String actionsSound []={"primitives", "vibration", "return"};
 
+ String actionsColor [] = {"color", "alpha"};
+ String actionsStroke [] = {"color", "width"};
+ String actionsSize [] = {"density", "size"};
+ 
+ 
+
  float w, h, x, y;
  boolean activated=true;
  float sSvg=0.60;
- String activeAction="none";
+ String activeActions="none";
+ 
  
  MenuItem back;
  
@@ -23,6 +29,7 @@ class SubMenu{
     
     int i, j;
     
+
     for(i=0; i<layers.length; i++){
       
       SubMenuActions layerActions  = new SubMenuActions(layers[i]);
@@ -39,10 +46,11 @@ class SubMenu{
       }
 
     }
-    
-    back = new MenuItem("return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
 
-  
+    String subsEmpty [] ={};
+    back = new MenuItem("action", "return", subsEmpty, 1000, width/2-w-padding, height/2-h-padding, sSvg);
+    float y= -h/2;
+
  };
  
  void addActions(String [] actions, SubMenuActions layerActions){
@@ -52,24 +60,25 @@ class SubMenu{
           
           float x= -widthTotal/2 + (j*(w+padding)) +padding;
           float y= -h/2;
-          MenuItem item=new MenuItem(actions[j], j, x, y, sSvg);
+          String subActions [] = {};
+                    
+          MenuItem item=new MenuItem("subMenu", actions[j], subActions, j, x, y, sSvg);
           layerActions.actions.add(item); 
           
         }
 
  }
- 
+
  
  void drawSubMenu(PVector left, PVector right, String activeLayer){
-      
-      
-      if(activeAction!="none"){
-        setLayerActions(activeAction, activeLayer, left, right);
-        return;
+
+      if(activeActions!="none"){   
+          setLayerActions(activeActions, activeLayer, left, right);
+          return;
       };
 
-      //activated  =  gestureActions.checkMenuActive(left, right, h);
-      //if(activated==false)return;
+      activated  =  gestureActions.checkMenuActive(left, right, h);
+      if(activated==false)return;
 
       SubMenuActions subList;
       int i,j;
@@ -97,7 +106,7 @@ class SubMenu{
                boolean timed = timer.setTimer(item.x, item.y, item.item);
                if(timed){
                     // set menu action
-                    activeAction=item.item;
+                    activeActions=item.item;
 
                 };
       
@@ -124,8 +133,7 @@ class SubMenu{
       popMatrix();
 
   };
-  
-  
+
   void setLayerActions(String action, String activeLayer, PVector left, PVector right){
 
     //MenuItem back=new MenuItem("return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
@@ -137,24 +145,21 @@ class SubMenu{
                boolean timed = timer.setTimer(back.x, back.y, back.item);
                if(timed){
                     timer.activeId="none";
-                    activeAction="none";
+                    activeActions="none";
                     return;
 
                 };
       
              };  
 
-    if( activeAction=="none" || activeAction=="return"){
-      activeAction="none";
-      mainMenu.activeLayer="none";
-      return;
-    };
 
-    if(action=="color"){
+    if(action=="color" ){
       
       if(activeLayer=="bckgr"){
           colorBckgr=gestureActions.setColor(left, right, colorBckgr);
       }else if(activeLayer=="patern"){
+        
+        
           layerPatern.cf=gestureActions.setColor(left, right, layerPatern.cf);
         
       }
@@ -175,11 +180,6 @@ class SubMenu{
       
     }
 
-
-    
-    
-
-    
   };
 
 }

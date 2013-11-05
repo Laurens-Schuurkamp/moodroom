@@ -241,7 +241,7 @@ class GestureActions
     
     if(timed){
         // set menu action
-        subMenu.activeAction="none";
+        subMenu.activeActions="none";
         timer.activeId="none";
         return timed; 
       };

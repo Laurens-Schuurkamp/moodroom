@@ -12,7 +12,7 @@ class LayerPatern{
  color cs=color(255);
  
  float strokeWidth=1;
- String activeAction="none";
+ String activeActions="none";
 
   
  //float offset=220*s;
@@ -38,12 +38,14 @@ class LayerPatern{
     
     println("w ="+w);
     float widthTotal=(w*primitives.length)+(padding*primitives.length)+padding;
+    String subsPrimitives []={};
     int i;
     for(i=0; i<primitives.length; i++){
       
       float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
-      MenuItem item=new MenuItem(primitives[i], i, x, y, sSvg);
+      
+      MenuItem item=new MenuItem("action", primitives[i], subsPrimitives, i, x, y, sSvg);
       primitivesList.add(item); 
       
     }
@@ -137,18 +139,21 @@ class LayerPatern{
    
    
  };
- 
- void setProperties( ){
-   
- };
+
  
  void setAction(PVector left, PVector right, String action){
      if(action=="primitives"){
          drawPrimitivesPicker(left, right);
      }else if (action=="size"){
-       boolean isScaling=gestureActions.scalingActive(left, right);
-       if(isScaling ){
+       boolean isActive=gestureActions.scalingActive(left, right);
+       if(isActive ){
          scaling=gestureActions.setScale(left, right, scaling);
+       }
+       
+     }else if(action=="density"){
+       boolean isActive=gestureActions.scalingActive(left, right);
+       if(isActive ){
+         density=gestureActions.setScale(left, right, density);
        }
        
      }
@@ -183,7 +188,7 @@ class LayerPatern{
          if(timed){
                 // set menu action
                 activePrimitive=item.item;
-                subMenu.activeAction="none";
+                subMenu.activeActions="none";
                 timer.activeId="none";
                  
           };

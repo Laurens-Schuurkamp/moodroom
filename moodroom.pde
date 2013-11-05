@@ -28,6 +28,7 @@ SwipeControl swipeControl;
 
 MainMenu mainMenu;
 SubMenu subMenu;
+ActionsMenu actionsMenu;
 Skelleton skelleton;
 PointCloud3D pointCloud3D;
 GestureActions gestureActions;
@@ -35,6 +36,7 @@ ColorPicker colorPicker;
 Timer timer;
 
 LayerPatern layerPatern;
+String layers[]={"bckgr", "patern", "pointcloud", "sound"}; 
 
 boolean kinectConnected=true;
 boolean demoModus=false;
@@ -64,7 +66,7 @@ float        rotY = radians(0);
 float s;  //screen scale
 int padding=24;
 
-String layers[]={"bckgr", "patern", "pointcloud", "sound"};
+
 
 RFont rfont64;
 RFont rfont48;
@@ -147,6 +149,7 @@ void setup()
   
   mainMenu = new MainMenu();
   subMenu = new SubMenu();
+  actionsMenu =  new ActionsMenu();
   skelleton=new Skelleton();
   pointCloud3D = new PointCloud3D();
   gestureActions = new GestureActions();
