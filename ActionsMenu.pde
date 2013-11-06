@@ -200,6 +200,11 @@ class ActionsMenu
          }   
         
         
+      }else if(action == "vibration" ){
+        if(activeLayer=="sound"){
+          amp = gestureActions.setVibration(left, right, amp);
+         }  
+        
       }
 
   }

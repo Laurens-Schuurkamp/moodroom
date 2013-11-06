@@ -6,6 +6,12 @@ import java.awt.Frame;
 import java.awt.BorderLayout;
 import processing.video.*;
 import controlP5.*; //controls
+import ddf.minim.spi.*;
+import ddf.minim.signals.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.ugens.*;
+import ddf.minim.effects.*;
 
 JSONArray swipe_objects; 
 boolean httpResponse=false;
@@ -14,6 +20,12 @@ XML xmlSettings;
 XML mainSettings;
 XML niteSettings;
 XML niteDefaults;
+
+Minim minim;
+//AudioInput sound;
+AudioPlayer sound;
+FFT fft;
+BeatDetect beat;
 
 // NITE & Kinect
 SimpleOpenNI context;
@@ -57,6 +69,7 @@ float duration=100;
 
 
 float zoom;
+float amp=2;
 
 float        zoomF =1.0f;
 float        rotX = radians(180);  // by default rotate the hole scene 180deg around the x-axis, 
@@ -210,6 +223,21 @@ void setup()
   font16 = createFont("VAGRoundedLightSSi", 16);
   font12 = createFont("VAGRoundedLightSSi", 12);
   font10 = createFont("VAGRoundedLightSSi", 10);
+  
+    minim = new Minim(this);
+  
+  //sound = minim.getLineIn(Minim.STEREO, 1024);;
+  
+  String path = "sounds/timo-maas.mp3";
+  sound = minim.loadFile(path, 1024);
+  sound.loop();
+  
+  fft = new FFT(sound.bufferSize(), sound.sampleRate());
+  beat = new BeatDetect();
+  amp=2;
+  
+  
+  
 
   mainTweener = new Tween(this, 0.5);
   cosine = new CosineShaper( Tween.OUT );
@@ -248,6 +276,9 @@ void draw() {
   if(debug){
     cf.framerate.setText("framerate ="+round(frameRate)+" fps");
   };
+  
+  fft.forward(sound.mix);
+  beat.detect(sound.mix);
 
   PVector left=new PVector(0, 0);
   PVector right=new PVector(0,0);
@@ -338,6 +369,8 @@ void draw() {
       translate(0,0,2);
       HandRight hr=new HandRight(mouseX-(width/2), mouseY-(height/2), true);
     popMatrix();
+    mainMenu.drawMenu(left, right); 
+    //swipeControl.activated=true;
   }else if(swipeControl.activated){
     mainMenu.drawMenu(left, right); 
   }

@@ -98,8 +98,10 @@ class GestureActions
       noStroke();
         
       float rh=handSize;
-      
-      colorPicker.draw();
+      pushMatrix();
+        translate(0,0,1);
+        colorPicker.draw();
+      popMatrix();
       if(isActive){
         c = colorPicker.getColor (hand);
       };
@@ -151,15 +153,13 @@ class GestureActions
     int step=parseInt(width/255);
     pushMatrix();
     translate(-width/2, 0, 1);
-    
-    for(int i=0; i<256; i++){
-      pushStyle();
-      noStroke();
-      fill(r,g,b,i);
-      rect(i*step, -150/2, step, 150);
-      popStyle();
-    }
-   
+        for(int i=0; i<256; i++){
+          pushStyle();
+          noStroke();
+          fill(r,g,b,i);
+          rect(i*step, -150/2, step, 150);
+          popStyle();
+        }
    popMatrix();
    
    if(isActive){
@@ -176,6 +176,66 @@ class GestureActions
   };
   
   
+  float setVibration(PVector left, PVector right, float amp){
+    
+    boolean isActive=false;
+    PVector hand = new PVector(0,0);
+    String activeHand="none";
+    //zit ik in de colorpicker met rechts?
+      if( right.y > (height/2)-(175/2) && right.y < (height/2)+(175/2) ){
+        hand=right;
+        activeHand="right";
+        isActive=true;
+
+      }//zit ik in de color picker met links?
+      else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
+        hand=left;
+        activeHand="left";
+        isActive=true;
+        //println("cp links :"+left.y);
+      }
+    
+    if(isActive){
+       //boolean timed=checkHandsSteady(left, right, true, activeHand);
+       //if(timed) return amp;
+    }
+    
+    int stepw=parseInt(width/255);
+    
+    pushMatrix();
+    translate(-width/2, 0, 1);
+    pushStyle();
+      noStroke();
+      fill(0);
+      rect(0, -75-padding, width, 150+padding );
+    popStyle();
+    
+    for(int i=0; i<256; i++){
+      pushStyle();
+      stroke(256-i);
+      fill(255, i);
+        float steph=0.585*i;
+        
+        rect(i*stepw, -(steph+2)/2, stepw, steph+2 );
+      popStyle();
+    }
+   
+   popMatrix();
+   
+   if(isActive){
+       amp=(hand.x/width)*2;
+       
+    };
+   
+  
+  lastLeft=left;
+  lastRight=right;
+  
+   
+   return amp;
+  };
+  
+  
   boolean scalingActive(PVector left, PVector right){
      
      if(isScaling){
@@ -183,6 +243,8 @@ class GestureActions
      }
       
       float hitSize=handSize/2;
+      pushMatrix();
+      translate(0,0,1);
       pushStyle();
         fill(255);
         stroke(0);
@@ -213,6 +275,7 @@ class GestureActions
          left.y=bl.y + (height/2);
        }
        popStyle();
+       popMatrix();
 
        boolean leftHit=gestureActions.zoomGestureActivation(left, tl,  bl, hitSize);
        boolean rightHit=gestureActions.zoomGestureActivation(right, tr,  br, hitSize);

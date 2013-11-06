@@ -3,7 +3,7 @@ class LayerPatern{
  ArrayList primitivesList=new ArrayList();
  float w, h, x, y;
 
- String activePrimitive="none";
+ String activePrimitive="ellipse";
  boolean activated;
  
  boolean enabled=true;
@@ -55,21 +55,24 @@ class LayerPatern{
 
  void drawLayer(){
    
+   
+   
    if(activePrimitive=="none") return;
    
    
 
    pushMatrix();
      translate(0,0,1);
-      pushStyle();
-        setTextHeader(h, "none"); 
-      popStyle();
+//      pushStyle();
+//        setTextHeader(h, "none"); 
+//      popStyle();
    
      pushStyle();
        fill(cf);
        stroke(cs);
        float sw=strokeW.x;
        translate(-width/2, -height/2);
+              
        
        float stepx=density.x*50;
        float stepy=density.y*50;
@@ -91,11 +94,14 @@ class LayerPatern{
           for (int x=0;x < width; x+=stepx)
           {
             //float xpos=
+            int spc =(int) random(fft.specSize());    
+            float ampx = fft.getBand(  spc )*amp;
+            
             
             if(activePrimitive=="ellipse"){
                pushMatrix();
                 translate(x,y);
-                shape(svgEllipse, 0, 0, widthP, heightP);
+                shape(svgEllipse, 0, 0, widthP+ampx, heightP+ampx);
 //                svgEllipse.setStroke(cs);  
 //                svgEllipse.setStrokeWeight(strokeWidth);
 //                svgEllipse.setFill(cf);
@@ -106,7 +112,7 @@ class LayerPatern{
                //rect(x-dims.x/2, y-hP/2, dims.x, hP);
               pushMatrix();
                 translate(x,y);
-                shape(svgRectangle, 0, 0, widthP, heightP);
+                shape(svgRectangle, 0, 0, widthP+ampx, heightP+ampx);
 //                svgRectangle.setStroke(cs);  
 //                svgRectangle.setStrokeWeight(strokeWidth);
 //                svgRectangle.setFill(cf);
@@ -116,7 +122,7 @@ class LayerPatern{
                //triangle(x-dims.x/2, y+hP/2, x+/2, y+hP/2, x, y-hP/2);
                pushMatrix();
                 translate(x,y);
-                shape(svgTriangle, 0, 0, widthP, heightP);
+                shape(svgTriangle, 0, 0, widthP+ampx, heightP+ampx);
 //                svgTriangle.setStroke(cs);  
 //                svgTriangle.setStrokeWeight(strokeWidth);
 //                svgTriangle.setFill(cf);
@@ -126,7 +132,7 @@ class LayerPatern{
               
               pushMatrix();
                 translate(x,y);
-                shape(svgStar, 0, 0, widthP, heightP);
+                shape(svgStar, 0, 0, widthP+ampx, heightP+ampx);
 //                svgStar.setStroke(cs);  
 //                svgStar.setStrokeWeight(strokeWidth);
 //                svgStar.setFill(cf);
@@ -137,7 +143,7 @@ class LayerPatern{
               
               pushMatrix();
                 translate(x,y);
-                shape(svgHectagon, 0, 0, widthP, heightP);
+                shape(svgHectagon, 0, 0, widthP+ampx, heightP+ampx);
 //                svgHectagon.setStroke(cs);  
 //                svgHectagon.setStrokeWeight(strokeWidth);
 //                svgHectagon.setFill(cf);
@@ -149,7 +155,7 @@ class LayerPatern{
               pushMatrix();
                 translate(x,y);
                 
-                shape(svgHart, 0, 0, widthP, heightP);
+                shape(svgHart, 0, 0, widthP+ampx, heightP+ampx);
 //                svgHart.setStroke(cs);  
 //                svgHart.setStrokeWeight(strokeWidth);
 //                svgHart.setFill(cf);

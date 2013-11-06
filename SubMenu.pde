@@ -5,7 +5,7 @@ class SubMenu{
  String actionsBckgr []={ "color","return"};
  String actionsPatern []={ "stroke", "size", "primitives", "color", "return"};
  String actionsPointcloud []={"size", "color", "return"};
- String actionsSound []={"primitives", "vibration", "return"};
+ String actionsSound []={"soundPrimitives", "vibration", "return"};
 
 
  float w, h, x, y;
@@ -56,6 +56,9 @@ class SubMenu{
           float y= -h/2;
                     
           MenuItem item=new MenuItem("subMenu", actions[j], j, x, y, sSvg);
+          if(item.item=="soundPrimitives"){
+            item.iconSvg.setFill(color(0,96));
+          };
           layerActions.actions.add(item); 
           
         }
@@ -64,17 +67,19 @@ class SubMenu{
 
  
  void drawSubMenu(PVector left, PVector right, String activeLayer){
-
+      //println("active action ="+
       if(activeActions!="none"){
          if(activeActions=="color" && activeLayer=="bckgr"){
              actionsMenu.activeAction="color";             
          }else if(activeActions=="primitives" && activeLayer=="patern"){
               actionsMenu.activeAction="primitives";              
+         }else if(activeActions=="vibration" && activeLayer=="sound"){
+              actionsMenu.activeAction="vibration"; 
          }else if(activeActions=="return"){
            mainMenu.activeLayer="none";
            activeActions="none";
            return;
-           
+
          };
         
          actionsMenu.drawActions(activeActions, activeLayer, left, right);
@@ -104,9 +109,15 @@ class SubMenu{
             for(j=0; j<subList.actions.size(); j++){
 
               MenuItem item=(MenuItem) subList.actions.get(j);
-              boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
-              boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
-   
+              
+              boolean leftHit=false;
+              boolean rightHit=false;;
+
+              if(item.item!="soundPrimitives"){
+                leftHit=gestureActions.checkSingleHitId(item, left, w, h);
+                rightHit=gestureActions.checkSingleHitId(item, right, w, h);
+              };
+               
              if(leftHit || rightHit){
                boolean timed = timer.setTimer(item.x, item.y, item.item);
                if(timed){
