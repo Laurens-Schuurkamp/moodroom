@@ -71,14 +71,7 @@ int padding=24;
 RFont rfont64;
 RFont rfont48;
 
-PFont font64;
-PFont font48;
-PFont font32;
-PFont font28;
-PFont font24;
-PFont font16;
-PFont font12;
-PFont font10;
+PFont font64, font48, font36, font32, font28, font24, font16, font12, font10;
 
 
 //hands
@@ -209,6 +202,7 @@ void setup()
     
   font64 = createFont("VAGRoundedLightSSi", 64);
   font48 = createFont("VAGRoundedLightSSi", 48);
+  font36 = createFont("VAGRoundedLightSSi", 36);
   font32 = createFont("VAGRoundedLightSSi", 32);
   font28 = createFont("VAGRoundedLightSSi", 28);
   font24 = createFont("VAGRoundedLightSSi", 24);
@@ -267,17 +261,25 @@ void draw() {
         rotateX(rotX);
         rotateY(rotY);
         scale(zoomF);
+        translate(0, 0, -1250); 
 
-        //skelleton  
+        //skelleton
+      //pushMatrix();
+          //translate(0, 0, -1250);  
         for(int i=0;i<userList.length;i++)
         {
+         
           if(context.isTrackingSkeleton(userList[i])){
-            //skelleton.drawSkeleton(userList[i]);
+             
+            skelleton.drawSkeleton(userList[i]);
           }
+
         }
         
         pointCloud3D.drawPointCloud();
+        
       popMatrix();
+     
 
       //hands
       if (userList.length<=0){
@@ -446,16 +448,30 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   return p;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+void setTextHeader(float h, String _txt){
+  
+  String txt="";
+  
+  if(_txt=="patern"){
+    txt="patronen";
+  }else if(txt=="pointcloud"){
+    txt="3D punten";
+  }else if(_txt=="sound"){
+    txt="geluiden";
+  }else if(_txt=="skellet"){
+    txt="skellet";
+  }    
+  
+  fill(0);
+  noStroke();
+  rect(-width/4, -(h/2)-padding-46, width/2, 70, 15 );
+  rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
+  stroke(0);
+  fill(255);
+  textFont(font36, 36);
+  textAlign(CENTER, CENTER);
+  String title = "Bewerk de laag "+txt;
+  text(title, 0, -(h/2)-44);
+  
+};
 

@@ -9,7 +9,7 @@ class Skelleton {
   handright, hipleft, kneeleft, footleft, hipright, kneeright, footright;
   ArrayList jointPos;
   
-  boolean active=true;
+  boolean active=false;
   color cf=color(255, 128);
   color cs=color(255);
   boolean xxx=false;
@@ -88,6 +88,7 @@ class Skelleton {
 // draw the skeleton with the selected joints
   void drawSkeleton(int userId)
   {
+    
 
     if(active==false)return;
 

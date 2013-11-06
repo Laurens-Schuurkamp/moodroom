@@ -22,7 +22,7 @@ public class ControlFrame extends PApplet {
     cp5 = new ControlP5(this);
     
      cp5.addTextlabel("labelSwipe")
-                    .setText("Swipe settings")
+                    .setText("Moodroom settings")
                     .setPosition(10,20)
                     .setFont(createFont("arial",20))
                     ;
@@ -54,7 +54,16 @@ public class ControlFrame extends PApplet {
      cp5.addToggle("skelletActive")
      .setPosition(10,360)
      .setSize(16,16)
+     .setValue(false);
      ;
+     
+     cp5.addToggle("pointCloudActive")
+     .setPosition(150,360)
+     .setSize(16,16)
+     .setValue(true);
+     ;
+     
+
      
      cp5.addSlider("actionTimer").setRange(0, 3000).setPosition(10,400).setSize(200,16).setValue(mainSettings.getInt("actionTimer"));
      cp5.addSlider("timerDelay").setRange(0, 2500).setPosition(10,430).setSize(200,16).setValue(mainSettings.getFloat("timerDelay"));
@@ -173,6 +182,16 @@ public class ControlFrame extends PApplet {
     if(init==false){
        return;
     }
+    skelleton.active=value;
+    println("checkbox :"+value);
+    
+  }
+  
+  void pointCloudActive(boolean value){
+    if(init==false){
+       return;
+    }
+    pointCloud3D.active=value;
     println("checkbox :"+value);
     
   }

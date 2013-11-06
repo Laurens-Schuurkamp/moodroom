@@ -1,7 +1,7 @@
 class PointCloud3D
 {
 
-  boolean activated=false;
+  boolean active=true;
   color cf = color(255, 128);
   color cs = color (255, 128);
   
@@ -19,6 +19,7 @@ class PointCloud3D
   void drawPointCloud(){
     
     if(demoModus) return;
+    if(!active) return;
     
     //pointcloud
         int[]   depthMap = context.depthMap();
@@ -26,12 +27,10 @@ class PointCloud3D
         
         
         
-        int     stepsX   =parseInt(density.x*15);  // to speed up the drawing, draw every third point
-        int     stepsY   =parseInt(density.y*15);
+        int     stepsX   =parseInt(density.x*20);  // to speed up the drawing, draw every third point
+        int     stepsY   =parseInt(density.y*20);
         int     index;
         PVector realWorldPoint;
-      
-        translate(0, 0, -1250);  // set the rotation center of the scene 1000 infront of the camera
       
         
        pushStyle(); 
@@ -52,6 +51,7 @@ class PointCloud3D
           }
         }
         popStyle();
+
        
   } 
 

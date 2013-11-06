@@ -11,6 +11,8 @@
 				actionTimer="2000"
 				timerDelay="500"
 				sensitivity="0.01"
+				skeletActive="true"
+				pointcloudActive="true"
         
     />
     

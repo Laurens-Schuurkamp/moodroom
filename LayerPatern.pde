@@ -8,16 +8,13 @@ class LayerPatern{
  
  boolean enabled=true;
  
- float sSvg=0.65; 
+ float sSvg=0.55; 
   
  color cf=color(255, 96);
  color cs=color(255);
  
  float strokeWidth=1;
  String activeActions="none";
-
-  
- //float offset=220*s;
  
  String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
  
@@ -59,6 +56,11 @@ class LayerPatern{
  void drawLayer(){
    
    if(activePrimitive=="none") return;
+   
+    pushStyle();
+        setTextHeader(h, mainMenu.activeLayer); 
+      popStyle();
+
    pushMatrix();
      pushStyle();
        fill(cf);

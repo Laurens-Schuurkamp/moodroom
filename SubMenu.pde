@@ -83,8 +83,10 @@ class SubMenu{
          return;
       };
 
-      activated  =  gestureActions.checkMenuActive(left, right, h);
-      if(activated==false)return;
+      //activated  =  gestureActions.checkMenuActive(left, right, h);
+      //if(activated==false)return;
+      
+      
 
       SubMenuActions subList;
       int i,j;
@@ -93,8 +95,7 @@ class SubMenu{
       translate(0,0,1);
       
       pushStyle();
-        fill(0);
-        rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
+        setTextHeader(h, activeLayer); 
       popStyle();
       boolean hit=false;
       
