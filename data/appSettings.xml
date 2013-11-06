@@ -19,8 +19,8 @@
     <niteSettings
         UseSteady="true"
         MotionSpeedThreshold="0.25"
-        MotionTime="350"
-        SteadyDuration="50"
+        MotionTime="250"
+        SteadyDuration="250"
         XAngleThreshold="25"
         YAngleThreshold="20"
         swipeDelay="500"

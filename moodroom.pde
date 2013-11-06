@@ -81,6 +81,7 @@ PShape handSvgR;
 PShape handSvgL;
 PShape handSvgRuser;
 PShape handSvgLuser;
+PShape waveActivation;
 float pxHandActive=0;
 float handSize=150;
 float adjustOffset;
@@ -125,8 +126,8 @@ void setup()
   
   context = new SimpleOpenNI(this, SimpleOpenNI.RUN_MODE_MULTI_THREADED);
   
-  pushControl = new PushControl();
-  pushDetector = new XnVPushDetector();
+  //pushControl = new PushControl();
+  //pushDetector = new XnVPushDetector();
   waveControl= new WaveControl();
   waveDetector = new XnVWaveDetector();
   swipeControl = new SwipeControl();
@@ -171,22 +172,23 @@ void setup()
     
     waveDetector.RegisterPrimaryPointCreate(waveControl);
         
-    pushDetector.RegisterPush(pushControl);
+    //pushDetector.RegisterPush(pushControl);
     
     // swipe 
-    swipeDetector.RegisterSwipeLeft(swipeControl); 
-    swipeDetector.RegisterSwipeRight(swipeControl);
-    swipeDetector.RegisterSwipeUp(swipeControl); 
-    swipeDetector.RegisterSwipeDown(swipeControl); 
+    //swipeDetector.RegisterSwipeLeft(swipeControl); 
+    //swipeDetector.RegisterSwipeRight(swipeControl);
+    //swipeDetector.RegisterSwipeUp(swipeControl); 
+    //swipeDetector.RegisterSwipeDown(swipeControl); 
     swipeDetector.RegisterPrimaryPointCreate(swipeControl);
     swipeDetector.RegisterPrimaryPointDestroy(swipeControl);
-    swipeDetector.RegisterPointUpdate(swipeControl);
+    //swipeDetector.RegisterPointUpdate(swipeControl);
     
     flowRouter = new XnVFlowRouter();
-    //flowRouter.SetActive(swipeDetector);
-    flowRouter.SetActive(waveDetector);
+    flowRouter.SetActive(swipeDetector);
+    //flowRouter.SetActive(waveDetector);
     //flowRouter.SetActive(pushDetector);
     sessionManager.AddListener(flowRouter);
+    //sessionManager.RemoveListener(flowRouter);
 
     //sessionManager.AddListener(swipeDetector);
    
@@ -228,6 +230,8 @@ void setup()
   handSvgR  = loadShape("data/gui/hand_r.svg");
   handSvgL  = loadShape("data/gui/hand_l.svg");
   
+  waveActivation = loadShape("data/gui/wave.svg");
+  
   handSize=95*s;
   adjustOffset=handSize;
   perspective(radians(60), float(width)/float(height), 10.0f, 150000.0f);
@@ -251,6 +255,8 @@ void draw() {
     translate(width/2, height/2, 0);
     
     if (kinectConnected) {
+      
+      swipeControl.checkActive();
 
       context.update();
       context.update(sessionManager);
@@ -316,8 +322,7 @@ void draw() {
               
             popMatrix();
 
-            
-            mainMenu.drawMenu(left, right);
+
           }
         
       }
@@ -329,15 +334,15 @@ void draw() {
   if(demoModus){
     left=new PVector(mouseX, mouseY);
     right=new PVector(mouseX, mouseY);
-    
-    
     pushMatrix();
       translate(0,0,2);
       HandRight hr=new HandRight(mouseX-(width/2), mouseY-(height/2), true);
     popMatrix();
+  }else if(swipeControl.activated){
+    mainMenu.drawMenu(left, right); 
   }
   
-  mainMenu.drawMenu(left, right); 
+  
   
   if(init==false){
     init=true;

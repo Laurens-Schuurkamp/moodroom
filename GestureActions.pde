@@ -324,6 +324,7 @@ class GestureActions
     return timed;
   };
 
+ 
  void toggleMenus(){
    if(actionsMenu.activeAction!="none"){
     if(mainMenu.activeLayer=="bckgr"){
