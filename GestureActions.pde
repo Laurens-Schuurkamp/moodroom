@@ -196,8 +196,8 @@ class GestureActions
       }
     
     if(isActive){
-       //boolean timed=checkHandsSteady(left, right, true, activeHand);
-       //if(timed) return amp;
+       boolean timed=checkHandsSteady(left, right, true, activeHand);
+       if(timed) return amp;
     }
     
     int stepw=parseInt(width/255);
@@ -394,7 +394,10 @@ class GestureActions
       subMenu.activeActions="none";
      }else if(mainMenu.activeLayer=="patern" && actionsMenu.activeAction=="primitives"){
       subMenu.activeActions="none"; 
+     }else if(mainMenu.activeLayer=="sound" && actionsMenu.activeAction=="vibration"){
+      subMenu.activeActions="none"; 
      }
+        
       actionsMenu.activeAction="none";
    }else if(subMenu.activeActions!="none"){
       subMenu.activeActions="none";

@@ -263,7 +263,7 @@ void setup()
   handSize=95*s;
   adjustOffset=handSize;
   perspective(radians(60), float(width)/float(height), 10.0f, 150000.0f);
-
+  frameRate(30);
   smooth(8);
 
 
@@ -279,6 +279,10 @@ void draw() {
   
   fft.forward(sound.mix);
   beat.detect(sound.mix);
+  
+  if(beat.isOnset()){
+     pointCloud3D.amplitude= 1000*parseInt(amp); 
+  }
 
   PVector left=new PVector(0, 0);
   PVector right=new PVector(0,0);

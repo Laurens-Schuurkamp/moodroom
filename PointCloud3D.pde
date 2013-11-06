@@ -9,6 +9,8 @@ class PointCloud3D
    PVector dims=new PVector(50,50);
    PVector scaling=new PVector(1,1);
    PVector strokeW=new PVector(2,2);
+   
+   int amplitude=0;
 
   PointCloud3D(){
     println("PointCloud3D constructor");
@@ -20,6 +22,11 @@ class PointCloud3D
     
     if(demoModus) return;
     if(!active) return;
+    
+    if(amplitude>0){
+      amplitude=amplitude-(amplitude/30);
+      
+    }
     
     //pointcloud
         int[]   depthMap = context.depthMap();
@@ -33,6 +40,10 @@ class PointCloud3D
 
        pushStyle(); 
          
+         if(strokeW.x>25)strokeW.x=25;
+         if(stepsX<5) stepsX=5;
+         if(stepsY<5) stepsY=5;
+         
          stroke(cs);
          strokeWeight(strokeW.x);
         for (int y=0;y < context.depthHeight();y+=stepsY)
@@ -44,7 +55,7 @@ class PointCloud3D
             { 
               // draw the projected point
               realWorldPoint = context.depthMapRealWorld()[index];              
-              point(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
+              point(realWorldPoint.x, realWorldPoint.y, (realWorldPoint.z-amplitude));
             }
           }
         }

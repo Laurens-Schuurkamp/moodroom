@@ -3,12 +3,12 @@ class LayerPatern{
  ArrayList primitivesList=new ArrayList();
  float w, h, x, y;
 
- String activePrimitive="ellipse";
+ String activePrimitive="none";
  boolean activated;
  
  boolean enabled=true;
  
- float sSvg=0.55; 
+ float sSvg=0.45; 
   
  color cf=color(255, 96);
  color cs=color(255);
@@ -16,7 +16,7 @@ class LayerPatern{
  float strokeWidth=1;
  String activeActions="none";
  
- String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
+ String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart", "none"};
  
  PVector density=new PVector(1,1);
  PVector dims=new PVector(50,50);
@@ -58,8 +58,6 @@ class LayerPatern{
    
    
    if(activePrimitive=="none") return;
-   
-   
 
    pushMatrix();
      translate(0,0,1);
@@ -76,6 +74,11 @@ class LayerPatern{
        
        float stepx=density.x*50;
        float stepy=density.y*50;
+       
+       if(stepx<25)stepx=25;
+       if(stepy<25)stepy=25;
+       
+       
        
        float widthP=dims.x*scaling.x;
        float heightP=dims.y*scaling.y;
