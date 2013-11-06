@@ -24,15 +24,13 @@ class PointCloud3D
     //pointcloud
         int[]   depthMap = context.depthMap();
         //int     steps   = parseInt(density.x*50);  // to speed up the drawing, draw every third point
-        
-        
+
         
         int     stepsX   =parseInt(density.x*20);  // to speed up the drawing, draw every third point
         int     stepsY   =parseInt(density.y*20);
         int     index;
         PVector realWorldPoint;
-      
-        
+
        pushStyle(); 
          
          stroke(cs);

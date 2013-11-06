@@ -315,13 +315,7 @@ class GestureActions
 
     if(timed){
 
-        if(actionsMenu.activeAction!="none"){
-            actionsMenu.activeAction="none";
-         }else if(subMenu.activeActions!="none"){
-            subMenu.activeActions="none";
-         }else{
-             mainMenu.activeLayer="none";
-         };
+        toggleMenus();
         
         timer.activeId="none";
         return timed; 
@@ -330,9 +324,27 @@ class GestureActions
     return timed;
   };
 
+ void toggleMenus(){
+   if(actionsMenu.activeAction!="none"){
+    if(mainMenu.activeLayer=="bckgr"){
+      subMenu.activeActions="none";
+     }else if(mainMenu.activeLayer=="patern" && actionsMenu.activeAction=="primitives"){
+      subMenu.activeActions="none"; 
+     }
+      actionsMenu.activeAction="none";
+   }else if(subMenu.activeActions!="none"){
+      subMenu.activeActions="none";
+   }else{
+       mainMenu.activeLayer="none";
+   };
+
+ }
   
   
 }
+
+
+
 
 //class hnds
 class HandLeft{

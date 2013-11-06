@@ -67,11 +67,9 @@ class SubMenu{
 
       if(activeActions!="none"){
          if(activeActions=="color" && activeLayer=="bckgr"){
-             setBckgrColor(left, right);
-             return;
+             actionsMenu.activeAction="color";             
          }else if(activeActions=="primitives" && activeLayer=="patern"){
-            layerPatern.drawPrimitivesPicker(left, right);
-             return; 
+              actionsMenu.activeAction="primitives";              
          }else if(activeActions=="return"){
            mainMenu.activeLayer="none";
            activeActions="none";
@@ -141,10 +139,7 @@ class SubMenu{
 
   };
   
-  void setBckgrColor(PVector left, PVector right){
 
-     colorBckgr=gestureActions.setColor(left, right, colorBckgr);   
-  }
 
 
 }

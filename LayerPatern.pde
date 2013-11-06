@@ -57,11 +57,14 @@ class LayerPatern{
    
    if(activePrimitive=="none") return;
    
-    pushStyle();
-        setTextHeader(h, mainMenu.activeLayer); 
-      popStyle();
+   
 
    pushMatrix();
+     translate(0,0,1);
+      pushStyle();
+        setTextHeader(h, "none"); 
+      popStyle();
+   
      pushStyle();
        fill(cf);
        stroke(cs);
@@ -214,6 +217,7 @@ class LayerPatern{
                 // set menu action
                 activePrimitive=item.item;
                 subMenu.activeActions="none";
+                actionsMenu.activeAction="none";
                 timer.activeId="none";
                  
           };

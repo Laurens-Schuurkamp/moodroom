@@ -162,6 +162,9 @@ class ActionsMenu
            layerPatern.cf=gestureActions.setColor(left, right, layerPatern.cf);  
         }else if(activeLayer=="pointcloud"){
            pointCloud3D.cs=gestureActions.setColor(left, right, pointCloud3D.cs);  
+        }else if(activeLayer=="bckgr"){
+          colorBckgr=gestureActions.setColor(left, right, colorBckgr);  
+          
         }
         
       }else if(action=="strokewidth"){
@@ -191,12 +194,16 @@ class ActionsMenu
            pointCloud3D.cs=gestureActions.setAlpha(left, right, pointCloud3D.cs);  
         }
 
+      }else if(action=="primitives"){
+         if(activeLayer=="patern"){
+            layerPatern.drawPrimitivesPicker(left, right);
+         }   
+        
+        
       }
 
-      
-      
-      
   }
+
   
   
   

@@ -36,7 +36,7 @@ ColorPicker colorPicker;
 Timer timer;
 
 LayerPatern layerPatern;
-String layers[]={"bckgr", "patern", "pointcloud", "sound"}; 
+String layers[]={"bckgr", "patern", "pointcloud", "sound"};
 
 boolean kinectConnected=true;
 boolean demoModus=false;
@@ -93,7 +93,6 @@ float sensitivity=0.1;
 color handFeedBack=color(255,0,255);
 
 color colorBckgr=color(0);
-
 
 void setup()
 {
@@ -246,7 +245,8 @@ void draw() {
     cf.framerate.setText("framerate ="+round(frameRate)+" fps");
   };
 
-  
+  PVector left=new PVector(0, 0);
+  PVector right=new PVector(0,0);
     // set the scene pos
     translate(width/2, height/2, 0);
     
@@ -261,7 +261,8 @@ void draw() {
         rotateX(rotX);
         rotateY(rotY);
         scale(zoomF);
-        translate(0, 0, -1250); 
+        translate(0,0,-1250);
+        
 
         //skelleton
       //pushMatrix();
@@ -297,8 +298,9 @@ void draw() {
             rx = map(skelleton.handright.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
             ry = map(skelleton.handright.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
             
-            PVector left=new PVector(lx, ly);
-            PVector right=new PVector(rx, ry);
+            left=new PVector(lx, ly);
+            right=new PVector(rx, ry);
+            
             
             pushMatrix();
               translate(0,0,2);  
@@ -325,25 +327,20 @@ void draw() {
   layerPatern.drawLayer();
   
   if(demoModus){
-    PVector left=new PVector(mouseX, mouseY);
-    PVector right=new PVector(mouseX, mouseY);
+    left=new PVector(mouseX, mouseY);
+    right=new PVector(mouseX, mouseY);
     
-    mainMenu.drawMenu(left, right);
+    
     pushMatrix();
       translate(0,0,2);
       HandRight hr=new HandRight(mouseX-(width/2), mouseY-(height/2), true);
     popMatrix();
-  }else{
-   
-    
-  };
+  }
   
-   
+  mainMenu.drawMenu(left, right); 
   
   if(init==false){
     init=true;
-    //mainmenu.drawMenu();
-    //subMenu.drawMenu();
     
   }
   
@@ -460,17 +457,25 @@ void setTextHeader(float h, String _txt){
     txt="geluiden";
   }else if(_txt=="skellet"){
     txt="skellet";
-  }    
+  }else if(_txt=="bckgr"){
+    txt="achtergrond";
+  }
+
+  String title = "Bewerk de laag "+txt;
   
   fill(0);
   noStroke();
-  rect(-width/4, -(h/2)-padding-46, width/2, 70, 15 );
+  if(_txt!="none"){
+    rect(-width/4, -(h/2)-padding-46, width/2, 70, 15 );
+  }else{
+    title="";
+  }
+  
   rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
   stroke(0);
   fill(255);
   textFont(font36, 36);
   textAlign(CENTER, CENTER);
-  String title = "Bewerk de laag "+txt;
   text(title, 0, -(h/2)-44);
   
 };
