@@ -4,6 +4,7 @@ class SwipeControl extends XnVPointControl
   boolean activated=false;
   int savedTime;
   int totalTime = 6000;
+  PVector handSwipe=new PVector(0,0);
 
 
   SwipeControl(){
@@ -35,7 +36,7 @@ class SwipeControl extends XnVPointControl
     if(activated==false){
        float w=height/2;
        pushMatrix();
-         translate(0,0,1);
+         translate(0,0,2);
          shape(waveActivation, -w/2, -w/2, w ,w);
        popMatrix();    
     }
@@ -85,16 +86,23 @@ class SwipeControl extends XnVPointControl
     println("onPrimaryPointCreate: swipedetector");
     println("hand point ="+ptFocus.getX());
     activated=true;
-
+    drawHands=true;
 
   }
 
   void onPrimaryPointDestroy(int nID) {
     //println("onPrimaryPointDestroy: " + nID); 
+   drawHands=false;
    activated=false;   
   }
+  
+  
 
   void onPointUpdate(XnVHandPointContext pContex) {
+    
+    //handSwipe.x=ptPosition.getX();
+    //handSwipe.y=ptPosition.getY();
+    
     //handPosition=ptPosition.getX();
     //println("handPosition ="+handPosition);
       

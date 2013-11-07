@@ -22,8 +22,8 @@ XML niteSettings;
 XML niteDefaults;
 
 Minim minim;
-//AudioInput sound;
-AudioPlayer sound;
+AudioInput sound;
+//AudioPlayer sound;
 FFT fft;
 BeatDetect beat;
 
@@ -79,8 +79,6 @@ float        rotY = radians(0);
 float s;  //screen scale
 int padding=24;
 
-
-
 RFont rfont64;
 RFont rfont48;
 
@@ -92,6 +90,8 @@ float lx,ly,rx,ry, bodyX;
 boolean drawHands=false;
 PShape handSvgR;
 PShape handSvgL;
+PShape handSvgRuserInactive;
+PShape handSvgLuserInactive;
 PShape handSvgRuser;
 PShape handSvgLuser;
 PShape waveActivation;
@@ -121,10 +121,10 @@ void setup()
   serverUrl="http://"+ip+":"+port+"/";
   println("server ="+serverUrl);
   
-  s =mainSettings.getFloat("height")/960;
+  s =mainSettings.getFloat("height")/800;
   //colorMode(HSB);
   int screenWidth=parseInt(s*1280);
-  int screenHeight=parseInt(s*1024);
+  int screenHeight=parseInt(s*800);
 
   size(screenWidth, screenHeight, OPENGL);
   zoom=screenHeight/640;
@@ -150,9 +150,7 @@ void setup()
   swipeDetector.SetMotionSpeedThreshold(niteSettings.getFloat("MotionSpeedThreshold"));  
   swipeDetector.SetXAngleThreshold(niteSettings.getFloat("XAngleThreshold"));
   swipeDetector.SetYAngleThreshold(niteSettings.getFloat("YAngleThreshold"));
-  
-  
-  
+
   mainMenu = new MainMenu();
   subMenu = new SubMenu();
   actionsMenu =  new ActionsMenu();
@@ -224,13 +222,13 @@ void setup()
   font12 = createFont("VAGRoundedLightSSi", 12);
   font10 = createFont("VAGRoundedLightSSi", 10);
   
-    minim = new Minim(this);
+   
+  minim = new Minim(this);
+  sound = minim.getLineIn(Minim.STEREO, 1024);;
   
-  //sound = minim.getLineIn(Minim.STEREO, 1024);;
-  
-  String path = "sounds/timo-maas.mp3";
-  sound = minim.loadFile(path, 1024);
-  sound.loop();
+  //String path = "sounds/timo-maas.mp3";
+  //sound = minim.loadFile(path, 1024);
+  //sound.loop();
   
   fft = new FFT(sound.bufferSize(), sound.sampleRate());
   beat = new BeatDetect();
@@ -254,6 +252,11 @@ void setup()
   
   handSvgRuser  = loadShape("data/gui/hand_r.svg");
   handSvgLuser  = loadShape("data/gui/hand_l.svg");
+  
+  handSvgRuserInactive  = loadShape("data/gui/hand_r.svg");
+  handSvgLuserInactive  = loadShape("data/gui/hand_l.svg");
+  handSvgRuserInactive.setFill(color(128,64));
+  handSvgLuserInactive.setFill(color(128,64));
   
   handSvgR  = loadShape("data/gui/hand_r.svg");
   handSvgL  = loadShape("data/gui/hand_l.svg");
@@ -291,8 +294,8 @@ void draw() {
     
     if (kinectConnected) {
       
-      swipeControl.checkActive();
-
+      
+      
       context.update();
       context.update(sessionManager);
       
@@ -302,23 +305,18 @@ void draw() {
         rotateX(rotX);
         rotateY(rotY);
         scale(zoomF);
-        translate(0,0,-1250);
+        translate(0,0,-1350);
         
 
         //skelleton
       //pushMatrix();
           //translate(0, 0, -1250);  
-        for(int i=0;i<userList.length;i++)
-        {
-         
-          if(context.isTrackingSkeleton(userList[i])){
-             
-            skelleton.drawSkeleton(userList[i]);
-          }
-
-        }
+      for(int i=0;i<userList.length;i++)
+       {
+         skelleton.drawSkeleton(userList[i]);
+       }
         
-        pointCloud3D.drawPointCloud();
+      pointCloud3D.drawPointCloud();
         
       popMatrix();
      
@@ -326,37 +324,53 @@ void draw() {
       //hands
       if (userList.length<=0){
           drawHands=false;
+          
           //flowRouter.SetActive(waveDetector);
           
       }else{
-                
-          drawHands=true;
-          if(drawHands){
-            skelleton.getSkeleton(userList[0]);
-            bodyX=map(skelleton.torso.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
-            lx = map(skelleton.handleft.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
-            ly = map(skelleton.handleft.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
-            rx = map(skelleton.handright.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
-            ry = map(skelleton.handright.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
-            
-            left=new PVector(lx, ly);
-            right=new PVector(rx, ry);
-            
-            
-            pushMatrix();
-              translate(0,0,2);  
-              //handSvgR.setStroke(color(255));
-              //handSvgL.setStroke(color(255));
-              
-              HandLeft hl=new HandLeft(lx-(width/2), ly-(height/2), true);
-              HandRight hr=new HandRight(rx-(width/2), ry-(height/2), true);
-              
-//              shape(handSvgR, rx-(width/2)-(handSize/2), ry-(height/2)-(handSize/2), handSize,handSize);
-//              shape(handSvgL, lx-(width/2)-(handSize/2), ly-(height/2)-(handSize/2), handSize,handSize);
-              
-              
-            popMatrix();
 
+          swipeControl.checkActive();      
+          
+          drawHands=true;
+         
+          if(drawHands){
+             for(int i=0;i<userList.length;i++)
+            {
+              if(context.isTrackingSkeleton(userList[i])){
+              
+              skelleton.drawSkeleton(userList[i]);  
+                
+              skelleton.getSkeleton(userList[i]);
+              bodyX=map(skelleton.torso.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
+              lx = map(skelleton.handleft.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
+              ly = map(skelleton.handleft.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
+              rx = map(skelleton.handright.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
+              ry = map(skelleton.handright.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
+
+              left=new PVector(lx, ly);
+              right=new PVector(rx, ry);
+
+              pushMatrix();
+                translate(0,0,2);  
+                //handSvgR.setStroke(color(255));
+                //handSvgL.setStroke(color(255));
+                if(i==0){
+                  HandLeft hl=new HandLeft(lx-(width/2), ly-(height/2), true, true);
+                  HandRight hr=new HandRight(rx-(width/2), ry-(height/2), true, true);
+                }else{
+                  HandLeft hl=new HandLeft(lx-(width/2), ly-(height/2), true, false);
+                  HandRight hr=new HandRight(rx-(width/2), ry-(height/2), true, false);
+                }
+                 
+               popMatrix();
+                
+                if(i==0){
+                  mainMenu.drawMenu(left, right , i);
+                }
+                
+              }
+
+            }
 
           }
         
@@ -371,12 +385,11 @@ void draw() {
     right=new PVector(mouseX, mouseY);
     pushMatrix();
       translate(0,0,2);
-      HandRight hr=new HandRight(mouseX-(width/2), mouseY-(height/2), true);
+      HandRight hr=new HandRight(mouseX-(width/2), mouseY-(height/2), true, true);
+      //HandLeft hl=new HandLeft(-(width/4), -(height/4), true, false);
     popMatrix();
-    mainMenu.drawMenu(left, right); 
-    //swipeControl.activated=true;
-  }else if(swipeControl.activated){
-    mainMenu.drawMenu(left, right); 
+    mainMenu.drawMenu(left, right, 0); 
+    
   }
   
   

@@ -32,7 +32,7 @@ class MainMenu
     }
   }
 
-  void drawMenu(PVector left, PVector right) {
+  void drawMenu(PVector left, PVector right, int id) {
 
     if (activeLayer!="none") {
       //println("active layer ="+activeLayer);
@@ -57,7 +57,7 @@ class MainMenu
       MenuItem item=(MenuItem) menuList.get(i);
       boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
       boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
-
+      
       if (leftHit || rightHit) {
         boolean timed = timer.setTimer(item.x, item.y, item.item);
         if (timed) {

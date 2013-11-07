@@ -9,7 +9,7 @@ class GestureActions
   float distXorg=0;
   float distYorg=0;
   
-  float offset=220*s;
+  float offset=200*s;
   PVector tl=new PVector(-offset, -offset);
   PVector bl=new PVector(-offset, offset);
   
@@ -78,12 +78,14 @@ class GestureActions
         hand=right;
         activeHand="right";
         isActive=true;
+        handSvgRuser.setFill(handFeedBack);
 
       }//zit ik in de color picker met links?
       else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
         hand=left;
         activeHand="left";
         isActive=true;
+        handSvgLuser.setFill(handFeedBack);
         //println("cp links :"+left.y);
       }
     
@@ -136,12 +138,14 @@ class GestureActions
         hand=right;
         activeHand="right";
         isActive=true;
+        handSvgRuser.setFill(handFeedBack);
 
       }//zit ik in de color picker met links?
       else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
         hand=left;
         activeHand="left";
         isActive=true;
+        handSvgLuser.setFill(handFeedBack);
         //println("cp links :"+left.y);
       }
     
@@ -186,12 +190,14 @@ class GestureActions
         hand=right;
         activeHand="right";
         isActive=true;
+        handSvgRuser.setFill(handFeedBack);
 
       }//zit ik in de color picker met links?
       else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
         hand=left;
         activeHand="left";
         isActive=true;
+        handSvgLuser.setFill(handFeedBack);
         //println("cp links :"+left.y);
       }
     
@@ -254,23 +260,23 @@ class GestureActions
          if(i==0){
            //top
            ellipse(tl.x, tl.y, r, r);
-           HandLeft hl=new HandLeft(tl.x, tl.y, false);
+           HandLeft hl=new HandLeft(tl.x, tl.y, false, false);
            ellipse(tr.x, tr.y, r, r);
-           HandRight hr=new HandRight(tr.x, tr.y, false);
+           HandRight hr=new HandRight(tr.x, tr.y, false, false);
            
          }else if(i==1){
            //bottem
            ellipse(bl.x, bl.y, r, r);
-           HandLeft hl=new HandLeft(bl.x, bl.y, false);
+           HandLeft hl=new HandLeft(bl.x, bl.y, false, false);
            
            ellipse(br.x, br.y, r, r);
-           HandRight hr=new HandRight(br.x, br.y, false);           
+           HandRight hr=new HandRight(br.x, br.y, false, false);           
          }
          
        };
        
        if(demoModus){
-         HandLeft demo=new HandLeft(bl.x, bl.y, true); 
+         HandLeft demo=new HandLeft(bl.x, bl.y, true, true); 
          left.x=bl.x + (width/2);
          left.y=bl.y + (height/2);
        }
@@ -306,7 +312,7 @@ class GestureActions
    PVector setScale(PVector left, PVector right, PVector scaling){
        
        if(demoModus){
-         HandLeft demo=new HandLeft(bl.x, bl.y, true); 
+         HandLeft demo=new HandLeft(bl.x, bl.y, true, true); 
          left.x=bl.x + (width/2);
          left.y=bl.y + (height/2);
        }  
@@ -389,6 +395,9 @@ class GestureActions
 
  
  void toggleMenus(){
+    handSvgRuser.setFill(color(0));
+    handSvgLuser.setFill(color(0));
+   
    if(actionsMenu.activeAction!="none"){
     if(mainMenu.activeLayer=="bckgr"){
       subMenu.activeActions="none";
@@ -416,23 +425,26 @@ class GestureActions
 //class hnds
 class HandLeft{
   
-  HandLeft(float x, float y, boolean user){
-    if(user){
+  HandLeft(float x, float y, boolean user, boolean activeUser){
+    if(user && activeUser){
       shape(handSvgLuser, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
+    }else if(user && activeUser==false){
+      shape(handSvgLuserInactive, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
     }else{
       shape(handSvgL, x-(handSize/1.5), y-(handSize/2), handSize,handSize);
     }
-
     if (debug) ellipse(x,y,10,10);
   }
 }
 
 class HandRight{
   
-    HandRight(float x, float y, boolean user){
+    HandRight(float x, float y, boolean user, boolean activeUser){
       
-      if(user){
+      if(user && activeUser){
         shape(handSvgRuser, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
+      }else if(user && activeUser==false){
+        shape(handSvgRuserInactive, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
       }else{
         shape(handSvgR, x-(handSize/1.25), y-(handSize/2), handSize,handSize);
       }

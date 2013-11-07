@@ -8,7 +8,7 @@ class PointCloud3D
    PVector density=new PVector(0.25,0.25);
    PVector dims=new PVector(50,50);
    PVector scaling=new PVector(1,1);
-   PVector strokeW=new PVector(2,2);
+   PVector strokeW=new PVector(10,10);
    
    int amplitude=0;
 
@@ -40,12 +40,15 @@ class PointCloud3D
 
        pushStyle(); 
          
-         if(strokeW.x>25)strokeW.x=25;
+         //if(strokeW.x>25)strokeW.x=25;
+         
+         
+         float stw=strokeW.x/4;
          if(stepsX<5) stepsX=5;
          if(stepsY<5) stepsY=5;
          
          stroke(cs);
-         strokeWeight(strokeW.x);
+         strokeWeight(stw);
         for (int y=0;y < context.depthHeight();y+=stepsY)
         {
           for (int x=0;x < context.depthWidth();x+=stepsX)

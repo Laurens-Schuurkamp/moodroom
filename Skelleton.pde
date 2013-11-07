@@ -276,7 +276,7 @@ void onNewUser(int userId)
   println("  start pose detection");
   
   int[] userList = context.getUsers(); 
-  if(userList.length>1) return;
+  //if(userList.length>1) return;
   
   if (autoCalib)
     context.requestCalibrationSkeleton(userId, true);
@@ -291,6 +291,8 @@ void onLostUser(int userId)
 //    swipeControl.activated=false;
 //    swipeControl.swipeHor=false;
 //    swipeControl.swipeVer=false;
+    
+    
     int[] userList = context.getUsers(); 
    
     println("onLostUser - userId: " + userId + " users length ="+userList.length);
