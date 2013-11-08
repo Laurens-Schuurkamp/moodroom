@@ -27,6 +27,7 @@ class GestureActions
   }
   
   boolean checkMenuActive(PVector left, PVector right, float h){
+    //println("checking sub items");
     if ( ( left.y-(height/2) > -h/2 && left.y-(height/2) < h/2 ) || ( right.y-(height/2) > -h/2 && right.y-(height/2) < h/2 )) {
       return true;
     }else{
@@ -343,7 +344,6 @@ class GestureActions
    
    boolean checkHandsSteady(PVector left, PVector right, boolean single, String activeHand){
      
-     
       float sens=sensitivity*handSize;
       boolean timed=false;
       boolean timerLeft=false;
@@ -397,22 +397,7 @@ class GestureActions
  void toggleMenus(){
     handSvgRuser.setFill(color(0));
     handSvgLuser.setFill(color(0));
-   
-   if(actionsMenu.activeAction!="none"){
-    if(mainMenu.activeLayer=="bckgr"){
-      subMenu.activeActions="none";
-     }else if(mainMenu.activeLayer=="patern" && actionsMenu.activeAction=="primitives"){
-      subMenu.activeActions="none"; 
-     }else if(mainMenu.activeLayer=="sound" && actionsMenu.activeAction=="vibration"){
-      subMenu.activeActions="none"; 
-     }
-        
-      actionsMenu.activeAction="none";
-   }else if(subMenu.activeActions!="none"){
-      subMenu.activeActions="none";
-   }else{
-       mainMenu.activeLayer="none";
-   };
+    actionsMenu.activeAction="none";
 
  }
   

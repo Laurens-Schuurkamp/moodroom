@@ -2,10 +2,10 @@ class SubMenu{
 
  ArrayList subMenuList=new ArrayList();
  
- String actionsBckgr []={ "color","return"};
- String actionsPatern []={ "stroke", "size", "primitives", "color", "return"};
- String actionsPointcloud []={"size", "color", "return"};
- String actionsSound []={"soundPrimitives", "vibration", "return"};
+ String actionsBckgr [][]={ {"color", "false"},{"return", "true"}};
+ String actionsPatern [][]={ {"stroke", "true"}, {"size", "true"}, {"primitives", "false"}, {"color", "true"}, {"return", "true"}};
+ String actionsPointcloud [][]={{"size", "true"}, {"color", "true"}, {"return", "true"}};
+ String actionsSound [][]={{"soundPrimitives", "true"}, {"vibration", "false"}, {"return", "true"}};
 
 
  float w, h, x, y;
@@ -42,20 +42,22 @@ class SubMenu{
 
     }
 
-    back = new MenuItem("action", "return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
+    back = new MenuItem("action", "return", false, 1000, width/2-w-padding, height/2-h-padding, sSvg);
     float y= -h/2;
 
  };
  
- void addActions(String [] actions, SubMenuActions layerActions){
+ void addActions(String [][] actions, SubMenuActions layerActions){
    
    float widthTotal=(w*actions.length)+(padding*actions.length)+padding;
    for(int j=0; j<actions.length; j++){
           
           float x= -widthTotal/2 + (j*(w+padding)) +padding;
           float y= -h/2;
-                    
-          MenuItem item=new MenuItem("subMenu", actions[j], j, x, y, sSvg);
+          boolean subs=false;
+          if(actions[j][1]=="true") subs=true;
+                     
+          MenuItem item=new MenuItem("subMenu", actions[j][0], subs, j, x, y, sSvg);
           if(item.item=="soundPrimitives"){
             item.iconSvg.setFill(color(0,96));
           };
@@ -67,35 +69,23 @@ class SubMenu{
 
  
  void drawSubMenu(PVector left, PVector right, String activeLayer){
-      //println("active action ="+
-      if(activeActions!="none"){
-         if(activeActions=="color" && activeLayer=="bckgr"){
-             actionsMenu.activeAction="color";             
-         }else if(activeActions=="primitives" && activeLayer=="patern"){
-              actionsMenu.activeAction="primitives";              
-         }else if(activeActions=="vibration" && activeLayer=="sound"){
-              actionsMenu.activeAction="vibration"; 
-         }else if(activeActions=="return"){
-           mainMenu.activeLayer="none";
-           activeActions="none";
-           return;
 
-         };
-        
-         actionsMenu.drawActions(activeActions, activeLayer, left, right);
-         return;
-      };
-
-      //activated  =  gestureActions.checkMenuActive(left, right, h);
-      //if(activated==false)return;
+     if(actionsMenu.activeAction!="none"){
+        actionsMenu.drawActions(activeActions, activeLayer, left, right);
+        return;
+      } 
+   
+     
+      if( mainTweener.isTweening() || menuLevel>=1 ){
+        actionsMenu.drawActions(activeActions, activeLayer, left, right);
+      }
       
-      
-
+     
       SubMenuActions subList;
       int i,j;
       
       pushMatrix();
-      translate(0,0,1);
+      translate(mainMenu.posXmenu+width,0,1);
       
       pushStyle();
         setTextHeader(h, activeLayer); 
@@ -109,24 +99,46 @@ class SubMenu{
             for(j=0; j<subList.actions.size(); j++){
 
               MenuItem item=(MenuItem) subList.actions.get(j);
-              
-              boolean leftHit=false;
-              boolean rightHit=false;;
+              if(!mainTweener.isTweening() && menuLevel==1){
 
-              if(item.item!="soundPrimitives"){
-                leftHit=gestureActions.checkSingleHitId(item, left, w, h);
-                rightHit=gestureActions.checkSingleHitId(item, right, w, h);
-              };
-               
-             if(leftHit || rightHit){
-               boolean timed = timer.setTimer(item.x, item.y, item.item);
-               if(timed){
-                    // set menu action
-                    activeActions=item.item;
-
+                boolean leftHit=false;
+                boolean rightHit=false;;
+  
+                if(item.item!="soundPrimitives"){
+                  leftHit=gestureActions.checkSingleHitId(item, left, w, h);
+                  rightHit=gestureActions.checkSingleHitId(item, right, w, h);
                 };
-      
-             };
+                 
+               if(leftHit || rightHit){
+                 boolean timed = timer.setTimer(item.x, item.y, item.item);
+                 if(timed){
+                      // set menu action
+                      
+                      if(item.subs){
+                        if(item.item=="return"){
+                          menuLevel--;
+                          mainMenu.activeLayer="none";
+                          actionsMenu.activeAction="none";
+                          activeActions="none";
+                          startMainTween(true, "right");
+                          
+                        }else{
+                          menuLevel++;
+                          startMainTween(true, "left");
+                          activeActions=item.item;
+                        };
+                      }else{
+                          //menuLevel++;
+                          activeActions=item.item;
+                          actionsMenu.activeAction=item.item;
+                          //startMainTween(true, "left");
+                          
+                      };
+
+                  };
+        
+               };
+              };
              
              shape(item.iconSvg, item.x, item.y);
              

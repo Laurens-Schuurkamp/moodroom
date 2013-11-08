@@ -10,6 +10,8 @@ class MainMenu
  
   ArrayList menuList=new ArrayList();
   float w, h, x, y;
+  
+  float posXmenu;
 
   //int rTimer=66;
   float sSvg=0.8;
@@ -27,26 +29,53 @@ class MainMenu
       float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
       
-      MenuItem item=new MenuItem("mainMenu", layers[i], i, x, y, sSvg);
+      MenuItem item=new MenuItem("mainMenu", layers[i], true, i, x, y, sSvg);
       menuList.add(item);
     }
   }
-
+  
+  
   void drawMenu(PVector left, PVector right, int id) {
+    
+    float posXtarget=0;
+      if(menuLevel==0){
+          posXtarget=0;
+      }else if(menuLevel==1){
+          posXtarget=-width;
+      }else if(menuLevel==2){
+          posXtarget=-2*width;
+      };
+        
+    if(mainTweener.isTweening()){
+      float tweenPos=mainTweener.position();
+      if(tweenPos>=0.99){
+        tweenPos=1;
+        mainTweener.end();
+      }      
+      println("tweener pos ="+mainTweener.position());
 
-    if (activeLayer!="none") {
-      //println("active layer ="+activeLayer);
-      subMenu.drawSubMenu(left, right, activeLayer);
-      return;
+      if(posXtarget<posXmenu){
+         posXmenu = posXtarget + (( 1-tweenPos )*width); 
+      }else{
+         posXmenu = (posXtarget-width) + (tweenPos *width);    
+      }; 
+
+    }else{
+      posXmenu=posXtarget;
+      
     };
 
+    subMenu.drawSubMenu(left, right, activeLayer);
+
+    if(menuLevel>0 && !mainTweener.isTweening()) return;
+    
     activated  =  gestureActions.checkMenuActive(left, right, h);  
     if (activated==false)return;
 
     int hitId=-1;
 
     pushMatrix();
-    translate(0, 0, 1);
+    translate(posXmenu, 0, 1);
     pushStyle();
     fill(0);
     rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
@@ -55,20 +84,24 @@ class MainMenu
     for (int i=0; i<menuList.size(); i++) {
 
       MenuItem item=(MenuItem) menuList.get(i);
-      boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
-      boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
       
-      if (leftHit || rightHit) {
-        boolean timed = timer.setTimer(item.x, item.y, item.item);
-        if (timed) {
-          // set menu action
-          activeLayer=item.item;
-          println("active layer ="+item.item);
-          timer.activeId="none";
+      if( !mainTweener.isTweening() && menuLevel==0) {
+        //println("checking tweener "+mainTweener.isTweening());
+        //println("check hands level 0");
+        boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
+        boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
+        
+        if (leftHit || rightHit) {
+          boolean timed = timer.setTimer(item.x, item.y, item.item);
+          if (timed) {
+            // set menu action
+            menuLevel++;
+            activeLayer=item.item;
+            timer.activeId="none";
+            startMainTween(true, "left");
+          };
         };
       };
-
-
 
       shape(item.iconSvg, item.x, item.y);
     };
@@ -90,12 +123,15 @@ class MenuItem {
   PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg"); 
   color c;
   String menuLevel;
+  boolean subs;
 
-  MenuItem(String _menuLevel, String _item, int _id, float _x, float _y, float sSvg) {
+  MenuItem(String _menuLevel, String _item, boolean _subs, int _id, float _x, float _y, float sSvg) {
+    
     id=_id;
     x=_x;
     y=_y;
     item = _item;
+    subs=_subs;
     menuLevel=_menuLevel; 
     iconSvg = loadShape("data/gui/menu/icon_"+item+".svg");
     iconSvg.scale(sSvg*s);

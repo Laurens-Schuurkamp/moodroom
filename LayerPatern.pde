@@ -3,7 +3,7 @@ class LayerPatern{
  ArrayList primitivesList=new ArrayList();
  float w, h, x, y;
 
- String activePrimitive="none";
+ String activePrimitive="ellipse";
  boolean activated;
  
  boolean enabled=true;
@@ -46,7 +46,7 @@ class LayerPatern{
       float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
       
-      MenuItem item=new MenuItem("action", primitives[i], i, x, y, sSvg);
+      MenuItem item=new MenuItem("action", primitives[i], false, i, x, y, sSvg);
       primitivesList.add(item); 
       
     }

@@ -13,7 +13,7 @@ class ActionsMenu
     "strokecolor", "strokewidth", "return"
   };
   String actionsSize [] = {
-    "density", "size", "return"
+    "density", "scale", "return"
   }; 
 
   float w, h, x, y;
@@ -47,7 +47,7 @@ class ActionsMenu
       }
     }
 
-    back = new MenuItem("action", "return", 1000, width/2-w-padding, height/2-h-padding, sSvg);
+    back = new MenuItem("action", "return", false, 1000, width/2-w-padding, height/2-h-padding, sSvg);
     float y= -h/2;
   }
 
@@ -59,7 +59,7 @@ class ActionsMenu
       float x= -widthTotal/2 + (j*(w+padding)) +padding;
       float y= -h/2;
       println(actions[j]);          
-      MenuItem item=new MenuItem("action", actions[j], j, x, y, sSvg);
+      MenuItem item=new MenuItem("action", actions[j], false, j, x, y, sSvg);
       layerActions.actions.add(item); 
 
     }
@@ -67,24 +67,18 @@ class ActionsMenu
 
   void drawActions(String activeActions, String activeLayer, PVector left, PVector right) {
 
-    if (activeAction!="none") { 
-      if(activeAction=="return"){
-         subMenu.activeActions="none";
-         activeAction="none";
-         
-      }else{
+      //println("before draw actions :"+activeAction+" menu level ="+menuLevel);  
+      if(activeAction!="none"){
         setActions(activeAction, activeLayer, left, right);
-          
+        return;
       };
-      return;
-
-    }
+    
     
     SubActions subList;
       int i,j;
       
       pushMatrix();
-      translate(0,0,1);
+      translate(mainMenu.posXmenu+(2*width),0,1);
 
       pushStyle();
         setTextHeader(h, activeLayer); 
@@ -98,18 +92,27 @@ class ActionsMenu
             for(j=0; j<subList.actions.size(); j++){
 
               MenuItem item=(MenuItem) subList.actions.get(j);
-              boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
-              boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
-   
-             if(leftHit || rightHit){
-               boolean timed = timer.setTimer(item.x, item.y, item.item);
-               if(timed){
-                    // set menu action
-                    activeAction=item.item;
+              if(!mainTweener.isTweening() && menuLevel==2){
+                  
+                  boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
+                  boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
+       
+                 if(leftHit || rightHit){
+                   boolean timed = timer.setTimer(item.x, item.y, item.item);
+                   if(timed){
+                        // set menu action
 
-                };
-      
-             };
+                        if(item.item=="return"){
+                          menuLevel--;
+                          activeAction="none";
+                          startMainTween(true, "right");
+                        }else{
+                          activeAction=item.item;
+                        };
+                      }
+
+                 };
+              };
              
              shape(item.iconSvg, item.x, item.y);
 
@@ -125,7 +128,7 @@ class ActionsMenu
 
   void setActions(String action, String activeLayer, PVector left, PVector right) {
       
-    if(action=="size"){
+    if(action=="scale"){
          boolean isActive=gestureActions.scalingActive(left, right);
                
          if(isActive && activeLayer=="patern"){

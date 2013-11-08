@@ -49,6 +49,7 @@ Timer timer;
 
 LayerPatern layerPatern;
 String layers[]={"bckgr", "patern", "pointcloud", "sound"};
+int menuLevel=0;
 
 boolean kinectConnected=true;
 boolean demoModus=false;
@@ -57,16 +58,13 @@ String ip;
 String port;
 String serverUrl;
 
-Boolean menuActive=false;
-
 ControlP5 cp5;
 ControlFrame cf;
 
 Tween mainTweener;
 Tween subTweener;
 Shaper cosine;
-float duration=100;
-
+float duration=30;
 
 float zoom;
 float amp=2;
@@ -79,11 +77,8 @@ float        rotY = radians(0);
 float s;  //screen scale
 int padding=24;
 
-RFont rfont64;
-RFont rfont48;
 
 PFont font64, font48, font36, font32, font28, font24, font16, font12, font10;
-
 
 //hands
 float lx,ly,rx,ry, bodyX;
@@ -234,9 +229,6 @@ void setup()
   beat = new BeatDetect();
   amp=2;
   
-  
-  
-
   mainTweener = new Tween(this, 0.5);
   cosine = new CosineShaper( Tween.OUT );
   mainTweener.setEasing( cosine );
@@ -247,8 +239,8 @@ void setup()
   subTweener.end();
 
   RG.init(this);
-  rfont64 = new RFont( "data/fonts/vagrlsb_.ttf", 64, RFont.LEFT);
-  rfont48 = new RFont( "data/fonts/vagrlsb_.ttf", 48, RFont.LEFT);
+  //rfont64 = new RFont( "data/fonts/vagrlsb_.ttf", 64, RFont.LEFT);
+  //rfont48 = new RFont( "data/fonts/vagrlsb_.ttf", 48, RFont.LEFT);
   
   handSvgRuser  = loadShape("data/gui/hand_r.svg");
   handSvgLuser  = loadShape("data/gui/hand_l.svg");
@@ -293,7 +285,6 @@ void draw() {
     translate(width/2, height/2, 0);
     
     if (kinectConnected) {
-      
       
       
       context.update();
@@ -392,8 +383,8 @@ void draw() {
     
   }
   
-  
-  
+  //println("menu level ="+menuLevel);
+
   if(init==false){
     init=true;
     
@@ -408,21 +399,17 @@ void updateTweenMain() {
 }
 
 
-void startMainTween(boolean newTween, int tweenDirection) {
-   
-  mainTweener.setDuration(duration, Tween.FRAMES);
+void startMainTween(boolean newTween, String tweenDirection) {
+  duration=15;
+  mainTweener.setDuration(15, Tween.FRAMES);
+  //mainTweener.setPlayMode( Tween.ONCE );
   mainTweener.start();
 
 }
 
 void startSubTween(int dir) {
-
    subTweener.start();
-    
 }
-
-
-
 
 
 void keyReleased()
