@@ -9,7 +9,7 @@
         port="3000"
         qrActive="false"
 				actionTimer="2000"
-				timerDelay="500"
+				timerDelay="250"
 				sensitivity="0.01"
 				skeletActive="true"
 				pointcloudActive="true"

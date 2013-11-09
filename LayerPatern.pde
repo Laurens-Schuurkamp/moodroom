@@ -54,16 +54,11 @@ class LayerPatern{
  };
 
  void drawLayer(){
-   
-   
-   
+
    if(activePrimitive=="none") return;
 
    pushMatrix();
      translate(0,0,1);
-//      pushStyle();
-//        setTextHeader(h, "none"); 
-//      popStyle();
    
      pushStyle();
        fill(cf);
@@ -207,9 +202,9 @@ class LayerPatern{
       translate(0,0,1);
       
       pushStyle();
-        fill(0);
-        rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
-      popStyle();
+      String header="Kies een patroon vorm";
+      setTextHeader(header); 
+    popStyle();
       
       boolean hit=false;
       

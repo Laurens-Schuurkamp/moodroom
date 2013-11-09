@@ -81,7 +81,8 @@ class ActionsMenu
       translate(mainMenu.posXmenu+(2*width),0,1);
 
       pushStyle();
-        setTextHeader(h, activeLayer); 
+        String header="Bewerk de "+activeActions+" voor laag "+activeLayer;   
+        setTextHeader(header); 
       popStyle();
       boolean hit=false;
       

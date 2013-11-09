@@ -13,7 +13,7 @@ public class ColorPicker
     this.h = h;
     this.c = c;
     
-    cpImage = new PImage( w, 150 );
+    cpImage = new PImage( w, parseInt(mainMenu.menuHeight) );
     
     init();
   }

@@ -88,7 +88,8 @@ class SubMenu{
       translate(mainMenu.posXmenu+width,0,1);
       
       pushStyle();
-        setTextHeader(h, activeLayer); 
+        String header="Bewerk de laag "+activeLayer;
+        setTextHeader(header); 
       popStyle();
       boolean hit=false;
       

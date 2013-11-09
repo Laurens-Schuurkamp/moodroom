@@ -103,6 +103,8 @@ color handFeedBack=color(255,0,255);
 
 color colorBckgr=color(0);
 
+
+
 void setup()
 {
   xmlSettings = loadXML("data/appSettings.xml");
@@ -117,7 +119,6 @@ void setup()
   println("server ="+serverUrl);
   
   s =mainSettings.getFloat("height")/800;
-  //colorMode(HSB);
   int screenWidth=parseInt(s*1280);
   int screenHeight=parseInt(s*800);
 
@@ -302,10 +303,12 @@ void draw() {
         //skelleton
       //pushMatrix();
           //translate(0, 0, -1250);  
+      pushStyle();
       for(int i=0;i<userList.length;i++)
        {
          skelleton.drawSkeleton(userList[i]);
-       }
+       };
+      popStyle();
         
       pointCloud3D.drawPointCloud();
         
@@ -487,38 +490,19 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   return p;
 }
 
-void setTextHeader(float h, String _txt){
-  
-  String txt="";
-  
-  if(_txt=="patern"){
-    txt="patronen";
-  }else if(txt=="pointcloud"){
-    txt="3D punten";
-  }else if(_txt=="sound"){
-    txt="geluiden";
-  }else if(_txt=="skellet"){
-    txt="skellet";
-  }else if(_txt=="bckgr"){
-    txt="achtergrond";
-  }
 
-  String title = "Bewerk de laag "+txt;
+
+void setTextHeader(String header){
   
   fill(0);
   noStroke();
-  if(_txt!="none"){
-    rect(-width/4, -(h/2)-padding-46, width/2, 70, 15 );
-  }else{
-    title="";
-  }
-  
-  rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
+  rect(-width/4, -(mainMenu.menuHeight/2)-(3*padding), width/2, (4*padding), 15 );
+  rect(-width/2, -(mainMenu.menuHeight/2)-padding, width, mainMenu.menuHeight+(2*padding) );
   stroke(0);
   fill(255);
   textFont(font36, 36);
   textAlign(CENTER, CENTER);
-  text(title, 0, -(h/2)-44);
+  text(header, 0, -(mainMenu.menuHeight/2)-(2*padding));
   
 };
 

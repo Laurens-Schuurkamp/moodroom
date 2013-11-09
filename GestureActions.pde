@@ -21,7 +21,7 @@ class GestureActions
   GestureActions(){
     println("gestureScaling constopuctor");
     
-    colorPicker = new ColorPicker( 0, 0, width, parseInt(handSize), 255 );
+    colorPicker = new ColorPicker( 0, 0, width, parseInt(mainMenu.menuHeight), 255 );
     //swipeDelay=niteSettings.getInt("swipeDelay");
 
   }
@@ -53,19 +53,7 @@ class GestureActions
 
   }
   
-  boolean zoomGestureActivation(PVector hand, PVector top, PVector bottom, float hitSize){
-    
-        boolean hit=false;  
-        //top position
-       if ( hand.x - (width/2) > top.x-hitSize && hand.x - (width/2) < top.x+hitSize && hand.y-(height/2) > top.y-hitSize && hand.y-(height/2) < top.y+hitSize ) {
-            hit=true;    
-        }else if ( hand.x - (width/2) > bottom.x-hitSize && hand.x - (width/2) < bottom.x+hitSize && hand.y-(height/2) > bottom.y-hitSize && hand.y-(height/2) < bottom.y+hitSize ) {
-            hit=true;
-        };
 
-    
-    return hit;
-  }
 
   color setColor(PVector left, PVector right, color c){
     
@@ -173,8 +161,8 @@ class GestureActions
       };
    c=color(r,g,b,alpha);
   
-  lastLeft=left;
-    lastRight=right;
+   lastLeft=left;
+   lastRight=right;
   
    
    return c;
@@ -242,6 +230,16 @@ class GestureActions
    return amp;
   };
   
+  boolean zoomGestureActivation(PVector hand, PVector hitItem,  float hitSize){
+    
+       boolean hit=false;  
+        //top position
+       if ( hand.x - (width/2) > hitItem.x-hitSize && hand.x - (width/2) < hitItem.x+hitSize && hand.y-(height/2) > hitItem.y-hitSize && hand.y-(height/2) < hitItem.y+hitSize ) {
+            hit=true;    
+       }
+
+    return hit;
+   }
   
   boolean scalingActive(PVector left, PVector right){
      
@@ -284,17 +282,21 @@ class GestureActions
        popStyle();
        popMatrix();
 
-       boolean leftHit=gestureActions.zoomGestureActivation(left, tl,  bl, hitSize);
-       boolean rightHit=gestureActions.zoomGestureActivation(right, tr,  br, hitSize);
+       boolean leftHitTop=gestureActions.zoomGestureActivation(left, tl, hitSize);
+       boolean leftHitBottom=gestureActions.zoomGestureActivation(left, bl, hitSize);
+       
+       boolean rightHitTop=gestureActions.zoomGestureActivation(right, tr, hitSize);
+       boolean rightHitBottom=gestureActions.zoomGestureActivation(right, br, hitSize);
 
        handSvgRuser.setFill(color(0));
        handSvgLuser.setFill(color(0));
        
-       if(rightHit)  handSvgRuser.setFill(handFeedBack);
-       if(leftHit)  handSvgLuser.setFill(handFeedBack);
+       if(rightHitTop || rightHitBottom)  handSvgRuser.setFill(handFeedBack);
+       if(leftHitTop || leftHitBottom)  handSvgLuser.setFill(handFeedBack);
        
-       if(leftHit && rightHit){
-           boolean timed = timer.setTimer(0, 0, "scaleActivation");
+       if( (leftHitTop && rightHitBottom) ||  (leftHitBottom && rightHitTop)){
+
+         boolean timed = timer.setTimer(0, 0, "scaleActivation");
            if(timed){
              timer.activeId="none";
              distXorg=right.x-left.x;

@@ -27,9 +27,6 @@ public class ControlFrame extends PApplet {
                     .setFont(createFont("arial",20))
                     ;
                     
-                  
-
-         
      cp5.addSlider("SteadyDuration").setRange(0, 500).setPosition(10,60).setSize(200,16).setValue(niteSettings.getInt("SteadyDuration"));
 
      cp5.addSlider("MotionTime").setRange(0, 1000).setPosition(10,90).setSize(200,16).setValue(niteSettings.getInt("MotionTime"));

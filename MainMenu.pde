@@ -9,6 +9,7 @@ class MainMenu
  String actionsSound []={"primitives", "vibration", "return"};
  
   ArrayList menuList=new ArrayList();
+  float menuHeight=240;
   float w, h, x, y;
   
   float posXmenu;
@@ -21,6 +22,7 @@ class MainMenu
 
     w = 320*s*sSvg;
     h = 240*s*sSvg;
+    menuHeight=h;
 
     println("w ="+w);
     float widthTotal=(w*layers.length)+(padding*layers.length)+padding;
@@ -77,8 +79,8 @@ class MainMenu
     pushMatrix();
     translate(posXmenu, 0, 1);
     pushStyle();
-    fill(0);
-    rect(-width/2, -(h/2)-padding, width, h+(2*padding) );
+      String header="Kies een laag om te bewerken";
+      setTextHeader(header); 
     popStyle();
     boolean hit=false;
     for (int i=0; i<menuList.size(); i++) {
