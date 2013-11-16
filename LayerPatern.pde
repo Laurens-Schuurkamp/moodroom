@@ -20,8 +20,8 @@ class LayerPatern{
  
  PVector density=new PVector(1,1);
  PVector dims=new PVector(50,50);
- PVector scaling = new PVector(0.9,0.9);
- PVector scaleOrg = scaling;
+ PVector scaleInit = new PVector(1.0,1.0);
+ PVector scaleEdit = new PVector(0.9,0.9);
  PVector strokeW=new PVector(1,1);
  
  PShape svgRectangle = loadShape("data/gui/primitives/primitives_rectangle.svg");
@@ -70,14 +70,12 @@ class LayerPatern{
        
        float stepx=density.x*50;
        float stepy=density.y*50;
-       
        if(stepx<25)stepx=25;
        if(stepy<25)stepy=25;
        
        
-       
-       float widthP=dims.x*scaling.x;
-       float heightP=dims.y*scaling.y;
+       float widthP=dims.x*(scaleInit.x*scaleEdit.x);
+       float heightP=dims.y*(scaleInit.y*scaleEdit.y);
        
        for (int i=0; i<allSvgShapes.length; i++){
          allSvgShapes[i].setStroke(cs);  
@@ -149,26 +147,6 @@ class LayerPatern{
 
    
  
-// void setAction(PVector left, PVector right, String action){
-//     if(action=="primitives"){
-//         drawPrimitivesPicker(left, right);
-//     }else if (action=="size"){
-//       boolean isActive=gestureActions.scalingActive(left, right);
-//       if(isActive ){
-//         scaling=gestureActions.setScale(left, right, scaling);
-//       }
-//       
-//     }else if(action=="density"){
-//       boolean isActive=gestureActions.scalingActive(left, right);
-//       if(isActive ){
-//         density=gestureActions.setScale(left, right, density);
-//       }
-//       
-//     }
-//   
-//   
-// }
- 
  void drawPrimitivesPicker(PVector left, PVector right){
    
       //activated  =  gestureActions.checkMenuActive(left, right, h);  
@@ -178,9 +156,9 @@ class LayerPatern{
       translate(0,0,1);
       
       pushStyle();
-      String header="Kies een patroon vorm";
-      setTextHeader(header); 
-    popStyle();
+        String header="Kies een patroon vorm";
+        setTextHeader(header); 
+      popStyle();
       
       boolean hit=false;
       

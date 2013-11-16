@@ -9,7 +9,7 @@ class GestureActions
   float distXorg=0;
   float distYorg=0;
   
-  float offset=200*s;
+  float offset=150*s;
   PVector tl=new PVector(-offset, -offset);
   PVector bl=new PVector(-offset, offset);
   
@@ -22,9 +22,7 @@ class GestureActions
   
   GestureActions(){
     println("gestureScaling constopuctor");
-    
     colorPicker = new ColorPicker( 0, 0, width, parseInt(mainMenu.menuHeight), 255 );
-    //swipeDelay=niteSettings.getInt("swipeDelay");
 
   }
   
@@ -339,7 +337,6 @@ class GestureActions
 
        if(timed){
          timer.activeId="none";
-         
          distXorg=right.x-left.x;
          distYorg=right.y-left.y;
          deltaOrg = dist(left.x, left.y, right.x, right.y);
@@ -350,8 +347,8 @@ class GestureActions
 
    };
 
-   PVector setScale(PVector left, PVector right, PVector scaling){
-       
+   PVector setScale(PVector left, PVector right, PVector scaleInit, PVector scaleEdit){
+       //PVector scaling []={scaleInit, scaleEdit};
        if(demoModus){
          pushMatrix();
            translate(0,0,2);
@@ -366,7 +363,13 @@ class GestureActions
        isScaling=false;
        handSvgRuser.setFill(color(0));
        handSvgLuser.setFill(color(0));
-       return scaling;
+       //set def gesture action values
+       scaleInit.x=scaleInit.x*scaleEdit.x;
+       scaleInit.y=scaleInit.y*scaleEdit.y;
+       scaleEdit.x=1.0;
+       scaleEdit.y=1.0;
+       
+       return scaleEdit;
      }; 
 
      handSvgRuser.setFill(handFeedBack);
@@ -374,20 +377,20 @@ class GestureActions
 
      float distX=right.x-left.x;
      float distY=right.y-left.y;
-     PVector newScale=scaling;
+     
      if(scaleLock=="horizontal"){
-       scaling.x=distX/distXorg;
+       scaleEdit.x=distX/distXorg;
      }else if(scaleLock=="vertical"){
-       scaling.y=distY/distYorg;
+       scaleEdit.y=distY/distYorg;
      }else if(scaleLock=="diagonal"){
-       scaling.x=distX/distXorg;
-       scaling.y=distY/distYorg;
+       scaleEdit.x=distX/distXorg;
+       scaleEdit.y=distY/distYorg;
        
      };
 
     lastLeft=left;
     lastRight=right;
-    return scaling;
+    return scaleEdit;
 
    }
    

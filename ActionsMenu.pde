@@ -133,10 +133,23 @@ class ActionsMenu
          Boolean isActive=gestureActions.scalingActive(left, right, "free");
                
          if(isActive && activeLayer=="patern"){
-           layerPatern.scaling=gestureActions.setScale(left, right, layerPatern.scaleOrg);
+           
+           PVector scaleEdit = gestureActions.setScale(left, right, layerPatern.scaleInit, layerPatern.scaleEdit);  
+           if(scaleEdit.x==1.0 && scaleEdit.y==1.0){
+             
+             layerPatern.scaleInit.x*=layerPatern.scaleEdit.x;
+             layerPatern.scaleInit.y*=layerPatern.scaleEdit.y;
+             layerPatern.scaleEdit.x=1;
+             layerPatern.scaleEdit.y=1;
+             
+           }else{
+             layerPatern.scaleEdit=scaleEdit;
+           }
+           
+           
          
          }else if(isActive && activeLayer=="pointcloud"){
-           PVector w=gestureActions.setScale(left, right, layerPatern.strokeW);
+           PVector w=gestureActions.setScale(left, right, layerPatern.strokeW, layerPatern.strokeW);
              w.x=w.x*50;
              w.y=w.y*50;
              if(w.x<1) w.x=1;
@@ -151,12 +164,12 @@ class ActionsMenu
         boolean isActive=gestureActions.scalingActive(left, right, "free");
                
          if(isActive && activeLayer=="patern"){
-           PVector dens=gestureActions.setScale(left, right, layerPatern.density);
+           PVector dens=gestureActions.setScale(left, right, layerPatern.density, layerPatern.density);
            if(dens.x<0.25) dens.x=0.25;
            if(dens.y<0.25) dens.y=0.25;
            layerPatern.density=dens;
          }else if(isActive && activeLayer=="pointcloud"){
-           PVector dens=gestureActions.setScale(left, right, pointCloud3D.density);
+           PVector dens=gestureActions.setScale(left, right, pointCloud3D.density, pointCloud3D.density);
            if(dens.x<0.25) dens.x=0.25;
            if(dens.y<0.25) dens.y=0.25;
            pointCloud3D.density=dens;
@@ -177,7 +190,7 @@ class ActionsMenu
           boolean isActive=gestureActions.scalingActive(left, right, "horizontal");
                  
            if(isActive && activeLayer=="patern"){
-             PVector w=gestureActions.setScale(left, right, layerPatern.strokeW);
+             PVector w=gestureActions.setScale(left, right, layerPatern.strokeW, layerPatern.strokeW);
              w.x=w.x*2;
              w.y=w.y*2;
              if(w.x<0.1) w.x=0.1;
