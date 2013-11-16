@@ -126,7 +126,6 @@ class GestureActions
   };
  
 
-  
   color setAlpha(PVector left, PVector right, color c){
     float alpha = alpha(c);
     float r= red(c);
@@ -249,13 +248,13 @@ class GestureActions
   
   boolean scaleGestureActivation(PVector hand, PVector hitItem, float hitSize){
     
-       boolean hit=false;  
+    boolean hit=false;  
        if ( hand.x - (width/2) > hitItem.x-hitSize && hand.x - (width/2) < hitItem.x+hitSize && hand.y-(height/2) > hitItem.y-hitSize && hand.y-(height/2) < hitItem.y+hitSize ) {
             hit=true;    
        }
 
     return hit;
-   }
+   };
   
   boolean scalingActive(PVector left, PVector right, String gestureType){
      
@@ -300,37 +299,42 @@ class GestureActions
        popMatrix();
         
        //left hits
+       boolean leftHitTopLeft=gestureActions.scaleGestureActivation(left, tl, hitSize);
+       Boolean leftHitTopRight=gestureActions.scaleGestureActivation(left, tr, hitSize);
        
-       boolean leftHitTop=gestureActions.scaleGestureActivation(left, tl, hitSize);
-       if(!leftHitTop)leftHitTop=gestureActions.scaleGestureActivation(left, tr, hitSize);
+       boolean leftHitBottomLeft=gestureActions.scaleGestureActivation(left, bl, hitSize);
+       boolean leftHitBottomRight=gestureActions.scaleGestureActivation(left, br, hitSize);
        
-       boolean leftHitBottom=gestureActions.scaleGestureActivation(left, bl, hitSize);
-       if(!leftHitBottom)leftHitBottom=gestureActions.scaleGestureActivation(left, br, hitSize);
+       boolean rightHitTopRight=gestureActions.scaleGestureActivation(right, tr, hitSize);
+       boolean rightHitTopLeft=gestureActions.scaleGestureActivation(right, tl, hitSize);
        
-       boolean rightHitTop=gestureActions.scaleGestureActivation(right, tr, hitSize);
-       if(!rightHitTop) rightHitTop=gestureActions.scaleGestureActivation(right, tl, hitSize);
-       
-       boolean rightHitBottom=gestureActions.scaleGestureActivation(right, br, hitSize);
-       if(!rightHitBottom) rightHitBottom=gestureActions.scaleGestureActivation(right, bl, hitSize);
+       boolean rightHitBottomRight=gestureActions.scaleGestureActivation(right, br, hitSize);
+       boolean rightHitBottomLeft=gestureActions.scaleGestureActivation(right, bl, hitSize);
        
 
        handSvgRuser.setFill(color(0));
        handSvgLuser.setFill(color(0));
        
-       if(leftHitTop || leftHitBottom)  handSvgLuser.setFill(handFeedBack);
-       if(rightHitTop || rightHitBottom )  handSvgRuser.setFill(handFeedBack);
        
+       if( (leftHitTopLeft && rightHitTopLeft) || (leftHitBottomLeft && rightHitBottomLeft) || (leftHitTopRight && rightHitTopRight) || (leftHitTopLeft && rightHitBottomRight) ){
+         handSvgRuser.setFill(color(255, 0, 0));
+         handSvgLuser.setFill(color(255, 0, 0));
+       }else{
+         if(leftHitTopLeft || leftHitBottomLeft || leftHitTopRight || leftHitTopLeft )  handSvgLuser.setFill(handFeedBack);
+         if(rightHitTopLeft || rightHitBottomLeft || rightHitTopRight || rightHitBottomRight )  handSvgRuser.setFill(handFeedBack);
+         
+       };
        
        scaleLock="none";
        boolean timed=false;
        // look voor scale system hor, ver or diagonal
-       if ( (leftHitTop && leftHitBottom) || (rightHitTop && rightHitBottom)){
+       if ( (leftHitTopLeft && rightHitBottomLeft) || (leftHitBottomLeft && rightHitTopLeft) || (leftHitTopRight && rightHitBottomRight) || (leftHitBottomRight && rightHitTopRight) ){
            scaleLock="vertical";
-           timed = timer.setTimer(0, 0, "scaleVertical");  
-       }else if ( (leftHitTop && rightHitTop) || (leftHitBottom && rightHitBottom)){
+           timed = timer.setTimer(0, 0, "vertical");  
+       }else if ( (leftHitTopLeft && rightHitTopRight) || (leftHitBottomLeft && rightHitBottomRight) || (rightHitTopLeft && leftHitTopRight) || (rightHitBottomLeft && leftHitBottomRight)){
            scaleLock="horizontal";
            timed = timer.setTimer(0, 0, "horizontal");
-       }else if( (leftHitTop && rightHitBottom) ||  (leftHitBottom && rightHitTop)){ 
+       }else if( (leftHitTopLeft && rightHitBottomRight) || (leftHitBottomLeft && rightHitTopRight) || (rightHitTopLeft && leftHitBottomRight) || (rightHitBottomLeft && leftHitTopRight) ){ 
            scaleLock="diagonal";
            timed = timer.setTimer(0, 0, "diagonal");
        } ;
@@ -341,7 +345,7 @@ class GestureActions
          distYorg=right.y-left.y;
          deltaOrg = dist(left.x, left.y, right.x, right.y);
          isScaling=true;
-       }    
+       };    
 
        return isScaling;
 
@@ -377,6 +381,8 @@ class GestureActions
 
      float distX=right.x-left.x;
      float distY=right.y-left.y;
+     
+     //println("scalelock ="+scaleLock);
      
      if(scaleLock=="horizontal"){
        scaleEdit.x=distX/distXorg;
