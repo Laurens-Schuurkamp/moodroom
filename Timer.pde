@@ -1,9 +1,10 @@
 class Timer{
   
- int timer = 2000;
+
  int timeActivation;
  String activeId="none";
- int delay = 500;
+ int timer = mainSettings.getInt("actionTimer");
+ int delay = mainSettings.getInt("timerDelay");
  
  Timer(){
   println("timer constructor");
@@ -33,17 +34,21 @@ class Timer{
       
       if(timerProgress>0.1 && timerProgress<1){
             pushMatrix();
+              pushStyle();
               translate(x,y,10);
               rotate(-PI/2);
               stroke(255);
               fill(0);
               arc( 0, 0, r*s, r*s, 0, TWO_PI );
-              fill(timerProgress*255);
+              //fill(timerProgress*255);
               fill(255);
               stroke(0);
-              arc( 0, 0, r*s, r*s, 0, (TWO_PI*timerProgress) );
-            popMatrix();
-          } 
+              arc( 0, 0, r*s, r*s, 0, TWO_PI*timerProgress);
+              stroke(255);
+              fill(0);
+              ellipse(0,0, 25, 25);  
+            popStyle();  
+          popMatrix();;          } 
       return false;
       
     }

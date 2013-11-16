@@ -16,6 +16,8 @@ class GestureActions
   PVector tr=new PVector(offset, -offset);
   PVector br=new PVector(offset, offset);
   boolean isScaling=false;
+  String scaleLock="none";
+  
   
   
   GestureActions(){
@@ -53,6 +55,18 @@ class GestureActions
 
   }
   
+  boolean checkSliderBarActive(PVector hand){
+    boolean isActive=false;
+    //zit ik in de colorpicker met rechts?
+    if( hand.y > (height/2)-(mainMenu.menuHeight/2) && hand.y < (height/2)+(mainMenu.menuHeight/2) ){
+        
+        isActive=true;
+    }
+    return isActive;
+      
+    
+  }
+  
 
 
   color setColor(PVector left, PVector right, color c){
@@ -62,21 +76,23 @@ class GestureActions
     boolean isActive=false;
     PVector hand = new PVector(0,0);
     String activeHand="none";
-    //zit ik in de colorpicker met rechts?
-      if( right.y > (height/2)-(175/2) && right.y < (height/2)+(175/2) ){
+
+      if( checkSliderBarActive(right) ){
         hand=right;
         activeHand="right";
         isActive=true;
         handSvgRuser.setFill(handFeedBack);
 
       }//zit ik in de color picker met links?
-      else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
+      else if( checkSliderBarActive(left) ){
         hand=left;
         activeHand="left";
         isActive=true;
         handSvgLuser.setFill(handFeedBack);
-        //println("cp links :"+left.y);
+
       }
+    
+    
     
     if(isActive){
        boolean timed=checkHandsSteady(left, right, true, activeHand);
@@ -95,7 +111,7 @@ class GestureActions
       popMatrix();
       if(isActive){
         c = colorPicker.getColor (hand);
-      };
+    };
       
     
        popStyle();
@@ -123,14 +139,14 @@ class GestureActions
     PVector hand = new PVector(0,0);
     String activeHand="none";
     //zit ik in de colorpicker met rechts?
-      if( right.y > (height/2)-(175/2) && right.y < (height/2)+(175/2) ){
+      if( checkSliderBarActive(right) ){
         hand=right;
         activeHand="right";
         isActive=true;
         handSvgRuser.setFill(handFeedBack);
 
       }//zit ik in de color picker met links?
-      else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
+      else if( checkSliderBarActive(left) ){
         hand=left;
         activeHand="left";
         isActive=true;
@@ -150,7 +166,7 @@ class GestureActions
           pushStyle();
           noStroke();
           fill(r,g,b,i);
-          rect(i*step, -150/2, step, 150);
+          rect(i*step, -mainMenu.menuHeight/2, step, mainMenu.menuHeight);
           popStyle();
         }
    popMatrix();
@@ -175,14 +191,14 @@ class GestureActions
     PVector hand = new PVector(0,0);
     String activeHand="none";
     //zit ik in de colorpicker met rechts?
-      if( right.y > (height/2)-(175/2) && right.y < (height/2)+(175/2) ){
+      if( checkSliderBarActive(right) ){
         hand=right;
         activeHand="right";
         isActive=true;
         handSvgRuser.setFill(handFeedBack);
 
       }//zit ik in de color picker met links?
-      else if( left.y > (height/2)-(175/2) && left.y < (height/2)+(175/2) ){
+      else if( checkSliderBarActive(left) ){
         hand=left;
         activeHand="left";
         isActive=true;
@@ -202,7 +218,8 @@ class GestureActions
     pushStyle();
       noStroke();
       fill(0);
-      rect(0, -75-padding, width, 150+padding );
+      
+      rect(0, -mainMenu.menuHeight/2, width, mainMenu.menuHeight );
     popStyle();
     
     for(int i=0; i<256; i++){
@@ -230,10 +247,11 @@ class GestureActions
    return amp;
   };
   
-  boolean zoomGestureActivation(PVector hand, PVector hitItem,  float hitSize){
+  
+  
+  boolean scaleGestureActivation(PVector hand, PVector hitItem, float hitSize){
     
        boolean hit=false;  
-        //top position
        if ( hand.x - (width/2) > hitItem.x-hitSize && hand.x - (width/2) < hitItem.x+hitSize && hand.y-(height/2) > hitItem.y-hitSize && hand.y-(height/2) < hitItem.y+hitSize ) {
             hit=true;    
        }
@@ -241,7 +259,7 @@ class GestureActions
     return hit;
    }
   
-  boolean scalingActive(PVector left, PVector right){
+  boolean scalingActive(PVector left, PVector right, String gestureType){
      
      if(isScaling){
        return true; 
@@ -275,49 +293,72 @@ class GestureActions
        };
        
        if(demoModus){
-         HandLeft demo=new HandLeft(bl.x, bl.y, true, true); 
-         left.x=bl.x + (width/2);
-         left.y=bl.y + (height/2);
+        PVector demoPos = bl;
+          HandLeft demo=new HandLeft(demoPos.x, demoPos.y, true, true); 
+          left.x=demoPos.x + (width/2);
+          left.y=demoPos.y + (height/2);
        }
        popStyle();
        popMatrix();
-
-       boolean leftHitTop=gestureActions.zoomGestureActivation(left, tl, hitSize);
-       boolean leftHitBottom=gestureActions.zoomGestureActivation(left, bl, hitSize);
+        
+       //left hits
        
-       boolean rightHitTop=gestureActions.zoomGestureActivation(right, tr, hitSize);
-       boolean rightHitBottom=gestureActions.zoomGestureActivation(right, br, hitSize);
+       boolean leftHitTop=gestureActions.scaleGestureActivation(left, tl, hitSize);
+       if(!leftHitTop)leftHitTop=gestureActions.scaleGestureActivation(left, tr, hitSize);
+       
+       boolean leftHitBottom=gestureActions.scaleGestureActivation(left, bl, hitSize);
+       if(!leftHitBottom)leftHitBottom=gestureActions.scaleGestureActivation(left, br, hitSize);
+       
+       boolean rightHitTop=gestureActions.scaleGestureActivation(right, tr, hitSize);
+       if(!rightHitTop) rightHitTop=gestureActions.scaleGestureActivation(right, tl, hitSize);
+       
+       boolean rightHitBottom=gestureActions.scaleGestureActivation(right, br, hitSize);
+       if(!rightHitBottom) rightHitBottom=gestureActions.scaleGestureActivation(right, bl, hitSize);
+       
 
        handSvgRuser.setFill(color(0));
        handSvgLuser.setFill(color(0));
        
-       if(rightHitTop || rightHitBottom)  handSvgRuser.setFill(handFeedBack);
        if(leftHitTop || leftHitBottom)  handSvgLuser.setFill(handFeedBack);
+       if(rightHitTop || rightHitBottom )  handSvgRuser.setFill(handFeedBack);
        
-       if( (leftHitTop && rightHitBottom) ||  (leftHitBottom && rightHitTop)){
+       
+       scaleLock="none";
+       boolean timed=false;
+       // look voor scale system hor, ver or diagonal
+       if ( (leftHitTop && leftHitBottom) || (rightHitTop && rightHitBottom)){
+           scaleLock="vertical";
+           timed = timer.setTimer(0, 0, "scaleVertical");  
+       }else if ( (leftHitTop && rightHitTop) || (leftHitBottom && rightHitBottom)){
+           scaleLock="horizontal";
+           timed = timer.setTimer(0, 0, "horizontal");
+       }else if( (leftHitTop && rightHitBottom) ||  (leftHitBottom && rightHitTop)){ 
+           scaleLock="diagonal";
+           timed = timer.setTimer(0, 0, "diagonal");
+       } ;
 
-         boolean timed = timer.setTimer(0, 0, "scaleActivation");
-           if(timed){
-             timer.activeId="none";
-             distXorg=right.x-left.x;
-             distYorg=right.y-left.y;
-             deltaOrg = dist(left.x, left.y, right.x, right.y);
-             isScaling=true;
-           }
-
+       if(timed){
+         timer.activeId="none";
          
-       };
-       
+         distXorg=right.x-left.x;
+         distYorg=right.y-left.y;
+         deltaOrg = dist(left.x, left.y, right.x, right.y);
+         isScaling=true;
+       }    
+
        return isScaling;
 
    };
-   
+
    PVector setScale(PVector left, PVector right, PVector scaling){
        
        if(demoModus){
-         HandLeft demo=new HandLeft(bl.x, bl.y, true, true); 
-         left.x=bl.x + (width/2);
-         left.y=bl.y + (height/2);
+         pushMatrix();
+           translate(0,0,2);
+           HandLeft demo=new HandLeft(bl.x, bl.y, true, true); 
+           left.x=bl.x + (width/2);
+           left.y=bl.y + (height/2);
+         popMatrix();
        }  
      
      
@@ -333,14 +374,20 @@ class GestureActions
 
      float distX=right.x-left.x;
      float distY=right.y-left.y;
-     
-     scaling.x=distX/distXorg;
-     scaling.y=distY/distYorg;
-    
+     PVector newScale=scaling;
+     if(scaleLock=="horizontal"){
+       scaling.x=distX/distXorg;
+     }else if(scaleLock=="vertical"){
+       scaling.y=distY/distYorg;
+     }else if(scaleLock=="diagonal"){
+       scaling.x=distX/distXorg;
+       scaling.y=distY/distYorg;
+       
+     };
 
     lastLeft=left;
     lastRight=right;
-     return scaling;
+    return scaling;
 
    }
    

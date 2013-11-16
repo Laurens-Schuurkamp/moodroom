@@ -13,7 +13,7 @@ class ActionsMenu
     "strokecolor", "strokewidth", "return"
   };
   String actionsSize [] = {
-    "density", "scale", "return"
+    "density", "scale", "rotate", "return"
   }; 
 
   float w, h, x, y;
@@ -130,10 +130,11 @@ class ActionsMenu
   void setActions(String action, String activeLayer, PVector left, PVector right) {
       
     if(action=="scale"){
-         boolean isActive=gestureActions.scalingActive(left, right);
+         Boolean isActive=gestureActions.scalingActive(left, right, "free");
                
          if(isActive && activeLayer=="patern"){
-           layerPatern.scaling=gestureActions.setScale(left, right, layerPatern.scaling);
+           layerPatern.scaling=gestureActions.setScale(left, right, layerPatern.scaleOrg);
+         
          }else if(isActive && activeLayer=="pointcloud"){
            PVector w=gestureActions.setScale(left, right, layerPatern.strokeW);
              w.x=w.x*50;
@@ -147,7 +148,7 @@ class ActionsMenu
         
       }else if(action=="density"){
         
-        boolean isActive=gestureActions.scalingActive(left, right);
+        boolean isActive=gestureActions.scalingActive(left, right, "free");
                
          if(isActive && activeLayer=="patern"){
            PVector dens=gestureActions.setScale(left, right, layerPatern.density);
@@ -173,7 +174,7 @@ class ActionsMenu
         
       }else if(action=="strokewidth"){
           
-          boolean isActive=gestureActions.scalingActive(left, right);
+          boolean isActive=gestureActions.scalingActive(left, right, "horizontal");
                  
            if(isActive && activeLayer=="patern"){
              PVector w=gestureActions.setScale(left, right, layerPatern.strokeW);

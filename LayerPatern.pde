@@ -20,7 +20,8 @@ class LayerPatern{
  
  PVector density=new PVector(1,1);
  PVector dims=new PVector(50,50);
- PVector scaling=new PVector(0.9,0.9);
+ PVector scaling = new PVector(0.9,0.9);
+ PVector scaleOrg = scaling;
  PVector strokeW=new PVector(1,1);
  
  PShape svgRectangle = loadShape("data/gui/primitives/primitives_rectangle.svg");
@@ -100,41 +101,25 @@ class LayerPatern{
                pushMatrix();
                 translate(x,y);
                 shape(svgEllipse, 0, 0, widthP+ampx, heightP+ampx);
-//                svgEllipse.setStroke(cs);  
-//                svgEllipse.setStrokeWeight(strokeWidth);
-//                svgEllipse.setFill(cf);
-//                svgEllipse.setStrokeWeight(sw);
                 
               popMatrix();
             }else if(activePrimitive=="rectangle"){
                //rect(x-dims.x/2, y-hP/2, dims.x, hP);
               pushMatrix();
                 translate(x,y);
-                shape(svgRectangle, 0, 0, widthP+ampx, heightP+ampx);
-//                svgRectangle.setStroke(cs);  
-//                svgRectangle.setStrokeWeight(strokeWidth);
-//                svgRectangle.setFill(cf);
-//                svgRectangle.setStrokeWeight(sw);
+                shape(svgRectangle, 0, 0, widthP+ampx, heightP+ampx);;
               popMatrix(); 
             }else if(activePrimitive=="triangle"){
                //triangle(x-dims.x/2, y+hP/2, x+/2, y+hP/2, x, y-hP/2);
                pushMatrix();
                 translate(x,y);
                 shape(svgTriangle, 0, 0, widthP+ampx, heightP+ampx);
-//                svgTriangle.setStroke(cs);  
-//                svgTriangle.setStrokeWeight(strokeWidth);
-//                svgTriangle.setFill(cf);
-//                svgTriangle.setStrokeWeight(sw);
               popMatrix(); 
             }else if(activePrimitive=="star"){
               
               pushMatrix();
                 translate(x,y);
                 shape(svgStar, 0, 0, widthP+ampx, heightP+ampx);
-//                svgStar.setStroke(cs);  
-//                svgStar.setStrokeWeight(strokeWidth);
-//                svgStar.setFill(cf);
-//                svgStar.setStrokeWeight(sw);
               popMatrix();
                
             }else if(activePrimitive=="hectagon"){
@@ -142,23 +127,13 @@ class LayerPatern{
               pushMatrix();
                 translate(x,y);
                 shape(svgHectagon, 0, 0, widthP+ampx, heightP+ampx);
-//                svgHectagon.setStroke(cs);  
-//                svgHectagon.setStrokeWeight(strokeWidth);
-//                svgHectagon.setFill(cf);
-//                svgHectagon.setStrokeWeight(sw);
               popMatrix();
                
             }else if(activePrimitive=="hart"){
               
               pushMatrix();
                 translate(x,y);
-                
                 shape(svgHart, 0, 0, widthP+ampx, heightP+ampx);
-//                svgHart.setStroke(cs);  
-//                svgHart.setStrokeWeight(strokeWidth);
-//                svgHart.setFill(cf);
-//                svgHart.setStrokeWeight(sw);
-               
               popMatrix();
                
             }
@@ -172,6 +147,7 @@ class LayerPatern{
    
  };
 
+   
  
 // void setAction(PVector left, PVector right, String action){
 //     if(action=="primitives"){
