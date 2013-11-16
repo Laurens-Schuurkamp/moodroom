@@ -17,7 +17,6 @@ class ActionsMenu
   }; 
 
   float w, h, x, y;
-  boolean activated=true;
   float sSvg=0.60;
   String activeAction="none";
 
@@ -73,6 +72,11 @@ class ActionsMenu
         return;
       };
     
+    boolean activated  =  gestureActions.checkMenuActive(left, right, h);  
+    if (activated==false){
+      timer.activeId="none";
+      //return;
+    };
     
     SubActions subList;
       int i,j;
@@ -144,18 +148,24 @@ class ActionsMenu
              
            }else{
              layerPatern.scaleEdit=scaleEdit;
-           }
-           
-           
+           };
+                      
          
          }else if(isActive && activeLayer=="pointcloud"){
-           PVector w=gestureActions.setScale(left, right, layerPatern.strokeW, layerPatern.strokeW);
-             w.x=w.x*50;
-             w.y=w.y*50;
-             if(w.x<1) w.x=1;
-             if(w.y<1) w.y=1;
-                      
-           pointCloud3D.strokeW=w;
+           PVector strokeWEdit=gestureActions.setScale(left, right, pointCloud3D.strokeWInit, pointCloud3D.strokeWEdit);
+           if(strokeWEdit.x==1.0 && strokeWEdit.y==1.0){
+             
+             pointCloud3D.strokeWInit.x*=pointCloud3D.strokeWEdit.x;
+             pointCloud3D.strokeWInit.y*=pointCloud3D.strokeWEdit.y;
+             pointCloud3D.strokeWEdit.x=1;
+             pointCloud3D.strokeWEdit.y=1;
+
+           }else{
+             if(strokeWEdit.x<=0)strokeWEdit.x=0;
+             if(strokeWEdit.y<=0)strokeWEdit.y=0;
+             
+             pointCloud3D.strokeWEdit=strokeWEdit;
+           };
              
        }
         
@@ -164,15 +174,30 @@ class ActionsMenu
         boolean isActive=gestureActions.scalingActive(left, right, "free");
                
          if(isActive && activeLayer=="patern"){
-           PVector dens=gestureActions.setScale(left, right, layerPatern.density, layerPatern.density);
-           if(dens.x<0.25) dens.x=0.25;
-           if(dens.y<0.25) dens.y=0.25;
-           layerPatern.density=dens;
+           PVector densityEdit=gestureActions.setScale(left, right, layerPatern.densityInit, layerPatern.densityEdit);  
+           if(densityEdit.x==1.0 && densityEdit.y==1.0){
+             layerPatern.densityInit.x*=layerPatern.densityEdit.x;
+             layerPatern.densityInit.y*=layerPatern.densityEdit.y;
+             layerPatern.densityEdit.x=1;
+             layerPatern.densityEdit.y=1;
+           }else{
+             if(densityEdit.x<0.5)densityEdit.x=0.5;
+             if(densityEdit.y<0.5)densityEdit.y=0.5;
+             layerPatern.densityEdit=densityEdit;
+           };
+
          }else if(isActive && activeLayer=="pointcloud"){
-           PVector dens=gestureActions.setScale(left, right, pointCloud3D.density, pointCloud3D.density);
-           if(dens.x<0.25) dens.x=0.25;
-           if(dens.y<0.25) dens.y=0.25;
-           pointCloud3D.density=dens;
+           PVector densityEdit=gestureActions.setScale(left, right, pointCloud3D.densityInit, pointCloud3D.densityEdit);
+           if(densityEdit.x==1.0 && densityEdit.y==1.0){
+             pointCloud3D.densityInit.x*=pointCloud3D.densityEdit.x;
+             pointCloud3D.densityInit.y*=pointCloud3D.densityEdit.y;
+             pointCloud3D.densityEdit.x=1;
+             pointCloud3D.densityEdit.y=1;
+           }else{
+             if(densityEdit.x<0.25)densityEdit.x=0.25;
+             if(densityEdit.y<0.25)densityEdit.y=0.25;
+             pointCloud3D.densityEdit=densityEdit;
+           };
          }
         
       }else if(action=="color"){
@@ -190,13 +215,21 @@ class ActionsMenu
           boolean isActive=gestureActions.scalingActive(left, right, "horizontal");
                  
            if(isActive && activeLayer=="patern"){
-             PVector w=gestureActions.setScale(left, right, layerPatern.strokeW, layerPatern.strokeW);
-             w.x=w.x*2;
-             w.y=w.y*2;
-             if(w.x<0.1) w.x=0.1;
-             if(w.y<0.1) w.y=0.1;
+             PVector strokeWEdit=gestureActions.setScale(left, right, layerPatern.strokeWInit, layerPatern.strokeWEdit);
+             if(strokeWEdit.x==1.0 && strokeWEdit.y==1.0){
              
-             layerPatern.strokeW=w;
+               layerPatern.strokeWInit.x*=layerPatern.strokeWEdit.x;
+               layerPatern.strokeWInit.y*=layerPatern.strokeWEdit.y;
+               layerPatern.strokeWEdit.x=1;
+               layerPatern.strokeWEdit.y=1;
+
+           }else{
+               if(strokeWEdit.x<=0)strokeWEdit.x=0;
+               if(strokeWEdit.y<=0)strokeWEdit.y=0;
+             
+               layerPatern.strokeWEdit=strokeWEdit;
+           };
+             
            }
 
         
@@ -220,16 +253,34 @@ class ActionsMenu
         
       }else if(action == "vibration" ){
         if(activeLayer=="sound"){
-          amp = gestureActions.setVibration(left, right, amp);
+          layerSound.amp = gestureActions.setVibration(left, right, layerSound.amp);
          }  
         
+      }else if(action == "toggleActive"){
+        if(activeLayer=="patern"){
+          if(layerPatern.activated){
+            layerPatern.activated=false;
+          }else{
+            layerPatern.activated=true;
+          };
+         }else if(activeLayer=="pointcloud"){
+          if(pointCloud3D.activated){
+            pointCloud3D.activated=false;
+          }else{
+            pointCloud3D.activated=true;
+          };
+         }else if(activeLayer=="sound"){
+//          if(pointCloud3D.activated){
+//            pointCloud3D.activated=false;
+//          }else{
+//            pointCloud3D.activated=true;
+//          };
+         }
+         activeAction="none";
       }
 
   }
 
-  
-  
-  
 }
 
 class SubActions {

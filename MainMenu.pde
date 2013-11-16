@@ -1,12 +1,12 @@
 class MainMenu
 {
-  boolean activated=true;
+  boolean activated;
   String activeLayer="none";
    
- String actionsBckgr []={"color", "return"};
- String actionsPatern []={ "stroke", "size", "primitives", "color", "disable", "return"};
- String actionsPointcloud []={"size", "color", "primitives", "return"};
- String actionsSound []={"primitives", "vibration", "return"};
+// String actionsBckgr []={"color", "return"};
+// String actionsPatern []={ "disable", "stroke", "size", "primitives", "color", "return"};
+// String actionsPointcloud []={"disable", "size", "color", "primitives", "return"};
+// String actionsSound []={"disable", "primitives", "vibration", "return"};
  
   ArrayList menuList=new ArrayList();
   float menuHeight=240;
@@ -54,7 +54,7 @@ class MainMenu
         tweenPos=1;
         mainTweener.end();
       }      
-      println("tweener pos ="+mainTweener.position());
+      //println("tweener pos ="+mainTweener.position());
 
       if(posXtarget<posXmenu){
          posXmenu = posXtarget + (( 1-tweenPos )*width); 
@@ -72,7 +72,10 @@ class MainMenu
     if(menuLevel>0 && !mainTweener.isTweening()) return;
     
     activated  =  gestureActions.checkMenuActive(left, right, h);  
-    if (activated==false)return;
+    if (activated==false){
+      timer.activeId="none";
+      return;
+    };
 
     int hitId=-1;
 
@@ -122,10 +125,12 @@ class MenuItem {
   PImage icon;
   float x, y;
   PShape iconSvg;
+  PShape iconSvgDisabled;
   PShape edgeOver = loadShape("data/gui/menu/icon_edgeOver.svg"); 
   color c;
   String menuLevel;
   boolean subs;
+  boolean active=true;
 
   MenuItem(String _menuLevel, String _item, boolean _subs, int _id, float _x, float _y, float sSvg) {
     
@@ -137,6 +142,15 @@ class MenuItem {
     menuLevel=_menuLevel; 
     iconSvg = loadShape("data/gui/menu/icon_"+item+".svg");
     iconSvg.scale(sSvg*s);
+    
+    if(item=="toggleActive"){
+      iconSvgDisabled = loadShape("data/gui/menu/icon_toggleInactive.svg");
+    }else{
+      iconSvgDisabled = loadShape("data/gui/menu/icon_"+item+".svg");
+      iconSvgDisabled.setFill(color(0,96));
+    }
+    
+    iconSvgDisabled.scale(sSvg*s);
     edgeOver.scale(sSvg*s);
     
   }

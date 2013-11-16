@@ -3,13 +3,11 @@ class SubMenu{
  ArrayList subMenuList=new ArrayList();
  
  String actionsBckgr [][]={ {"color", "false"},{"return", "true"}};
- String actionsPatern [][]={ {"stroke", "true"}, {"size", "true"}, {"primitives", "false"}, {"color", "true"}, {"return", "true"}};
- String actionsPointcloud [][]={{"size", "true"}, {"color", "true"}, {"return", "true"}};
- String actionsSound [][]={{"soundPrimitives", "true"}, {"vibration", "false"}, {"return", "true"}};
-
+ String actionsPatern [][]={ {"toggleActive","false" }, {"stroke", "true"}, {"size", "true"}, {"primitives", "false"}, {"color", "true"}, {"return", "true"}};
+ String actionsPointcloud [][]={{"toggleActive","false" },{"size", "true"}, {"color", "true"}, {"return", "true"}};
+ String actionsSound [][]={{"toggleActive","false" }, {"soundPrimitives", "true"}, {"vibration", "false"}, {"return", "true"}};
 
  float w, h, x, y;
- boolean activated=true;
  float sSvg=0.60;
  String activeActions="none";
  
@@ -75,10 +73,15 @@ class SubMenu{
         return;
       } 
    
-     
       if( mainTweener.isTweening() || menuLevel>=1 ){
         actionsMenu.drawActions(activeActions, activeLayer, left, right);
       }
+      
+      boolean activated  =  gestureActions.checkMenuActive(left, right, h);  
+      if (activated==false){
+      timer.activeId="none";
+      //return;
+      };
       
      
       SubMenuActions subList;
@@ -97,15 +100,25 @@ class SubMenu{
           subList= (SubMenuActions) subMenuList.get(i);
           if(activeLayer==subList.layer){
             
+            boolean itemActive=true;
+            if(activeLayer=="patern"){
+              itemActive=layerPatern.activated;
+            }else if(activeLayer=="pointcloud"){
+              itemActive=pointCloud3D.activated;
+            }else if(activeLayer=="sound"){
+              //itemActive=pointCloud3D.activated;
+            }
+            
             for(j=0; j<subList.actions.size(); j++){
 
               MenuItem item=(MenuItem) subList.actions.get(j);
+              item.active=itemActive;
               if(!mainTweener.isTweening() && menuLevel==1){
 
                 boolean leftHit=false;
                 boolean rightHit=false;;
   
-                if(item.item!="soundPrimitives"){
+                if( (item.item!="soundPrimitives" && item.active==true) || item.item=="return" || item.item=="toggleActive"){
                   leftHit=gestureActions.checkSingleHitId(item, left, w, h);
                   rightHit=gestureActions.checkSingleHitId(item, right, w, h);
                 };
@@ -121,38 +134,28 @@ class SubMenu{
                           mainMenu.activeLayer="none";
                           actionsMenu.activeAction="none";
                           activeActions="none";
-                          startMainTween(true, "right");
-                          
+                          startMainTween(true, "right");  
                         }else{
                           menuLevel++;
                           startMainTween(true, "left");
                           activeActions=item.item;
                         };
                       }else{
-                          //menuLevel++;
                           activeActions=item.item;
                           actionsMenu.activeAction=item.item;
-                          //startMainTween(true, "left");
-                          
                       };
 
                   };
         
-               };
+               }; 
               };
              
-             shape(item.iconSvg, item.x, item.y);
-             
-             //show inactives 
-//             if( activeLayer=="patern" && layerPatern.activePrimitive=="none"){
-//                if(item.item!="primitives" ){
-//                    item.iconSvg.setFill(color(255, 96));
-//                }
-//             }else{
-//          
-//             }      
-
-              
+             if(itemActive || item.item=="return"){
+               shape(item.iconSvg, item.x, item.y);
+             }else{
+               shape(item.iconSvgDisabled, item.x, item.y);
+             };
+                           
            };
 
         };

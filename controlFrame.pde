@@ -188,7 +188,7 @@ public class ControlFrame extends PApplet {
     if(init==false){
        return;
     }
-    pointCloud3D.active=value;
+    pointCloud3D.activated=value;
     println("checkbox :"+value);
     
   }

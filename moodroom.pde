@@ -43,6 +43,7 @@ SubMenu subMenu;
 ActionsMenu actionsMenu;
 Skelleton skelleton;
 PointCloud3D pointCloud3D;
+LayerSound layerSound;
 GestureActions gestureActions;
 ColorPicker colorPicker;
 Timer timer;
@@ -67,7 +68,7 @@ Shaper cosine;
 float duration=30;
 
 float zoom;
-float amp=2;
+
 
 float        zoomF =1.0f;
 float        rotX = radians(180);  // by default rotate the hole scene 180deg around the x-axis, 
@@ -152,6 +153,7 @@ void setup()
   actionsMenu =  new ActionsMenu();
   skelleton=new Skelleton();
   pointCloud3D = new PointCloud3D();
+  layerSound = new LayerSound();
   gestureActions = new GestureActions();
   timer = new Timer();
   
@@ -228,7 +230,6 @@ void setup()
   
   fft = new FFT(sound.bufferSize(), sound.sampleRate());
   beat = new BeatDetect();
-  amp=2;
   
   mainTweener = new Tween(this, 0.5);
   cosine = new CosineShaper( Tween.OUT );
@@ -273,12 +274,7 @@ void draw() {
     cf.framerate.setText("framerate ="+round(frameRate)+" fps");
   };
   
-  fft.forward(sound.mix);
-  beat.detect(sound.mix);
-  
-  if(beat.isOnset()){
-     pointCloud3D.amplitude= 1000*parseInt(amp); 
-  }
+  layerSound.drawSounds();
 
   PVector left=new PVector(0, 0);
   PVector right=new PVector(0,0);
@@ -495,6 +491,7 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
 void setTextHeader(String header){
   
   fill(0);
+  //stroke(255);
   noStroke();
   rect(-width/4, -(mainMenu.menuHeight/2)-(3*padding), width/2, (4*padding), 15 );
   rect(-width/2, -(mainMenu.menuHeight/2)-padding, width, mainMenu.menuHeight+(2*padding) );

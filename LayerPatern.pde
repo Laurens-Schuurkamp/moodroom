@@ -4,25 +4,26 @@ class LayerPatern{
  float w, h, x, y;
 
  String activePrimitive="ellipse";
- boolean activated;
+ boolean activated=true;
  
  boolean enabled=true;
  
- float sSvg=0.45; 
+ float sSvg=0.5; 
   
  color cf=color(255, 96);
  color cs=color(255);
- 
- float strokeWidth=1;
+
  String activeActions="none";
  
- String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart", "none"};
+ String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
  
- PVector density=new PVector(1,1);
+ PVector densityInit=new PVector(1,1);
+ PVector densityEdit=new PVector(1,1);
  PVector dims=new PVector(50,50);
  PVector scaleInit = new PVector(1.0,1.0);
  PVector scaleEdit = new PVector(0.9,0.9);
- PVector strokeW=new PVector(1,1);
+ PVector strokeWInit=new PVector(0.25,0.25);
+ PVector strokeWEdit=new PVector(1,1);
  
  PShape svgRectangle = loadShape("data/gui/primitives/primitives_rectangle.svg");
  PShape svgEllipse = loadShape("data/gui/primitives/primitives_ellipse.svg");
@@ -57,44 +58,46 @@ class LayerPatern{
  void drawLayer(){
 
    if(activePrimitive=="none") return;
-
+   if(!activated)return;
    pushMatrix();
      translate(0,0,1);
    
      pushStyle();
        fill(cf);
        stroke(cs);
-       float sw=strokeW.x;
+       
        translate(-width/2, -height/2);
               
+       float sw=(strokeWInit.x*strokeWEdit.x)*4;
+       if(sw<=0)sw=0;
        
-       float stepx=density.x*50;
-       float stepy=density.y*50;
-       if(stepx<25)stepx=25;
-       if(stepy<25)stepy=25;
-       
+       float stepx=(densityInit.x*densityEdit.x)*50;
+       float stepy=(densityInit.y*densityEdit.y)*50;
        
        float widthP=dims.x*(scaleInit.x*scaleEdit.x);
        float heightP=dims.y*(scaleInit.y*scaleEdit.y);
        
        for (int i=0; i<allSvgShapes.length; i++){
          allSvgShapes[i].setStroke(cs);  
-         allSvgShapes[i].setStrokeWeight(strokeWidth);
          allSvgShapes[i].setFill(cf);
          allSvgShapes[i].setStrokeWeight(sw);
+
+         
        };
-       
        
        
        for (int y=0;y < height; y+=stepy)
         {
           for (int x=0;x < width; x+=stepx)
           {
-            //float xpos=
-            int spc =(int) random(fft.specSize());    
-            float ampx = fft.getBand(  spc )*amp;
-            
-            
+
+            float ampx=0;
+            float ampy=0;
+            if(layerSound.activated){
+              int spc =(int) random(fft.specSize());    
+              ampx = fft.getBand(  spc )*layerSound.amp;
+            };
+
             if(activePrimitive=="ellipse"){
                pushMatrix();
                 translate(x,y);
@@ -105,7 +108,7 @@ class LayerPatern{
                //rect(x-dims.x/2, y-hP/2, dims.x, hP);
               pushMatrix();
                 translate(x,y);
-                shape(svgRectangle, 0, 0, widthP+ampx, heightP+ampx);;
+                shape(svgRectangle, 0, 0, widthP+ampx, heightP+ampx);
               popMatrix(); 
             }else if(activePrimitive=="triangle"){
                //triangle(x-dims.x/2, y+hP/2, x+/2, y+hP/2, x, y-hP/2);

@@ -1,16 +1,17 @@
 class PointCloud3D
 {
 
-  boolean active=true;
+  boolean activated=true;
   color cf = color(255, 128);
   color cs = color (255, 128);
   
-   PVector density=new PVector(0.25,0.25);
+   int stepSize=20;
+   PVector densityInit=new PVector(0.25,0.25);
+   PVector densityEdit=new PVector(1,1);
    PVector dims=new PVector(50,50);
    PVector scaling=new PVector(1,1);
-   PVector strokeW=new PVector(10,10);
-   
-   int amplitude=0;
+   PVector strokeWInit=new PVector(0.25,0.25);
+   PVector strokeWEdit=new PVector(1,1);
 
   PointCloud3D(){
     println("PointCloud3D constructor");
@@ -21,34 +22,25 @@ class PointCloud3D
   void drawPointCloud(){
     
     if(demoModus) return;
-    if(!active) return;
-    
-    if(amplitude>0){
-      amplitude=amplitude-(amplitude/30);
-      
-    }
+    if(!activated) return;
+
     
     //pointcloud
         int[]   depthMap = context.depthMap();
-        //int     steps   = parseInt(density.x*50);  // to speed up the drawing, draw every third point
-
         
-        int     stepsX   =parseInt(density.x*20);  // to speed up the drawing, draw every third point
-        int     stepsY   =parseInt(density.y*20);
+        int     stepsX   =parseInt( (densityInit.x*densityEdit.x)*stepSize);  // to speed up the drawing
+        int     stepsY   =parseInt( (densityInit.y*densityEdit.y)*stepSize);
         int     index;
         PVector realWorldPoint;
 
        pushStyle(); 
          
-         //if(strokeW.x>25)strokeW.x=25;
+
          
-         
-         float stw=strokeW.x/4;
-         if(stepsX<5) stepsX=5;
-         if(stepsY<5) stepsY=5;
+         float sw=(strokeWInit.x*strokeWEdit.x)*4;
          
          stroke(cs);
-         strokeWeight(stw);
+         strokeWeight(sw);
         for (int y=0;y < context.depthHeight();y+=stepsY)
         {
           for (int x=0;x < context.depthWidth();x+=stepsX)
@@ -58,7 +50,7 @@ class PointCloud3D
             { 
               // draw the projected point
               realWorldPoint = context.depthMapRealWorld()[index];              
-              point(realWorldPoint.x, realWorldPoint.y, (realWorldPoint.z-amplitude));
+              point(realWorldPoint.x, realWorldPoint.y, (realWorldPoint.z-layerSound.beatAmp));
             }
           }
         }
