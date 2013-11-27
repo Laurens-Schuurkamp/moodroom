@@ -2,14 +2,14 @@
 <appConfig>
     <mainSettings 
         debug="true" 
-        demoModus="true" 
+        demoModus="false" 
         width="1280"
 				height="800"
         ip="localhost"
         port="3000"
         qrActive="false"
-				actionTimer="1500"
-				timerDelay="100"
+				actionTimer="2000"
+				timerDelay="250"
 				sensitivity="0.01"
 				skeletActive="true"
 				pointcloudActive="true"

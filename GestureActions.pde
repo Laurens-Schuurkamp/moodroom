@@ -18,12 +18,15 @@ class GestureActions
   boolean isScaling=false;
   String scaleLock="none";
   
+  PShape iconPlus  = loadShape("data/gui/menu/icon_plus.svg");
+  PShape iconMinus  = loadShape("data/gui/menu/icon_minus.svg");
   
   
   GestureActions(){
     println("gestureScaling constopuctor");
     colorPicker = new ColorPicker( 0, 0, width, parseInt(mainMenu.menuHeight), 255 );
-
+    iconPlus.scale(s*0.5);
+    iconMinus.scale(s*0.5);
   }
   
   boolean checkMenuActive(PVector left, PVector right, float h){
@@ -37,9 +40,7 @@ class GestureActions
     }
   
   }
-  
 
-  
   boolean checkSingleHitId(MenuItem item, PVector pos, float w, float h){
     
     boolean hit=false;
@@ -166,6 +167,9 @@ class GestureActions
           rect(i*step, -mainMenu.menuHeight/2, step, mainMenu.menuHeight);
           popStyle();
         }
+    shape(iconMinus, 0, 0 );
+    shape(iconPlus, width-(75*s), 0);     
+        
    popMatrix();
    
    if(isActive){
@@ -207,32 +211,35 @@ class GestureActions
        boolean timed=checkHandsSteady(left, right, true, activeHand);
        if(timed) return amp;
     }
-    
-    int stepw=parseInt(width/255);
-    
+
     pushMatrix();
     translate(-width/2, 0, 1);
     pushStyle();
       noStroke();
       fill(0);
-      
       rect(0, -mainMenu.menuHeight/2, width, mainMenu.menuHeight );
     popStyle();
     
+    int stepw=parseInt(width/255);
+    
+    //println(amp);
     for(int i=0; i<256; i++){
       pushStyle();
-      stroke(256-i);
+      stroke(255, i);
       fill(255, i);
-        float steph=0.585*i;
-        
-        rect(i*stepw, -(steph+2)/2, stepw, steph+2 );
+      float steph=i*random(amp/10)+1;
+
+      rect(i*stepw, -steph/2, 1, steph );
       popStyle();
     }
+    
+    shape(iconMinus, 0, 0 );
+    shape(iconPlus, width-(75*s), 0);
    
    popMatrix();
    
    if(isActive){
-       amp=(hand.x/width)*2;
+       amp=(hand.x/width)*10;
        
     };
    

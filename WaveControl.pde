@@ -1,7 +1,7 @@
 class WaveControl extends XnVPointControl
 {
 
-  boolean activated=false;
+  boolean activated=true;
 
   WaveControl(){
     println("wave control constructor");
@@ -13,15 +13,29 @@ class WaveControl extends XnVPointControl
     
   }
   
+  void checkActive(){
+    
+    if(activated==false){
+       float w=height/2;
+       pushMatrix();
+         translate(0,0,2);
+         //shape(waveActivation, -w/2, -w/2, w ,w);
+       popMatrix();    
+    }
+    
+    
+    
+  }
+  
   ////////////////////////////////////////////////////////////////////////////////////////////
   // XnV callbacks
 
   void onPrimaryPointCreate(XnVHandPointContext pContext, XnPoint3D ptFocus) {
     
     println("onPrimaryPointCreate: wavedetector --> ptFocusWave ="+ptFocus.getX());
-      flowRouter.SetActive(pushDetector);
-      activated=false;
-      mainMenu.activated=true;
+      //flowRouter.SetActive(pushDetector);
+      activated=true;
+      
      // pxHandActive=ptFocus.getX();
 
   }

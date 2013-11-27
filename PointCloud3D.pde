@@ -1,62 +1,135 @@
+
 class PointCloud3D
 {
 
   boolean activated=true;
-  color cf = color(255, 128);
-  color cs = color (255, 128);
+  color cf = color(255, 255);
+  color cs = color (255, 255);
   
-   int stepSize=20;
+   int stepSize=40;
+   
    PVector densityInit=new PVector(0.25,0.25);
    PVector densityEdit=new PVector(1,1);
-   PVector dims=new PVector(50,50);
+   PVector dims=new PVector(40,40);
    PVector scaling=new PVector(1,1);
-   PVector strokeWInit=new PVector(0.25,0.25);
+   PVector strokeWInit=new PVector(2,2);
    PVector strokeWEdit=new PVector(1,1);
-
+   
   PointCloud3D(){
     println("PointCloud3D constructor");
-   
-
+    
   }
   
-  void drawPointCloud(){
+  void drawPointCloud(int[] userList){
     
     if(demoModus) return;
     if(!activated) return;
-
+    if(userList.length <= 0)  return;
     
-    //pointcloud
-        int[]   depthMap = context.depthMap();
-        
-        int     stepsX   =parseInt( (densityInit.x*densityEdit.x)*stepSize);  // to speed up the drawing
-        int     stepsY   =parseInt( (densityInit.y*densityEdit.y)*stepSize);
-        int     index;
-        PVector realWorldPoint;
+       int [] depthMap = context.depthMap();
+       int     stepsX   =parseInt( (densityInit.y*densityEdit.y)*stepSize);
+       int     stepsY   =parseInt( (densityInit.y*densityEdit.y)*stepSize);
+
+       int     index=0;
+       PVector realWorldPoint;
+
+       PVector [] usersCenter= new PVector [userList.length] ;
+       
+       for (int i=0; i < userList.length; i++){
+           usersCenter[i]=skelleton.getBodyCenter(userList[i]);
+       };       
 
        pushStyle(); 
          
-
-         
-         float sw=(strokeWInit.x*strokeWEdit.x)*4;
-         
+         float sw=(strokeWInit.x*strokeWEdit.x);
          stroke(cs);
-         strokeWeight(sw);
-        for (int y=0;y < context.depthHeight();y+=stepsY)
-        {
-          for (int x=0;x < context.depthWidth();x+=stepsX)
-          {
-            index = x + y * context.depthWidth();
-            if (depthMap[index] > 0)
-            { 
-              // draw the projected point
-              realWorldPoint = context.depthMapRealWorld()[index];              
-              point(realWorldPoint.x, realWorldPoint.y, (realWorldPoint.z-layerSound.beatAmp));
-            }
-          }
-        }
-        popStyle();
+         
+        strokeWeight(parseInt(sw));
+        noFill();
 
-       
-  } 
+        beginShape(POINTS);
+         for (int x=0;x < depthWidth; x+=stepsX)
+          {
+            for (int y=0;y < depthHeigth; y+=stepsY)
+            {
+              index = x + y * depthHeigth;
+              if (depthMap[index] > 0)
+              { 
+                // draw the projected point
+                realWorldPoint = context.depthMapRealWorld()[index];
+                //vertex(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
+                for (int u=0; u<usersCenter.length; u++){
+                  float d = abs(dist(usersCenter[u].x, usersCenter[u].z, realWorldPoint.x, realWorldPoint.z));   
+                  if(d<900){
+                    vertex(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
+                  };
+
+                };
+              }
+
+            }
+
+          }
+          endShape();
+         
+         
+         //verical
+//         for (int x=0;x < depthWidth; x+=stepsX)
+//          {
+//            beginShape(LINES);
+//            for (int y=0;y < depthHeigth; y+=stepsY)
+//            {
+//              index = x + y * depthWidth;
+//              if (depthMap[index] > 0)
+//              { 
+//                // draw the projected point
+//                realWorldPoint = context.depthMapRealWorld()[index];              
+//                //point(realWorldPoint.x, realWorldPoint.y, (realWorldPoint.z-layerSound.beatAmp));
+//                vertex(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
+//                //ellipse(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z, 10);
+//
+//
+//              }
+//            }
+//            endShape();
+//            
+//          }
+        
+            //horizontal
+//          for (int y=0;y < depthHeigth; y+=stepsY)
+//          {
+//            beginShape(LINES);
+//            for (int x=0;x < depthWidth; x+=stepsX)
+//            {
+//              index = x + y * depthWidth;
+//              if (depthMap[index] > 0)
+//              { 
+//                // draw the projected point
+//                realWorldPoint = context.depthMapRealWorld()[index];              
+//                //point(realWorldPoint.x, realWorldPoint.y, (realWorldPoint.z-layerSound.beatAmp));
+//                float vx = map(realWorldPoint.x, 0, context.depthWidth(), 0, width);
+//                float vy = map(realWorldPoint.y, 0, context.depthHeight(), 0, height);
+//                
+//                
+//                vertex(vx, vy, 0);
+//                vertex(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
+//                //ellipse(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z, 10);
+//
+//
+//              }
+//            }
+//            endShape();
+//            
+//          }
+
+       popStyle();
+ 
+  }; 
+  
+  
+  
 
 }
+
+
+

@@ -21,7 +21,6 @@ class Skelleton {
     
   }
 
-
 // draw the skeleton with the selected joints
   void getSkeleton(int userID)
   {
@@ -58,14 +57,12 @@ class Skelleton {
     
       jointPos = new ArrayList(limbs.length);
     
-    //  println("Limbs: " + limbs.length);
     
       for (int j=1; j <= limbs.length; j++){
         context.getJointPositionSkeleton(userID, j, limb);
         context.convertRealWorldToProjective(limb, limbP);
         jointPos.add(new PVector(limbP.x, limbP.y));
-    
-    //    println("JOINTPOS: " + jointPos);
+
       }
       
       head          = (PVector)jointPos.get(0);
@@ -84,13 +81,27 @@ class Skelleton {
       kneeright     = (PVector)jointPos.get(21);
       footright     = (PVector)jointPos.get(23);
   }
+  
+  PVector getBodyCenter(int userId){
+    // draw body direction
+    getBodyDirection(userId, bodyCenter, bodyDir);
+    bodyDir.mult(200);  // 200mm length
+    bodyDir.add(bodyCenter);
+    
+    return bodyCenter;
+    
+  }
 
 // draw the skeleton with the selected joints
   void drawSkeleton(int userId)
   {
     
-
+    bodyCenter = getBodyCenter(userId);
+    
     if(active==false)return;
+    
+    stroke(255, 0, 0);
+    line(bodyCenter.x, bodyCenter.y, bodyCenter.z, bodyDir.x, bodyDir.y, bodyDir.z);
 
     // to get the 3d joint data
     drawLimb(userId, SimpleOpenNI.SKEL_HEAD, SimpleOpenNI.SKEL_NECK, "head");
@@ -113,19 +124,9 @@ class Skelleton {
     drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_HIP, SimpleOpenNI.SKEL_RIGHT_KNEE, "");
     drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE, SimpleOpenNI.SKEL_RIGHT_FOOT, "");  
 
-    // draw body direction
-    getBodyDirection(userId, bodyCenter, bodyDir);
 
-    bodyDir.mult(200);  // 200mm length
-    bodyDir.add(bodyCenter);
-
-    stroke(255, 200, 200);
-    line(bodyCenter.x, bodyCenter.y, bodyCenter.z, 
-    bodyDir.x, bodyDir.y, bodyDir.z);
 
   }
-  
-  
 
   void drawLimb(int userId, int jointType1, int jointType2, String name)
   {
@@ -141,11 +142,24 @@ class Skelleton {
     // skellet 
     stroke(red(cs), green(cs), blue(cs), confidence * 200 + 55);
     line(jointPos1.x, jointPos1.y, jointPos1.z, jointPos2.x, jointPos2.y, jointPos2.z);
-
     drawJointOrientation(userId, jointType1, jointPos1, 50, name);
 
     
   }
+  
+  PVector subPoint(PVector startPoint, PVector endPoint, int segment, int totalSegments) {
+
+    PVector p1 = new PVector();
+  
+    float midX = (startPoint.x + (int) ((double) (endPoint.x - startPoint.x) / (double) totalSegments) * segment);
+    float midY = (startPoint.y + (int) ((double) (endPoint.y - startPoint.y) / (double) totalSegments) * segment);
+    float midZ = (startPoint.z + (int) ((double) (endPoint.z - startPoint.z) / (double) totalSegments) * segment);
+  
+    p1.set(midX, midY, 0);   
+  
+    return(p1);
+  }
+  
   
   float leftX=0;
   float leftY=0;

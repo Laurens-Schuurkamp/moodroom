@@ -37,6 +37,9 @@ WaveControl waveControl;
 XnVSwipeDetector swipeDetector;
 XnVFlowRouter flowRouter;
 SwipeControl swipeControl;
+int depthWidth;
+int depthHeigth;
+
 
 MainMenu mainMenu;
 SubMenu subMenu;
@@ -77,7 +80,6 @@ float        rotY = radians(0);
 
 float s;  //screen scale
 int padding=24;
-
 
 PFont font64, font48, font36, font32, font28, font24, font16, font12, font10;
 
@@ -193,8 +195,8 @@ void setup()
     //swipeDetector.RegisterPointUpdate(swipeControl);
     
     flowRouter = new XnVFlowRouter();
-    flowRouter.SetActive(swipeDetector);
-    //flowRouter.SetActive(waveDetector);
+    //flowRouter.SetActive(swipeDetector);
+    flowRouter.SetActive(waveDetector);
     //flowRouter.SetActive(pushDetector);
     sessionManager.AddListener(flowRouter);
     //sessionManager.RemoveListener(flowRouter);
@@ -202,6 +204,10 @@ void setup()
     //sessionManager.AddListener(swipeDetector);
    
     context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
+    
+    depthWidth = context.depthWidth();
+    depthHeigth = context.depthHeight();
+    
   }
   
   if(mainSettings.getString("debug").equals("true")){
@@ -224,7 +230,7 @@ void setup()
   minim = new Minim(this);
   sound = minim.getLineIn(Minim.STEREO, 1024);;
   
-  //String path = "sounds/timo-maas.mp3";
+  //String path = "data/sounds/timo-maas.mp3";
   //sound = minim.loadFile(path, 1024);
   //sound.loop();
   
@@ -260,16 +266,15 @@ void setup()
   handSize=95*s;
   adjustOffset=handSize;
   perspective(radians(60), float(width)/float(height), 10.0f, 150000.0f);
-  frameRate(30);
+  frameRate(60);
   smooth(8);
-
 
 }
 
 void draw() {
 
   background(colorBckgr);
-  
+
   if(debug){
     cf.framerate.setText("framerate ="+round(frameRate)+" fps");
   };
@@ -293,45 +298,40 @@ void draw() {
         rotateX(rotX);
         rotateY(rotY);
         scale(zoomF);
-        translate(0,0,-1350);
-        
+        translate(0,0,0-1250);
 
-        //skelleton
-      //pushMatrix();
-          //translate(0, 0, -1250);  
       pushStyle();
       for(int i=0;i<userList.length;i++)
        {
          skelleton.drawSkeleton(userList[i]);
        };
       popStyle();
-        
-      pointCloud3D.drawPointCloud();
-        
+
+      pointCloud3D.drawPointCloud(userList);
+
       popMatrix();
      
 
       //hands
       if (userList.length<=0){
-          drawHands=false;
+          waveControl.activated=false;
           
+          drawHands=false;
+          waveControl.checkActive();
           //flowRouter.SetActive(waveDetector);
           
       }else{
-
-          swipeControl.checkActive();      
-          
+          //swipeControl.checkActive();      
+          waveControl.checkActive();
           drawHands=true;
          
           if(drawHands){
              for(int i=0;i<userList.length;i++)
             {
               if(context.isTrackingSkeleton(userList[i])){
-              
-              skelleton.drawSkeleton(userList[i]);  
-                
+
               skelleton.getSkeleton(userList[i]);
-              bodyX=map(skelleton.torso.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
+
               lx = map(skelleton.handleft.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
               ly = map(skelleton.handleft.y, 0, context.depthHeight(), 0-adjustOffset, height+adjustOffset);
               rx = map(skelleton.handright.x, 0, context.depthWidth(), 0-adjustOffset, width+adjustOffset);
@@ -341,7 +341,7 @@ void draw() {
               right=new PVector(rx, ry);
 
               pushMatrix();
-                translate(0,0,2);  
+                translate(0,0,3);  
                 //handSvgR.setStroke(color(255));
                 //handSvgL.setStroke(color(255));
                 if(i==0){
@@ -354,8 +354,11 @@ void draw() {
                  
                popMatrix();
                 
-                if(i==0){
-                  mainMenu.drawMenu(left, right , i);
+                if(i==0 && waveControl.activated){
+                  pushMatrix();
+                    translate(0,0,1);
+                    mainMenu.drawMenu(left, right , i);
+                  popMatrix();
                 }
                 
               }
@@ -396,7 +399,6 @@ void updateTweenMain() {
 
 
 }
-
 
 void startMainTween(boolean newTween, String tweenDirection) {
   duration=15;

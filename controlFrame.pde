@@ -18,7 +18,7 @@ public class ControlFrame extends PApplet {
     PFont font = createFont("arial",20);
     
     size(w, h);
-    frameRate(25);
+
     cp5 = new ControlP5(this);
     
      cp5.addTextlabel("labelSwipe")

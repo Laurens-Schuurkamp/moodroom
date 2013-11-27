@@ -1,6 +1,6 @@
 class MainMenu
 {
-  boolean activated;
+  boolean activated=false;
   String activeLayer="none";
    
 // String actionsBckgr []={"color", "return"};
@@ -144,7 +144,7 @@ class MenuItem {
     iconSvg.scale(sSvg*s);
     
     if(item=="toggleActive"){
-      iconSvgDisabled = loadShape("data/gui/menu/icon_toggleInactive.svg");
+      iconSvgDisabled = loadShape("data/gui/menu/icon_toggleInActive.svg");
     }else{
       iconSvgDisabled = loadShape("data/gui/menu/icon_"+item+".svg");
       iconSvgDisabled.setFill(color(0,96));

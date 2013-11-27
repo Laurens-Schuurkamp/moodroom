@@ -4,10 +4,7 @@ class LayerPatern{
  float w, h, x, y;
 
  String activePrimitive="ellipse";
- boolean activated=true;
- 
- boolean enabled=true;
- 
+ boolean activated=false;
  float sSvg=0.5; 
   
  color cf=color(255, 96);
@@ -17,13 +14,21 @@ class LayerPatern{
  
  String primitives [] ={"rectangle", "ellipse", "triangle", "star", "hectagon", "hart"};
  
+ int minDensity=10;
  PVector densityInit=new PVector(1,1);
  PVector densityEdit=new PVector(1,1);
- PVector dims=new PVector(50,50);
+ PVector dims=new PVector(100,100);
  PVector scaleInit = new PVector(1.0,1.0);
- PVector scaleEdit = new PVector(0.9,0.9);
- PVector strokeWInit=new PVector(0.25,0.25);
- PVector strokeWEdit=new PVector(1,1);
+ PVector scaleEdit = new PVector(0.4,0.4);
+ PVector strokeWInit=new PVector(1, 1);
+ PVector strokeWEdit=new PVector(1, 1);
+ 
+ ArrayList<Primitive> pRectangles;
+ ArrayList<Primitive> pEllipses;
+ ArrayList<Primitive> pStars;
+ ArrayList<Primitive> pTriangles;
+ ArrayList<Primitive> pHectagons;
+ ArrayList<Primitive> pHarts;
  
  PShape svgRectangle = loadShape("data/gui/primitives/primitives_rectangle.svg");
  PShape svgEllipse = loadShape("data/gui/primitives/primitives_ellipse.svg");
@@ -44,14 +49,33 @@ class LayerPatern{
     String subsPrimitives []={};
     int i;
     for(i=0; i<primitives.length; i++){
-      
       float x= -widthTotal/2 + (i*(w+padding)) + padding;
       float y= -h/2;
-      
       MenuItem item=new MenuItem("action", primitives[i], false, i, x, y, sSvg);
       primitivesList.add(item); 
-      
     }
+    
+   pRectangles = new ArrayList<Primitive>();
+   pEllipses = new ArrayList<Primitive>();
+   pStars = new ArrayList<Primitive>();
+   pTriangles = new ArrayList<Primitive>();
+   pHectagons = new ArrayList<Primitive>();
+   pHarts = new ArrayList<Primitive>();
+   
+
+   
+   for (int iy =0; iy < height; iy+=minDensity){
+      for (int ix=0; ix < width; ix+=minDensity)
+      {
+        pRectangles.add(new Primitive(svgRectangle));
+        pEllipses.add(new Primitive(svgEllipse));
+        pStars.add(new Primitive(svgStar));
+        pTriangles.add(new Primitive(svgTriangle));
+        pHectagons.add(new Primitive(svgHectagon));
+        pHarts.add(new Primitive(svgHart));
+        
+      }
+   };
   
  };
 
@@ -60,17 +84,16 @@ class LayerPatern{
    if(activePrimitive=="none") return;
    if(!activated)return;
    pushMatrix();
-     translate(0,0,1);
+     translate(0,0,0);
    
      pushStyle();
        fill(cf);
        stroke(cs);
        
        translate(-width/2, -height/2);
-              
-       float sw=(strokeWInit.x*strokeWEdit.x)*4;
-       if(sw<=0)sw=0;
        
+       float sw=(strokeWInit.x*strokeWEdit.x);
+                    
        float stepx=(densityInit.x*densityEdit.x)*50;
        float stepy=(densityInit.y*densityEdit.y)*50;
        
@@ -81,11 +104,10 @@ class LayerPatern{
          allSvgShapes[i].setStroke(cs);  
          allSvgShapes[i].setFill(cf);
          allSvgShapes[i].setStrokeWeight(sw);
-
-         
+ 
        };
        
-       
+       int index=0;
        for (int y=0;y < height; y+=stepy)
         {
           for (int x=0;x < width; x+=stepx)
@@ -99,44 +121,23 @@ class LayerPatern{
             };
 
             if(activePrimitive=="ellipse"){
-               pushMatrix();
-                translate(x,y);
-                shape(svgEllipse, 0, 0, widthP+ampx, heightP+ampx);
-                
-              popMatrix();
+              Primitive item=(Primitive) pEllipses.get(index);
+              item.display(x, y, 0, widthP+ampx, heightP+ampx);
             }else if(activePrimitive=="rectangle"){
-               //rect(x-dims.x/2, y-hP/2, dims.x, hP);
-              pushMatrix();
-                translate(x,y);
-                shape(svgRectangle, 0, 0, widthP+ampx, heightP+ampx);
-              popMatrix(); 
+              Primitive item=(Primitive) pRectangles.get(index);
+              item.display(x, y, 0, widthP+ampx, heightP+ampx); 
             }else if(activePrimitive=="triangle"){
-               //triangle(x-dims.x/2, y+hP/2, x+/2, y+hP/2, x, y-hP/2);
-               pushMatrix();
-                translate(x,y);
-                shape(svgTriangle, 0, 0, widthP+ampx, heightP+ampx);
-              popMatrix(); 
+              Primitive item=(Primitive) pTriangles.get(index);
+              item.display(x, y, 0, widthP+ampx, heightP+ampx); 
             }else if(activePrimitive=="star"){
-              
-              pushMatrix();
-                translate(x,y);
-                shape(svgStar, 0, 0, widthP+ampx, heightP+ampx);
-              popMatrix();
-               
+              Primitive item=(Primitive) pStars.get(index);
+              item.display(x, y, 0, widthP+ampx, heightP+ampx);
             }else if(activePrimitive=="hectagon"){
-              
-              pushMatrix();
-                translate(x,y);
-                shape(svgHectagon, 0, 0, widthP+ampx, heightP+ampx);
-              popMatrix();
-               
+              Primitive item=(Primitive) pHectagons.get(index);
+              item.display(x, y, 0, widthP+ampx, heightP+ampx);
             }else if(activePrimitive=="hart"){
-              
-              pushMatrix();
-                translate(x,y);
-                shape(svgHart, 0, 0, widthP+ampx, heightP+ampx);
-              popMatrix();
-               
+              Primitive item=(Primitive) pHarts.get(index);
+              item.display(x, y, 0, widthP+ampx, heightP+ampx);
             }
 
           }
@@ -148,8 +149,6 @@ class LayerPatern{
    
  };
 
-   
- 
  void drawPrimitivesPicker(PVector left, PVector right){
    
       //activated  =  gestureActions.checkMenuActive(left, right, h);  
@@ -194,16 +193,6 @@ class LayerPatern{
 
 
    };
-   
-   
-   
-   
- 
-  
-}
-//end class layer
 
-//class Star{
-//  PShape star = loadShape("data/gui/primitives/primitives_star.svg");
-//  
-//}
+}
+

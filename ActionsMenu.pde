@@ -13,7 +13,7 @@ class ActionsMenu
     "strokecolor", "strokewidth", "return"
   };
   String actionsSize [] = {
-    "density", "scale", "rotate", "return"
+    "density", "scale", "return"
   }; 
 
   float w, h, x, y;
@@ -161,9 +161,8 @@ class ActionsMenu
              pointCloud3D.strokeWEdit.y=1;
 
            }else{
-             if(strokeWEdit.x<=0)strokeWEdit.x=0;
-             if(strokeWEdit.y<=0)strokeWEdit.y=0;
-             
+             if(strokeWEdit.x<=0.5)strokeWEdit.x=0.5;
+             if(strokeWEdit.y<=0.5)strokeWEdit.y=0.5;
              pointCloud3D.strokeWEdit=strokeWEdit;
            };
              
@@ -194,8 +193,8 @@ class ActionsMenu
              pointCloud3D.densityEdit.x=1;
              pointCloud3D.densityEdit.y=1;
            }else{
-             if(densityEdit.x<0.25)densityEdit.x=0.25;
-             if(densityEdit.y<0.25)densityEdit.y=0.25;
+             if(densityEdit.x<=0.25)densityEdit.x=0.25;
+             if(densityEdit.y<=0.25)densityEdit.y=0.25;
              pointCloud3D.densityEdit=densityEdit;
            };
          }
@@ -224,8 +223,8 @@ class ActionsMenu
                layerPatern.strokeWEdit.y=1;
 
            }else{
-               if(strokeWEdit.x<=0)strokeWEdit.x=0;
-               if(strokeWEdit.y<=0)strokeWEdit.y=0;
+               if(strokeWEdit.x<=0.5)strokeWEdit.x=0.5;
+               if(strokeWEdit.y<=0.5)strokeWEdit.y=0.5;
              
                layerPatern.strokeWEdit=strokeWEdit;
            };
@@ -270,11 +269,11 @@ class ActionsMenu
             pointCloud3D.activated=true;
           };
          }else if(activeLayer=="sound"){
-//          if(pointCloud3D.activated){
-//            pointCloud3D.activated=false;
-//          }else{
-//            pointCloud3D.activated=true;
-//          };
+          if(layerSound.activated){
+            layerSound.activated=false;
+          }else{
+            layerSound.activated=true;
+          };
          }
          activeAction="none";
       }
