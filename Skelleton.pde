@@ -84,10 +84,7 @@ class Skelleton {
   
   PVector getBodyCenter(int userId){
     // draw body direction
-    getBodyDirection(userId, bodyCenter, bodyDir);
-    bodyDir.mult(200);  // 200mm length
-    bodyDir.add(bodyCenter);
-    
+    getBodyDirection(userId, bodyCenter, bodyDir);    
     return bodyCenter;
     
   }
@@ -96,9 +93,12 @@ class Skelleton {
   void drawSkeleton(int userId)
   {
     
-    bodyCenter = getBodyCenter(userId);
+    
     
     if(active==false)return;
+    bodyCenter = getBodyCenter(userId);
+    bodyDir.mult(200);  // 200mm length
+    bodyDir.add(bodyCenter);
     
     stroke(255, 0, 0);
     line(bodyCenter.x, bodyCenter.y, bodyCenter.z, bodyDir.x, bodyDir.y, bodyDir.z);

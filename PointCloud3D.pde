@@ -6,14 +6,32 @@ class PointCloud3D
   color cf = color(255, 255);
   color cs = color (255, 255);
   
-   int stepSize=40;
+   int stepSize=32;
    
    PVector densityInit=new PVector(0.25,0.25);
    PVector densityEdit=new PVector(1,1);
-   PVector dims=new PVector(40,40);
+   PVector dims=new PVector(32,32);
    PVector scaling=new PVector(1,1);
    PVector strokeWInit=new PVector(2,2);
    PVector strokeWEdit=new PVector(1,1);
+   
+   ArrayList<Primitive> pRectangles;
+   ArrayList<Primitive> pEllipses;
+   ArrayList<Primitive> pStars;
+   ArrayList<Primitive> pTriangles;
+   ArrayList<Primitive> pHectagons;
+   ArrayList<Primitive> pHarts;
+   
+   PShape svgRectangle = loadShape("data/gui/primitives/primitives_rectangle.svg");
+   PShape svgEllipse = loadShape("data/gui/primitives/primitives_ellipse.svg");
+   PShape svgStar = loadShape("data/gui/primitives/primitives_star.svg");
+   PShape svgTriangle = loadShape("data/gui/primitives/primitives_triangle.svg");
+   PShape svgHectagon = loadShape("data/gui/primitives/primitives_hectagon.svg");
+   PShape svgHart = loadShape("data/gui/primitives/primitives_hart.svg");
+   
+   PShape allSvgShapes []= {svgRectangle, svgEllipse, svgStar, svgTriangle, svgHectagon, svgHart};
+   
+   
    
   PointCloud3D(){
     println("PointCloud3D constructor");
@@ -50,8 +68,10 @@ class PointCloud3D
         beginShape(POINTS);
          for (int x=0;x < depthWidth; x+=stepsX)
           {
+            
             for (int y=0;y < depthHeigth; y+=stepsY)
             {
+              
               index = x + y * depthHeigth;
               if (depthMap[index] > 0)
               { 
@@ -68,6 +88,7 @@ class PointCloud3D
               }
 
             }
+            
 
           }
           endShape();
@@ -126,9 +147,6 @@ class PointCloud3D
  
   }; 
   
-  
-  
-
 }
 
 
