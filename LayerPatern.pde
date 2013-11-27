@@ -1,12 +1,8 @@
 class LayerPatern{
-  
- ArrayList primitivesList=new ArrayList();
- float w, h, x, y;
-
+ 
  String activePrimitive="ellipse";
  boolean activated=true;
- float sSvg=0.5; 
-  
+ 
  color cf=color(255, 96);
  color cs=color(255);
 
@@ -25,24 +21,7 @@ class LayerPatern{
 
  LayerPatern(){
   println("layer patern contructor");
-
-    w = 320*s*sSvg;
-    h = 240*s*sSvg;
-    
-    println("w ="+w);
-    
-    primitives = new Primitives(minDensity);
-    float widthTotal=(w*primitives.selectables.length)+(padding*primitives.selectables.length)+padding;
-    String subsPrimitives []={};
-    
-    
-
-    for(int i=0; i<primitives.selectables.length; i++){
-      float x= -widthTotal/2 + (i*(w+padding)) + padding;
-      float y= -h/2;
-      MenuItem item=new MenuItem("action", primitives.selectables[i], false, i, x, y, sSvg);
-      primitivesList.add(item); 
-    }
+  primitives = new Primitives(minDensity);
 
  };
 
@@ -116,50 +95,7 @@ class LayerPatern{
    
  };
 
- void drawPrimitivesPicker(PVector left, PVector right){
-   
-      //activated  =  gestureActions.checkMenuActive(left, right, h);  
-      //if(activated==false)return; 
-   
-      pushMatrix();
-      translate(0,0,1);
-      
-      pushStyle();
-        String header="Kies een patroon vorm";
-        setTextHeader(header); 
-      popStyle();
-      
-      boolean hit=false;
-      
-      for(int i=0; i<primitivesList.size(); i++){
-        
-        MenuItem item=(MenuItem) primitivesList.get(i);
-        boolean leftHit=gestureActions.checkSingleHitId(item, left, w, h);
-        boolean rightHit=gestureActions.checkSingleHitId(item, right, w, h);
-   
-       if(leftHit || rightHit){
-         activePrimitive=item.item;
-         boolean timed = timer.setTimer(item.x, item.y, item.item);
-         if(timed){
-                // set menu action
-                activePrimitive=item.item;
-                subMenu.activeActions="none";
-                actionsMenu.activeAction="none";
-                timer.activeId="none";
-                 
-          };
-
-       };
-  
-        shape(item.iconSvg, item.x, item.y);
-            
-
-        
-      };
-      popMatrix();
-
-
-   };
+ 
 
 }
 

@@ -49,6 +49,7 @@ PointCloud3D pointCloud3D;
 LayerSound layerSound;
 GestureActions gestureActions;
 ColorPicker colorPicker;
+PrimitivesPicker primitivesPicker;
 Timer timer;
 
 LayerPatern layerPatern;
@@ -157,6 +158,7 @@ void setup()
   pointCloud3D = new PointCloud3D();
   layerSound = new LayerSound();
   gestureActions = new GestureActions();
+  primitivesPicker = new PrimitivesPicker();
   timer = new Timer();
   
   layerPatern = new LayerPatern();

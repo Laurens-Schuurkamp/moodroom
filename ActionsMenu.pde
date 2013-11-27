@@ -245,11 +245,9 @@ class ActionsMenu
         }
 
       }else if(action=="primitives"){
-         if(activeLayer=="patern"){
-            layerPatern.drawPrimitivesPicker(left, right);
-         }   
-        
-        
+
+          primitivesPicker.drawPrimitivesPicker(left, right, activeLayer);
+
       }else if(action == "vibration" ){
         if(activeLayer=="sound"){
           layerSound.amp = gestureActions.setVibration(left, right, layerSound.amp);
