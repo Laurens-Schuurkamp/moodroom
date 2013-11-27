@@ -9,7 +9,7 @@ class Skelleton {
   handright, hipleft, kneeleft, footleft, hipright, kneeright, footright;
   ArrayList jointPos;
   
-  boolean active=false;
+  boolean activated=false;
   color cf=color(255, 128);
   color cs=color(255);
   boolean xxx=false;
@@ -20,6 +20,8 @@ class Skelleton {
     println("Skelleton constructor");
     
   }
+  
+  
 
 // draw the skeleton with the selected joints
   void getSkeleton(int userID)
@@ -95,7 +97,7 @@ class Skelleton {
     
     
     
-    if(active==false)return;
+    if(activated==false)return;
     bodyCenter = getBodyCenter(userId);
     bodyDir.mult(200);  // 200mm length
     bodyDir.add(bodyCenter);

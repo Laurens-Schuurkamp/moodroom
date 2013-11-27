@@ -11,9 +11,9 @@ class LayerPatern{
  int minDensity=10;
  PVector densityInit=new PVector(1,1);
  PVector densityEdit=new PVector(1,1);
- PVector dims=new PVector(100,100);
- PVector scaleInit = new PVector(1.0,1.0);
- PVector scaleEdit = new PVector(0.4,0.4);
+ PVector dims=new PVector(40,40);
+ PVector scaleInit = new PVector(1.0, 1.0);
+ PVector scaleEdit = new PVector(1.0, 1.0);
  PVector strokeWInit=new PVector(1, 1);
  PVector strokeWEdit=new PVector(1, 1);
 
@@ -21,9 +21,22 @@ class LayerPatern{
 
  LayerPatern(){
   println("layer patern contructor");
-  primitives = new Primitives(minDensity);
+  primitives = new Primitives(width, height, minDensity);
 
  };
+ 
+ void reset(){
+   activePrimitive="ellipse";
+   activated=false;
+   densityInit.set(1,1);
+   densityEdit.set(1,1);
+   dims.set(40,40);
+   scaleInit.set(1.0, 1.0);
+   scaleEdit.set(1.0, 1.0);
+   strokeWInit.set(1, 1);
+   strokeWEdit.set(1, 1);
+
+ }
 
  void drawLayer(){
 
@@ -67,24 +80,22 @@ class LayerPatern{
             };
 
             if(activePrimitive=="ellipse"){
-              Primitive item=(Primitive) primitives.pEllipses.get(index);
-              item.display(x, y, 0, widthP+ampx, heightP+ampx);
+              primitives.pEllipse.display(x, y, 0, widthP+ampx, heightP+ampx);
             }else if(activePrimitive=="rectangle"){
-              Primitive item=(Primitive) primitives.pRectangles.get(index);
-              item.display(x, y, 0, widthP+ampx, heightP+ampx); 
+              primitives.pRectangle.display(x, y, 0, widthP+ampx, heightP+ampx); 
             }else if(activePrimitive=="triangle"){
-              Primitive item=(Primitive) primitives.pTriangles.get(index);
-              item.display(x, y, 0, widthP+ampx, heightP+ampx); 
+              primitives.pTriangle.display(x, y, 0, widthP+ampx, heightP+ampx);
             }else if(activePrimitive=="star"){
-              Primitive item=(Primitive) primitives.pStars.get(index);
-              item.display(x, y, 0, widthP+ampx, heightP+ampx);
+              primitives.pStar.display(x, y, 0, widthP+ampx, heightP+ampx);
             }else if(activePrimitive=="hectagon"){
-              Primitive item=(Primitive) primitives.pHectagons.get(index);
-              item.display(x, y, 0, widthP+ampx, heightP+ampx);
+              primitives.pHectagon.display(x, y, 0, widthP+ampx, heightP+ampx);
             }else if(activePrimitive=="hart"){
-              Primitive item=(Primitive) primitives.pHarts.get(index);
-              item.display(x, y, 0, widthP+ampx, heightP+ampx);
+              primitives.pHart.display(x, y, 0, widthP+ampx, heightP+ampx);
+            }else if(activePrimitive=="cross"){
+              primitives.pCross.display(x, y, 0, widthP+ampx, heightP+ampx);
             }
+            
+            //index++;
 
           }
         }

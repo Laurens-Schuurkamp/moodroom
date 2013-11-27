@@ -179,7 +179,7 @@ public class ControlFrame extends PApplet {
     if(init==false){
        return;
     }
-    skelleton.active=value;
+    skelleton.activated=value;
     println("checkbox :"+value);
     
   }

@@ -152,19 +152,18 @@ class ActionsMenu
                       
          
          }else if(isActive && activeLayer=="pointcloud"){
-           PVector strokeWEdit=gestureActions.setScale(left, right, pointCloud3D.strokeWInit, pointCloud3D.strokeWEdit);
-           if(strokeWEdit.x==1.0 && strokeWEdit.y==1.0){
+           PVector scaleEdit=gestureActions.setScale(left, right, pointCloud3D.scaleInit, pointCloud3D.scaleEdit);
+           if(scaleEdit.x==1.0 && scaleEdit.y==1.0){
              
-             pointCloud3D.strokeWInit.x*=pointCloud3D.strokeWEdit.x;
-             pointCloud3D.strokeWInit.y*=pointCloud3D.strokeWEdit.y;
-             pointCloud3D.strokeWEdit.x=1;
-             pointCloud3D.strokeWEdit.y=1;
-
+             pointCloud3D.scaleInit.x*=pointCloud3D.scaleEdit.x;
+             pointCloud3D.scaleInit.y*=pointCloud3D.scaleEdit.y;
+             pointCloud3D.scaleEdit.x=1;
+             pointCloud3D.scaleEdit.y=1;
+             
            }else{
-             if(strokeWEdit.x<=0.5)strokeWEdit.x=0.5;
-             if(strokeWEdit.y<=0.5)strokeWEdit.y=0.5;
-             pointCloud3D.strokeWEdit=strokeWEdit;
+             pointCloud3D.scaleEdit=scaleEdit;
            };
+
              
        }
         

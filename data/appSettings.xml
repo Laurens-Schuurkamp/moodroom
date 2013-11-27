@@ -2,7 +2,7 @@
 <appConfig>
     <mainSettings 
         debug="true" 
-        demoModus="true" 
+        demoModus="false" 
         width="1280"
 				height="800"
         ip="localhost"

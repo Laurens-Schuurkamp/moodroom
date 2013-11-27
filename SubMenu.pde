@@ -4,7 +4,7 @@ class SubMenu{
  
  String actionsBckgr [][]={ {"color", "false"},{"return", "true"}};
  String actionsPatern [][]={ {"toggleActive","false" }, {"stroke", "true"}, {"size", "true"}, {"primitives", "false"}, {"color", "true"}, {"return", "true"}};
- String actionsPointcloud [][]={{"toggleActive","false" },{"size", "true"}, {"color", "true"}, {"return", "true"}};
+ String actionsPointcloud [][]={{"toggleActive","false" },{"size", "true"}, {"primitives", "false"}, {"color", "true"}, {"return", "true"}};
  String actionsSound [][]={{"toggleActive","false" }, {"soundPrimitives", "true"}, {"vibration", "false"}, {"return", "true"}};
 
  float w, h, x, y;

@@ -323,12 +323,14 @@ void draw() {
           //flowRouter.SetActive(waveDetector);
           
       }else{
-          //swipeControl.checkActive();      
+          //swipeControl.checkActive();
+          waveControl.activated=true;      
           waveControl.checkActive();
           drawHands=true;
+          
          
           if(drawHands){
-             for(int i=0;i<userList.length;i++)
+            for(int i=0;i<userList.length;i++)
             {
               if(context.isTrackingSkeleton(userList[i])){
 
@@ -356,7 +358,7 @@ void draw() {
                  
                popMatrix();
                 
-                if(i==0 && waveControl.activated){
+                if(i==0 ){
                   pushMatrix();
                     translate(0,0,1);
                     mainMenu.drawMenu(left, right , i);
@@ -418,7 +420,7 @@ void startSubTween(int dir) {
 void keyReleased()
   {
     
-    if(kinectConnected) return;
+    //if(kinectConnected) return;
     
     if (key == CODED) {
       
@@ -440,18 +442,11 @@ void keyReleased()
     switch(keyCode)
     {
       
-      case 'S':
-        println("key S released");
-        return;
-      case 'W':
-        println("key W released");
-        return;
-      case 'P':
-        println("key P released");
-        return;
-      case 'C':
-        println("key C released");
-
+      case 'R':
+        println("key R released");
+        layerPatern.reset();
+        pointCloud3D.reset();
+        skelleton.activated=false;
      
     }
   

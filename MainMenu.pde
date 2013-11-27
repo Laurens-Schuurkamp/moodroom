@@ -38,7 +38,7 @@ class MainMenu
   
   
   void drawMenu(PVector left, PVector right, int id) {
-    
+    //println("draw menu for real");
     float posXtarget=0;
       if(menuLevel==0){
           posXtarget=0;
